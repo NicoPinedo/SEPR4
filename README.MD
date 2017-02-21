@@ -2,9 +2,9 @@
 Team: [Kieran Hall](https://github.com/NotKieran), [Jack Mountain](https://github.com/jm179796), [Nico Pinedo](https://github.com/NicoPinedo), [Martynas Minskis](https://github.com/mm1544), [Joseph Leakey](https://github.com/MisterSeph).
 
 
-Master Build Status:      [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=master)](https://travis-ci.org/NotKieran/DRTN-Fractal)
+Master Build Status:      [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=master)](https://travis-ci.org/NicoPinedo/SEPR4)
 
-Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=development)](https://travis-ci.org/NotKieran/DRTN-Fractal)
+Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=development)](https://travis-ci.org/NicoPinedo/SEPR4)
 
 
 ## Using our project
