@@ -1,0 +1,11 @@
+language: java
+
+jdk:
+  - oraclejdk7
+  - openjdk7
+
+before_install:
+ - chmod +x gradlew
+ 
+notifications:
+  slack: sepr-group:l15KLKyBIMboFmpdIVJVB6S7
