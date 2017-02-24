@@ -1,10 +1,11 @@
-#DRTN & Fractal
+#DRTN SEPR
+##Project ownership DRTN>Fractal>DRTN (Testing only, unconfirmed)
 Team: [Kieran Hall](https://github.com/NotKieran), [Jack Mountain](https://github.com/jm179796), [Nico Pinedo](https://github.com/NicoPinedo), [Martynas Minskis](https://github.com/mm1544), [Joseph Leakey](https://github.com/MisterSeph).
 
 
-Master Build Status:      [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=master)](https://travis-ci.org/NicoPinedo/SEPR4)
+Master Build Status:      [![Build Status](https://travis-ci.org/jm179796/SEPR.svg?branch=master)](https://travis-ci.org/jm179796/SEPR)
 
-Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=development)](https://travis-ci.org/NicoPinedo/SEPR4)
+Development Build Status: [![Build Status](https://travis-ci.org/jm179796/SEPR.svg?branch=Development)](https://travis-ci.org/jm179796/SEPR)
 
 
 ## Using our project
@@ -22,7 +23,7 @@ Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-
 	* Make sure you're working in the branch created for developing that feature!
 	* After you commit to the remote repository it'll trigger Travis to start compiling and testing the build
 	* If the build fails at this point go back to step 2 until it passes this point.
-	* If your build passes this point, check (preferably with someone) that the tests you have written are valid and test the feature fully.
+	* If your build passes this point, check (preferably with someone) that the tests you have written in *SEPR/tests/src/* are valid and test the feature fully.
 4. If we're at this point we're really cooking with gas and if you or your sub-team are happy with the feature, submit a pull request to the development branch from your feature branch.
 	* Travis will then check if these two branches are compatible as-is. 
 	* If this passes, someone outside of your team, typically Jack or myself will confirm the merge.

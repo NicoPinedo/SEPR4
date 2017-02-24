@@ -1,0 +1,1 @@
+This folder contains versions of all our images used so far. This will allow any subsequent developers to access our original images and modify them.
