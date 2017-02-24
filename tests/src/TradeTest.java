@@ -24,8 +24,8 @@ public class TradeTest {
 	@Test
 	public void successfulTrade(){
 		player1.setResource(ResourceType.ENERGY, 20);
-		player1.setResource(ResourceType.FOOD, 20);
-		player1.setResource(ResourceType.FOOD, 20);
+        player1.setResource(ResourceType.ORE, 20);
+        player1.setResource(ResourceType.FOOD, 20);
 		player2.setResource(ResourceType.MONEY, 110);
 		assert(trade.execute());
 		assertEquals(player1.getResource(ResourceType.ENERGY), 10);
@@ -41,8 +41,8 @@ public class TradeTest {
 	@Test
 	public void notEnoughResourcesTrade(){
 		player1.setResource(ResourceType.ENERGY, 5);
-		player1.setResource(ResourceType.FOOD, 5);
-		player1.setResource(ResourceType.FOOD, 5);
+        player1.setResource(ResourceType.ORE, 5);
+        player1.setResource(ResourceType.FOOD, 5);
 		player2.setResource(ResourceType.MONEY, 110);
 		assert(! trade.execute());
 		assertEquals(player1.getResource(ResourceType.ENERGY), 5);
@@ -58,8 +58,8 @@ public class TradeTest {
 	@Test
 	public void notEnoughMoneyTrade(){
 		player1.setResource(ResourceType.ENERGY, 10);
-		player1.setResource(ResourceType.FOOD, 10);
-		player1.setResource(ResourceType.FOOD, 10);
+        player1.setResource(ResourceType.ORE, 10);
+        player1.setResource(ResourceType.FOOD, 10);
 		player2.setResource(ResourceType.MONEY, 10);
 		assert(! trade.execute());
 		assertEquals(player1.getResource(ResourceType.ENERGY), 10);
