@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
+import com.drtn.game.enums.ResourceType;
 import com.drtn.game.util.Drawer;
 import com.drtn.game.util.TTFont;
 
@@ -215,7 +216,8 @@ public class Tile extends Button {
      */
     public void produce() {
         if (roboticonStored != null && owner != null) {
-            if ((owner.getEnergyCount() >= 3) && (owner.getFoodCount() >= 2)) {
+            if ((owner.getResource(ResourceType.ENERGY) >= 3) && (owner.getResource(ResourceType.FOOD) >= 2)) {
+                //TODO: why are these negative? - Kieran
                 owner.varyResource("Energy", -3);
                 owner.varyResource( "Food", -2);
             int[] modifiers = this.roboticonStored.productionModifier();

@@ -5,9 +5,6 @@ package com.drtn.game.enums;
  */
 public class ResourceTypeEnum {
 
-    public enum ResourceType{
-        FOOD, ORE, ENERGY
-    }
 
     ResourceType type;
 
