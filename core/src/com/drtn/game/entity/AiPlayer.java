@@ -71,7 +71,7 @@ public class AiPlayer extends Player {
                 while (market.getRoboticonStock() > 1 && market.getRoboticonBuyPrice() < getResource(ResourceType.MONEY)) {
                     try {
                         System.out.println("AI: Bought a roboticon at price $" + market.getRoboticonBuyPrice());
-                        market.buy("roboticon", 1, this);
+                        market.buy(ResourceType.ROBOTICON, 1, this);
                     } catch (Exception e) {
                         System.out.println("Can't buy stuff.");
                         break;

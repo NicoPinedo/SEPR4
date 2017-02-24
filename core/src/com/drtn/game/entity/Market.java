@@ -377,7 +377,7 @@ public class Market extends Table {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 try {
-                    engine.updateCurrentPlayer(buy("roboticon", 1, engine.currentPlayer()));
+                    engine.updateCurrentPlayer(buy(ResourceType.ROBOTICON, 1, engine.currentPlayer()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -396,7 +396,7 @@ public class Market extends Table {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 try {
-                    engine.updateCurrentPlayer(buy("ore", 1, engine.currentPlayer()));
+                    engine.updateCurrentPlayer(buy(ResourceType.ORE, 1, engine.currentPlayer()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -413,7 +413,7 @@ public class Market extends Table {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 try {
-                    engine.updateCurrentPlayer(buy("food", 1, engine.currentPlayer()));
+                    engine.updateCurrentPlayer(buy(ResourceType.FOOD, 1, engine.currentPlayer()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -430,7 +430,7 @@ public class Market extends Table {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 try {
-                    engine.updateCurrentPlayer(buy("energy", 1, engine.currentPlayer()));
+                    engine.updateCurrentPlayer(buy(ResourceType.ENERGY, 1, engine.currentPlayer()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1030,7 +1030,7 @@ public class Market extends Table {
     /**
      * A method that allows buying resources from the market.
      * <p>
-     * Depending on what type of resources is passed ("ore", "food" or "energy") method checks whether it is sufficient
+     * Depending on what type of resources is passed (ResourceType.ORE, ResourceType.FOOD or ResourceType.ENERGY) method checks whether it is sufficient
      * amount of that resource in market stock. Then it is checked whether does Player has enough money to buy required
      * amount. Market stock value (e.g. OreStock) is reduced by the quantity that has been bought(Quantity). Players money
      * (playersMoney) are reduced by the amount that was spent on the purchase. The value of Players resource stock is
@@ -1042,8 +1042,8 @@ public class Market extends Table {
      * @param Player     A Player object.
      */
     //TODO: change to case switch not if
-    public Player buy(String Stock_Type, int Quantity, Player Player) throws Exception {
-        if ("ore".equals(Stock_Type)) {
+    public Player buy(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
+        if (ResourceType.ORE.equals(Stock_Type)) {
             if (Quantity <= OreStock) {
                 int OrePrice = OreBuyPrice * Quantity;
                 if (Player.getResource(ResourceType.MONEY) >= OrePrice) {
@@ -1062,7 +1062,7 @@ public class Market extends Table {
             } else {
                 throw new Exception("Insufficient resources");
             }
-        } else if ("food".equals(Stock_Type)) {
+        } else if (ResourceType.FOOD.equals(Stock_Type)) {
             if (Quantity <= FoodStock) {
                 int FoodPrice = FoodBuyPrice * Quantity;
                 if (Player.getResource(ResourceType.MONEY) >= FoodPrice) {
@@ -1082,7 +1082,7 @@ public class Market extends Table {
             } else {
                 throw new Exception("Insufficient resources");
             }
-        } else if ("energy".equals(Stock_Type)) {
+        } else if (ResourceType.ENERGY.equals(Stock_Type)) {
             if (Quantity <= EnergyStock) {
                 int EnergyPrice = EnergyBuyPrice * Quantity;
                 if (Player.getResource(ResourceType.MONEY) >= EnergyPrice) {
@@ -1101,7 +1101,7 @@ public class Market extends Table {
             } else {
                 throw new Exception("Insufficient resources");
             }
-        } else if ("roboticon".equals(Stock_Type)) {
+        } else if (ResourceType.ROBOTICON.equals(Stock_Type)) {
             if (RoboticonStock > 0) {
                 if (Player.getResource(ResourceType.MONEY) >= RoboticonBuyPrice) {
                     RoboticonStock -= 1;
@@ -1130,7 +1130,7 @@ public class Market extends Table {
     /**
      * A method that allows selling resources to the market.
      * <p>
-     * Depending on what type of resources it is passed ("ore", "food" or "energy") method checks whether the Player has
+     * Depending on what type of resources it is passed (ResourceType.ORE, ResourceType.FOOD or ResourceType.ENERGY) method checks whether the Player has
      * sufficient amount (Quantity) of resource that he is willing to sell. Market stock value (e.g. OreStock) is
      * increased by the quantity that has been sold by Player. Players money(playersMoney) are increased by the amount
      * that was gotten by selling resources. The value of Player's resource is decreased by the amount that has been sold.
@@ -1144,7 +1144,7 @@ public class Market extends Table {
     //TODO: Change to case switch not if
     public Player sell(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
         int playersMoney = Player.getResource(ResourceType.MONEY);
-        if ("ore".equals(Stock_Type)) {
+        if (ResourceType.ORE.equals(Stock_Type)) {
             int playersOre = Player.getResource(ResourceType.ORE);
             if (playersOre >= Quantity) {
                 OreStock += Quantity;
@@ -1161,7 +1161,7 @@ public class Market extends Table {
                 throw new Exception("Insufficient resources");
 
             }
-        } else if ("food".equals(Stock_Type)) {
+        } else if (ResourceType.FOOD.equals(Stock_Type)) {
             int playersFood = Player.getResource(ResourceType.FOOD);
             if (playersFood >= Quantity) {
 
@@ -1177,7 +1177,7 @@ public class Market extends Table {
             } else {
                 throw new Exception("Insufficient resources");
             }
-        } else if ("energy".equals(Stock_Type)) {
+        } else if (ResourceType.ENERGY.equals(Stock_Type)) {
             int playersEnergy = Player.getResource(ResourceType.ENERGY);
             if (playersEnergy >= Quantity) {
                 EnergyStock += Quantity;

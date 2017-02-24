@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.drtn.game.enums.ResourceType;
+import com.drtn.game.exceptions.InvalidResourceTypeException;
 import com.drtn.game.util.Drawer;
 import com.drtn.game.util.TTFont;
 
@@ -243,13 +244,45 @@ public class Tile extends Button {
     }
 
     /**
-     * Sets a certain resource count to the specified amount.
+     * Unified Getter for resource amounts
      *
-     * @param Resource The resource that is to be changed
-     * @param quantity The amount that it is to be set to.
+     * @param type resource requested
+     * @return int value representing the amount of type the player currently have
      */
-    public void setResource(String Resource, int quantity) {
-        //Nothing here?
+    public int getResource(ResourceType type) throws InvalidResourceTypeException {
+        switch (type) {
+            case ENERGY:
+                return this.EnergyCount;
+            case FOOD:
+                return this.FoodCount;
+            case ORE:
+                return this.OreCount;
+            default:
+                throw new InvalidResourceTypeException();
+        }
+    }
+
+    /**
+     * Unified Setter for resource amounts
+     *
+     * @param type     resource being set
+     * @param newCount int value the count should be updated to
+     */
+    public void setResource(ResourceType type, int newCount) {
+        if (!(newCount < 0)) {
+            switch (type) {
+                case ENERGY:
+                    this.EnergyCount = newCount;
+                    break;
+                case FOOD:
+                    this.FoodCount = newCount;
+                    break;
+                case ORE:
+                    this.OreCount = newCount;
+                    break;
+                default:
+            }
+        }
     }
 
     /**
@@ -270,29 +303,6 @@ public class Tile extends Button {
         this.owner = Owner;
     }
 
-    public int getOreCount() {return this.OreCount;}
-
-    /**
-     * Setter for the ore count of the tile.
-     *
-     * @param Count What the count is to be changed to.
-     */
-    public void changeOreCount(int Count) {this.OreCount = Count;}
-
-    public int getEnergyCount() {return this.EnergyCount;}
-
-    /**
-     * Setter for the ore count of the tile.
-     *
-     * @param Count What the count is to be changed to.
-     */
-    public void changeEnergyCount(int Count) {
-        this.EnergyCount = Count;
-    }
-
-    public int getFoodCount() {return this.FoodCount;}
-
-    public void changeFoodCount(int count) {this.FoodCount = count;}
 
     /**
      * Adds a Roboticon to the roboticon list.

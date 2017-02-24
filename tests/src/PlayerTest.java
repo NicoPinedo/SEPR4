@@ -4,6 +4,7 @@ import com.drtn.game.entity.College;
 import com.drtn.game.entity.Player;
 import com.drtn.game.entity.Roboticon;
 import com.drtn.game.entity.Tile;
+import com.drtn.game.enums.ResourceType;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -48,23 +49,23 @@ public class PlayerTest extends TesterFile {
 
     @Test
     public void testVaryResource() {
-        int ore = TestPlayer.getOreCount();
-        int food = TestPlayer.getFoodCount();
-        int energy = TestPlayer.getEnergyCount();
-        int money = TestPlayer.getMoney();
+        int ore = TestPlayer.getResource(ResourceType.ORE);
+        int food = TestPlayer.getResource(ResourceType.FOOD);
+        int energy = TestPlayer.getResource(ResourceType.ENERGY);
+        int money = TestPlayer.getResource(ResourceType.MONEY);
         for (int i = 1; i < 200; i++){
             ore += i;
             food += i;
             energy += i;
             money += i;
-            TestPlayer.varyResource("Ore", i);
-            TestPlayer.varyResource("Food", i);
-            TestPlayer.varyResource("Energy", i);
-            TestPlayer.varyResource("Money", i);
-            assertEquals(ore,TestPlayer.getOreCount());
-            assertEquals(food,TestPlayer.getFoodCount());
-            assertEquals(energy,TestPlayer.getEnergyCount());
-            assertEquals(money,TestPlayer.getMoney());
+            TestPlayer.varyResource(ResourceType.ORE, i);
+            TestPlayer.varyResource(ResourceType.FOOD, i);
+            TestPlayer.varyResource(ResourceType.ENERGY, i);
+            TestPlayer.varyResource(ResourceType.MONEY, i);
+            assertEquals(ore, TestPlayer.getResource(ResourceType.ORE));
+            assertEquals(food, TestPlayer.getResource(ResourceType.FOOD));
+            assertEquals(energy, TestPlayer.getResource(ResourceType.ENERGY));
+            assertEquals(money, TestPlayer.getResource(ResourceType.MONEY));
         }
 
 
@@ -72,12 +73,12 @@ public class PlayerTest extends TesterFile {
 
     @Test
     public void testcalculateScore(){
-        int ore = TestPlayer.getOreCount();
-        int food = TestPlayer.getFoodCount();
-        int energy = TestPlayer.getEnergyCount();
+        int ore = TestPlayer.getResource(ResourceType.ORE);
+        int food = TestPlayer.getResource(ResourceType.FOOD);
+        int energy = TestPlayer.getResource(ResourceType.ENERGY);
         int score = ore + food + energy;
         assertEquals(score, TestPlayer.calculateScore());
-        //assertEquals((TestPlayer.getOreCount() + TestPlayer.getFoodCount() + TestPlayer.getEnergyCount()), TestPlayer.calculateScore());
+        //assertEquals((TestPlayer.getResource(ResourceType.ORE)() + TestPlayer.getResource(ResourceType.FOOD + TestPlayer.getResource(ResourceType.ENERGY)), TestPlayer.calculateScore());
     }
 
     @Test

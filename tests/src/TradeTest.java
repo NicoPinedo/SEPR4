@@ -1,5 +1,6 @@
 import com.drtn.game.Trade;
 import com.drtn.game.entity.Player;
+import com.drtn.game.enums.ResourceType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,15 +23,15 @@ public class TradeTest {
 	 */
 	@Test
 	public void successfulTrade(){
-		player1.setEnergyCount(20);
-		player1.setFoodCount(20);
-		player1.setOreCount(20);
-		player2.setMoney(110);
+		player1.setResource(ResourceType.ENERGY, 20);
+		player1.setResource(ResourceType.FOOD, 20);
+		player1.setResource(ResourceType.FOOD, 20);
+		player2.setResource(ResourceType.MONEY, 110);
 		assert(trade.execute());
-		assertEquals(player1.getEnergyCount(), 10);
-		assertEquals(player1.getFoodCount(), 10);
-		assertEquals(player1.getOreCount(), 10);
-		assertEquals(player2.getMoney(), 10);
+		assertEquals(player1.getResource(ResourceType.ENERGY), 10);
+		assertEquals(player1.getResource(ResourceType.FOOD), 10);
+		assertEquals(player1.getResource(ResourceType.ORE), 10);
+		assertEquals(player2.getResource(ResourceType.MONEY), 10);
 	}
 	
 	/**
@@ -39,15 +40,15 @@ public class TradeTest {
 	 */
 	@Test
 	public void notEnoughResourcesTrade(){
-		player1.setEnergyCount(5);
-		player1.setFoodCount(5);
-		player1.setOreCount(5);
-		player2.setMoney(110);
+		player1.setResource(ResourceType.ENERGY, 5);
+		player1.setResource(ResourceType.FOOD, 5);
+		player1.setResource(ResourceType.FOOD, 5);
+		player2.setResource(ResourceType.MONEY, 110);
 		assert(! trade.execute());
-		assertEquals(player1.getEnergyCount(), 5);
-		assertEquals(player1.getFoodCount(), 5);
-		assertEquals(player1.getOreCount(), 5);
-		assertEquals(player2.getMoney(), 110);
+		assertEquals(player1.getResource(ResourceType.ENERGY), 5);
+		assertEquals(player1.getResource(ResourceType.FOOD), 5);
+		assertEquals(player1.getResource(ResourceType.ORE), 5);
+		assertEquals(player2.getResource(ResourceType.MONEY), 110);
 	}
 	
 	/**
@@ -56,15 +57,15 @@ public class TradeTest {
 	 */
 	@Test
 	public void notEnoughMoneyTrade(){
-		player1.setEnergyCount(10);
-		player1.setFoodCount(10);
-		player1.setOreCount(10);
-		player2.setMoney(10);
+		player1.setResource(ResourceType.ENERGY, 10);
+		player1.setResource(ResourceType.FOOD, 10);
+		player1.setResource(ResourceType.FOOD, 10);
+		player2.setResource(ResourceType.MONEY, 10);
 		assert(! trade.execute());
-		assertEquals(player1.getEnergyCount(), 10);
-		assertEquals(player1.getFoodCount(), 10);
-		assertEquals(player1.getOreCount(), 10);
-		assertEquals(player2.getMoney(), 10);
+		assertEquals(player1.getResource(ResourceType.ENERGY), 10);
+		assertEquals(player1.getResource(ResourceType.FOOD), 10);
+		assertEquals(player1.getResource(ResourceType.ORE), 10);
+		assertEquals(player2.getResource(ResourceType.MONEY), 10);
 	}
 
 }

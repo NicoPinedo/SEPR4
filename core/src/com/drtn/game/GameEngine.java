@@ -623,6 +623,7 @@ public class GameEngine {
 
             selectedTile().getRoboticonStored().upgrade(resource);
         }
+        //TODO: change this to the enum
         //Upgrade the specified resource
         //0: ORE
         //1: ENERGY
