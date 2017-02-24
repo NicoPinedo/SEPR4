@@ -69,7 +69,7 @@ public class MarketTest extends TesterFile{
         assertEquals(TestFoodStock, testMarket.getEnergyStock());
 
         //Ore
-        TestPlayer.setResource(ResourceType.FOOD, 10);
+        TestPlayer.setResource(ResourceType.ORE, 10);
         TestPlayer.setResource(ResourceType.MONEY, 100);
         testMarket.setOreSellPrice(10);
         testMarket.setOreBuyPrice(10);
@@ -170,7 +170,7 @@ public class MarketTest extends TesterFile{
         assertEquals(TestEnergyStock, testMarket.getEnergyStock());
 
         //Ore
-        TestPlayer.setResource(ResourceType.FOOD, 10);
+        TestPlayer.setResource(ResourceType.ORE, 10);
         TestPlayer.setResource(ResourceType.MONEY, 100);
         testMarket.setOreSellPrice(10);
         testMarket.setOreBuyPrice(10);
