@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.drtn.game.GameEngine;
 import com.drtn.game.Trade;
+import com.drtn.game.enums.ResourceType;
 import com.drtn.game.util.Drawer;
 import com.drtn.game.util.TTFont;
 
@@ -43,7 +44,7 @@ public class Market extends Table {
      * Variable holding current Ore resource amount as an int, initialises at 0 as stated in the brief.
      */
     private int OreStock = 0;
-    
+
     /**
      * Variable holding current Food resource amount as an int, initialises at 16 as stated in the brief.
      */
@@ -148,150 +149,147 @@ public class Market extends Table {
      * Visualises the amount of Roboticon stocks currently held by the market
      */
     private Label roboticonStockLabel;
-    
+
     /**
      * button to move from market to auction
      */
-	private TextButton marketButton;
-	
-	/**
-	 * Button to move from market to auction
-	 */
-	private TextButton auctionButton;
-	
-	/**
-	 * Button to add ore to a trade
-	 */
-	private TextButton playerBuyOre;
+    private TextButton marketButton;
 
-	/**
-	 * Button to add energy to a trade
-	 */
-	private TextButton playerBuyEnergy;
+    /**
+     * Button to move from market to auction
+     */
+    private TextButton auctionButton;
 
-	/**
-	 * Button to add food to a trade
-	 */
-	private TextButton playerBuyFood;
+    /**
+     * Button to add ore to a trade
+     */
+    private TextButton playerBuyOre;
 
-	/**
-	 * Button to remove ore from a trade
-	 */
-	private TextButton playerSellOre;
+    /**
+     * Button to add energy to a trade
+     */
+    private TextButton playerBuyEnergy;
 
-	/**
-	 * Button to remove energy from a trade
-	 */
-	private TextButton playerSellEnergy;
+    /**
+     * Button to add food to a trade
+     */
+    private TextButton playerBuyFood;
 
-	/**
-	 * Button to remove food from a trade
-	 */
-	private TextButton playerSellFood;
+    /**
+     * Button to remove ore from a trade
+     */
+    private TextButton playerSellOre;
 
-	/**
-	 * variable storing amount of ore to be traded
-	 */
-	private int oreTradeAmount;
-	
-	/**
-	 * variable storing amount of energy to be traded
-	 */
-	private int energyTradeAmount;
+    /**
+     * Button to remove energy from a trade
+     */
+    private TextButton playerSellEnergy;
 
-	/**
-	 * variable storing amount of food to be traded
-	 */
-	private int foodTradeAmount;
+    /**
+     * Button to remove food from a trade
+     */
+    private TextButton playerSellFood;
 
-	/**
-	 * button to confirm a trade
-	 */
-	private TextButton confirmSale;
+    /**
+     * variable storing amount of ore to be traded
+     */
+    private int oreTradeAmount;
 
-	/**
-	 * button to add 1 to the price of a trade
-	 */
-	private TextButton pricePlus1;
-	
-	/**
-	 * button to add 10 to the price of a trade
-	 */
-	private TextButton pricePlus10;
-	
-	/**
-	 * button to add 100 to the price of a trade
-	 */
-	private TextButton pricePlus100;
+    /**
+     * variable storing amount of energy to be traded
+     */
+    private int energyTradeAmount;
 
-	/**
-	 * button to take 1 from the price of a trade
-	 */
-	private TextButton priceMinus1;
+    /**
+     * variable storing amount of food to be traded
+     */
+    private int foodTradeAmount;
 
-	/**
-	 * button to take 10 from the price of a trade
-	 */
-	private TextButton priceMinus10;
+    /**
+     * button to confirm a trade
+     */
+    private TextButton confirmSale;
 
-	/**
-	 * button to take 100 from price of a trade
-	 */
-	private TextButton priceMinus100;
+    /**
+     * button to add 1 to the price of a trade
+     */
+    private TextButton pricePlus1;
 
-	/**
-	 * label to show amount of ore being traded
-	 */
-	private Label oreTradeLabel;
-	
-	/**
-	 * label to show amount of energy being traded
-	 */	
-	private Label energyTradeLabel;
-	
-	/**
-	 * label to show amount of food being traded
-	 */
-	private Label foodTradeLabel;
-	
-	/**
-	 * variable storing price of trade
-	 */
-	private int tradePrice;
+    /**
+     * button to add 10 to the price of a trade
+     */
+    private TextButton pricePlus10;
 
-	/**
-	 * label to show the price of a trade
-	 */
-	private Label tradePriceLabel;
-	
-	/**
-	 * move forward through list of players you want to trade with in auction
-	 */
-	private TextButton nextPlayerButton;
+    /**
+     * button to add 100 to the price of a trade
+     */
+    private TextButton pricePlus100;
 
-	/**
-	 * move backwardward through list of players you want to trade with in auction
-	 */
-	private TextButton prevPlayerButton;
-	
-	/**
-	 * Label to show which player a trade is going to be sent to
-	 */
-	private Label playerLabel;
-	
-	/**
-	 * a list of players  that the current player can trade with
-	 */
-	private Array<Player> otherPlayer;
-	
-	/**
-	 * current position in other player list in auction
-	 */
-	private int playerListPosition;
-	
-	
+    /**
+     * button to take 1 from the price of a trade
+     */
+    private TextButton priceMinus1;
 
-	
+    /**
+     * button to take 10 from the price of a trade
+     */
+    private TextButton priceMinus10;
+
+    /**
+     * button to take 100 from price of a trade
+     */
+    private TextButton priceMinus100;
+
+    /**
+     * label to show amount of ore being traded
+     */
+    private Label oreTradeLabel;
+
+    /**
+     * label to show amount of energy being traded
+     */
+    private Label energyTradeLabel;
+
+    /**
+     * label to show amount of food being traded
+     */
+    private Label foodTradeLabel;
+
+    /**
+     * variable storing price of trade
+     */
+    private int tradePrice;
+
+    /**
+     * label to show the price of a trade
+     */
+    private Label tradePriceLabel;
+
+    /**
+     * move forward through list of players you want to trade with in auction
+     */
+    private TextButton nextPlayerButton;
+
+    /**
+     * move backwardward through list of players you want to trade with in auction
+     */
+    private TextButton prevPlayerButton;
+
+    /**
+     * Label to show which player a trade is going to be sent to
+     */
+    private Label playerLabel;
+
+    /**
+     * a list of players  that the current player can trade with
+     */
+    private Array<Player> otherPlayer;
+
+    /**
+     * current position in other player list in auction
+     */
+    private int playerListPosition;
+
 
     /**
      * Constructs the market by calculating buying/selling costs and arranging the associated visual interface
@@ -299,7 +297,7 @@ public class Market extends Table {
      * the functions and visual features of its internal purchase/sale buttons and populating a drawable visual
      * framework with them and some other stock/identification labels
      *
-     * @param game The game's state, which is used in this context to operate the game's renderer via the Drawer class
+     * @param game   The game's state, which is used in this context to operate the game's renderer via the Drawer class
      * @param engine The game's engine, which directly controls the availability and prices of market resources
      */
     public Market(Game game, GameEngine engine) {
@@ -327,8 +325,7 @@ public class Market extends Table {
             FoodSellPrice = calculateNewCost(FoodStock, "sell");
             EnergySellPrice = calculateNewCost(EnergyStock, "sell");
             //Calculate the market's buying/selling prices
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -351,39 +348,39 @@ public class Market extends Table {
         tableButtonStyle.pressedOffsetY = -1;
         //Set the visual parameters for the rest of the market's labels and buttons
 
-    
+
         marketButton = new TextButton("Market", tableButtonStyle);
         marketButton.addListener(new ChangeListener() {
-        	@Override
+            @Override
             public void changed(ChangeEvent event, Actor actor) {
-        	clearChildren();
-        	constructInterface();
-        	}
+                clearChildren();
+                constructInterface();
+            }
         });
-        
+
         auctionButton = new TextButton("Auction", tableButtonStyle);
         auctionButton.addListener(new ChangeListener() {
-        	
-        	@Override
+
+            @Override
             public void changed(ChangeEvent event, Actor actor) {
-	        	clearChildren();
-	        	constructAuctionInterface();
-	        	refreshAuction();
-        	}
+                clearChildren();
+                constructAuctionInterface();
+                refreshAuction();
+            }
         });
         /**
          * Button that attempts to buy a Roboticon for the current player when clicked on
          */
         buyRoboticon = new TextButton("-" + getRoboticonBuyPrice(), tableButtonStyle);
-       
+
         buyRoboticon.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                    try {
-                        engine.updateCurrentPlayer(buy("roboticon", 1, engine.currentPlayer()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    engine.updateCurrentPlayer(buy("roboticon", 1, engine.currentPlayer()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 refreshButtonAvailability();
 
             }
@@ -394,15 +391,15 @@ public class Market extends Table {
          * Button that attempts to buy a unit of ore for the current player when clicked on
          */
         buyOre = new TextButton("-" + getOreBuyPrice(), tableButtonStyle);
-     
+
         buyOre.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                    try {
-                        engine.updateCurrentPlayer(buy("ore", 1, engine.currentPlayer()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    engine.updateCurrentPlayer(buy("ore", 1, engine.currentPlayer()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 refreshButtonAvailability();
             }
         });
@@ -415,11 +412,11 @@ public class Market extends Table {
         buyFood.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                    try {
-                        engine.updateCurrentPlayer(buy("food", 1, engine.currentPlayer()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    engine.updateCurrentPlayer(buy("food", 1, engine.currentPlayer()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 refreshButtonAvailability();
             }
         });
@@ -432,11 +429,11 @@ public class Market extends Table {
         buyEnergy.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                    try {
-                        engine.updateCurrentPlayer(buy("energy", 1, engine.currentPlayer()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    engine.updateCurrentPlayer(buy("energy", 1, engine.currentPlayer()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 refreshButtonAvailability();
             }
         });
@@ -451,11 +448,11 @@ public class Market extends Table {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
 
-                    try {
-                        engine.updateCurrentPlayer(sell("energy", 1, engine.currentPlayer()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    engine.updateCurrentPlayer(sell("energy", 1, engine.currentPlayer()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 refreshButtonAvailability();
             }
         });
@@ -469,11 +466,11 @@ public class Market extends Table {
         sellOre.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                    try {
-                        engine.updateCurrentPlayer(sell("ore", 1, engine.currentPlayer()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    engine.updateCurrentPlayer(sell("ore", 1, engine.currentPlayer()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 refreshButtonAvailability();
             }
         });
@@ -487,149 +484,149 @@ public class Market extends Table {
         sellFood.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                    try {
-                        engine.updateCurrentPlayer(sell("food", 1, engine.currentPlayer()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    engine.updateCurrentPlayer(sell("food", 1, engine.currentPlayer()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 refreshButtonAvailability();
             }
         });
         //Set the button for selling food to do just that (but only when the game is in phase 5)
-        
+
         //rest of method is new for assessment 3
-        
+
         playerBuyOre = new TextButton("+", tableButtonStyle);
-        oreTradeLabel = new Label("Ore:        " + oreTradeAmount, 
-        		new Label.LabelStyle(tableFont.font(), Color.WHITE));
+        oreTradeLabel = new Label("Ore:        " + oreTradeAmount,
+                new Label.LabelStyle(tableFont.font(), Color.WHITE));
         playerBuyOre.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                  oreTradeAmount += 1;
-                  refreshAuction();
-                  
+                oreTradeAmount += 1;
+                refreshAuction();
+
             }
         });
-        
+
         playerBuyEnergy = new TextButton("+", tableButtonStyle);
-        energyTradeLabel = new Label("Energy:   " + energyTradeAmount, 
-        		new Label.LabelStyle(tableFont.font(), Color.WHITE));
+        energyTradeLabel = new Label("Energy:   " + energyTradeAmount,
+                new Label.LabelStyle(tableFont.font(), Color.WHITE));
         playerBuyEnergy.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                  energyTradeAmount += 1;
-                  refreshAuction();
-                  
+                energyTradeAmount += 1;
+                refreshAuction();
+
             }
         });
-        
+
         playerBuyFood = new TextButton("+", tableButtonStyle);
-        foodTradeLabel = new Label("Food:      " + foodTradeAmount, 
-        		new Label.LabelStyle(tableFont.font(), Color.WHITE));
+        foodTradeLabel = new Label("Food:      " + foodTradeAmount,
+                new Label.LabelStyle(tableFont.font(), Color.WHITE));
         playerBuyFood.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                  foodTradeAmount += 1;
-                  refreshAuction();
-                  
+                foodTradeAmount += 1;
+                refreshAuction();
+
             }
         });
-        
+
         playerSellOre = new TextButton("-", tableButtonStyle);
         playerSellOre.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                  oreTradeAmount -= 1;
-                  refreshAuction();
-                  
+                oreTradeAmount -= 1;
+                refreshAuction();
+
             }
         });
-        
+
         playerSellEnergy = new TextButton("-", tableButtonStyle);
         playerSellEnergy.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                  energyTradeAmount -= 1;
-                  refreshAuction();
-                  
+                energyTradeAmount -= 1;
+                refreshAuction();
+
             }
         });
-        
+
         playerSellFood = new TextButton("-", tableButtonStyle);
         playerSellFood.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                  foodTradeAmount -= 1;
-                  refreshAuction();
-                  
+                foodTradeAmount -= 1;
+                refreshAuction();
+
             }
         });
-        
-        tradePriceLabel = new Label("" + tradePrice, new Label.LabelStyle(tableFont.font(), Color.WHITE)); 
+
+        tradePriceLabel = new Label("" + tradePrice, new Label.LabelStyle(tableFont.font(), Color.WHITE));
         pricePlus1 = new TextButton("+ 1", tableButtonStyle);
         pricePlus1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                  tradePrice += 1;
-                  refreshAuction();
-                  
+                tradePrice += 1;
+                refreshAuction();
+
             }
         });
-        
+
         pricePlus10 = new TextButton("+ 10", tableButtonStyle);
         pricePlus10.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-            	tradePrice += 10;
-            	refreshAuction();
-                  
+                tradePrice += 10;
+                refreshAuction();
+
             }
         });
-        
+
         pricePlus100 = new TextButton("+ 100", tableButtonStyle);
         pricePlus100.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-            	tradePrice += 100;
-            	refreshAuction();
-                  
+                tradePrice += 100;
+                refreshAuction();
+
             }
         });
-        
-        
+
+
         priceMinus1 = new TextButton("- 1", tableButtonStyle);
         priceMinus1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-            	tradePrice -= 1;
-            	refreshAuction();
-                  
+                tradePrice -= 1;
+                refreshAuction();
+
             }
         });
-        
+
         priceMinus10 = new TextButton("- 10", tableButtonStyle);
         priceMinus10.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-            	tradePrice -= 10;
-            	refreshAuction();
-                  
+                tradePrice -= 10;
+                refreshAuction();
+
             }
         });
-        
+
         priceMinus100 = new TextButton("- 100", tableButtonStyle);
         priceMinus100.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-            	tradePrice -= 100;
-            	refreshAuction();
-                  
+                tradePrice -= 100;
+                refreshAuction();
+
             }
         });
-        
+
         confirmSale = new TextButton("confirm", tableButtonStyle);
         confirmSale.addListener(new ChangeListener() {
-        	@Override
+            @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 Trade trade = new Trade(oreTradeAmount, energyTradeAmount, foodTradeAmount,
                         tradePrice, engine.currentPlayer(), otherPlayer.get(playerListPosition));
@@ -637,37 +634,37 @@ public class Market extends Table {
                 engine.addTrade(trade);
                 oreTradeAmount = 0;
                 energyTradeAmount = 0;
-            	foodTradeAmount = 0;
-            	tradePrice = 0;
-            	refreshAuction();
-            	
-        	}
+                foodTradeAmount = 0;
+                tradePrice = 0;
+                refreshAuction();
+
+            }
         });
 
-        playerListPosition = 0; 
+        playerListPosition = 0;
         playerLabel = new Label("", new Label.LabelStyle(tableFont.font(), Color.WHITE));
         nextPlayerButton = new TextButton(">", tableButtonStyle);
         nextPlayerButton.addListener(new ChangeListener() {
-        	@Override
+            @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-            	playerListPosition += 1;
-            	playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
-            	refreshAuction();
-        	}
+                playerListPosition += 1;
+                playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+                refreshAuction();
+            }
         });
         prevPlayerButton = new TextButton("<", tableButtonStyle);
         prevPlayerButton.addListener(new ChangeListener() {
-        	@Override
+            @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-            	playerListPosition -= 1;
-            	playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
-            	refreshAuction();
-        	}
+                playerListPosition -= 1;
+                playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+                refreshAuction();
+            }
         });
         refreshButtonAvailability();
         refreshPlayers();
         //Ensure that these buttons are disabled at the beginning of the game
-        
+
     }
 
     /**
@@ -675,7 +672,7 @@ public class Market extends Table {
      * Once this method has finished executing, the market can be drawn to a stage like any other actor
      */
     private void constructInterface() {
-    	
+
         tableFont.setSize(36);
         drawer.toggleButton(marketButton, false, Color.GRAY);
         drawer.toggleButton(auctionButton, true, Color.WHITE);
@@ -750,15 +747,15 @@ public class Market extends Table {
         this.add(roboticonStockLabel).left();
         //Add label to encode current Roboticon stocks to the market's visual framework
     }
-    
-    
+
+
     /**
      * Builds the auction's visual interface by populating it with labels and buttons
      * Once this method has finished executing, the market can be drawn to a stage like any other actor
      */
     //new for assessment 3
-    private void constructAuctionInterface(){
-    	tableFont.setSize(36);
+    private void constructAuctionInterface() {
+        tableFont.setSize(36);
         drawer.toggleButton(auctionButton, false, Color.GRAY);
         drawer.toggleButton(marketButton, true, Color.WHITE);
         drawer.addTableRow(this, marketButton);
@@ -772,48 +769,48 @@ public class Market extends Table {
         this.add(new Label("More", new Label.LabelStyle(tableFont.font(), Color.WHITE))).left().padRight(30);
         this.add(new Label("Less", new Label.LabelStyle(tableFont.font(), Color.WHITE))).left().padRight(20);
         //Visual guff
-        
+
         this.row();
         oreTradeAmount = 0;
         this.add(oreTradeLabel).left();
         this.add(playerBuyOre).left().padLeft(10);
         this.add(playerSellOre).left().padLeft(10);
-        
+
         this.row();
         energyTradeAmount = 0;
         this.add(energyTradeLabel).left();
         this.add(playerBuyEnergy).left().padLeft(10);
         this.add(playerSellEnergy).left().padLeft(10);
-        
+
         this.row();
         foodTradeAmount = 0;
         this.add(foodTradeLabel).left().padBottom(15);
         this.add(playerBuyFood).left().padLeft(10).padBottom(15);
         this.add(playerSellFood).left().padLeft(10).padBottom(15);
-        
+
         this.row();
         tradePrice = 0;
         this.add(new Label("Price:", new Label.LabelStyle(tableFont.font(), Color.WHITE))).left();
-        
-        
+
+
         this.row();
-        
+
         this.add();
         this.add(pricePlus1).left();
         this.add(priceMinus1).left();
-        
+
         this.row();
-        
+
         this.add(tradePriceLabel);
         this.add(pricePlus10).left();
         this.add(priceMinus10).left();
-        
+
         this.row();
-        
+
         this.add();
         this.add(pricePlus100).left();
         this.add(priceMinus100).left();
-        
+
         this.row();
         this.add(prevPlayerButton);
         this.add(playerLabel);
@@ -824,7 +821,6 @@ public class Market extends Table {
 
     /**
      * Returns the number of Roboticons currently held in the market
-     *
      *
      * @return int The number of Roboticons currently held in the market
      */
@@ -838,7 +834,7 @@ public class Market extends Table {
      *
      * @param NewRoboticonStock The new number of Roboticons to be held in the market
      */
-    public void setRoboticonStock (int NewRoboticonStock) {
+    public void setRoboticonStock(int NewRoboticonStock) {
         this.RoboticonStock = NewRoboticonStock;
         roboticonStockLabel.setText("" + getRoboticonStock());
     }
@@ -848,7 +844,7 @@ public class Market extends Table {
      *
      * @return this.RoboticonBuyPrice is integer roboticon buy price value
      */
-    public int getRoboticonBuyPrice(){
+    public int getRoboticonBuyPrice() {
         return this.RoboticonBuyPrice;
     }
 
@@ -857,7 +853,7 @@ public class Market extends Table {
      *
      * @param NewRoboticonBuyPrice integer value that RoboticonBuyPrice is assigned to.
      */
-    public void setRoboticonBuyPrice(int NewRoboticonBuyPrice){
+    public void setRoboticonBuyPrice(int NewRoboticonBuyPrice) {
         this.RoboticonBuyPrice = NewRoboticonBuyPrice;
         buyRoboticon.setText("" + getRoboticonBuyPrice());
     }
@@ -1049,12 +1045,12 @@ public class Market extends Table {
         if ("ore".equals(Stock_Type)) {
             if (Quantity <= OreStock) {
                 int OrePrice = OreBuyPrice * Quantity;
-                if (Player.getMoney() >= OrePrice) {
+                if (Player.getResource(ResourceType.MONEY) >= OrePrice) {
                     OreStock -= Quantity;
-                    Player.setMoney(Player.getMoney() - OrePrice);
-                    int playersOre = Player.getOreCount();
+                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - OrePrice);
+                    int playersOre = Player.getResource(ResourceType.ORE);
                     playersOre += Quantity;
-                    Player.setOreCount(playersOre);
+                    Player.setResource(ResourceType.ORE, playersOre);
                     OreBuyPrice = calculateNewCost(OreStock, "buy");
                     OreSellPrice = calculateNewCost(OreStock, "sell");
                     oreStockLabel.setText("" + getOreStock());
@@ -1068,12 +1064,12 @@ public class Market extends Table {
         } else if ("food".equals(Stock_Type)) {
             if (Quantity <= FoodStock) {
                 int FoodPrice = FoodBuyPrice * Quantity;
-                if (Player.getMoney() >= FoodPrice) {
+                if (Player.getResource(ResourceType.MONEY) >= FoodPrice) {
                     FoodStock -= Quantity;
-                    Player.setMoney(Player.getMoney() - FoodPrice);
-                    int playersFood = Player.getFoodCount();
+                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - FoodPrice);
+                    int playersFood = Player.getResource(ResourceType.FOOD);
                     playersFood += Quantity;
-                    Player.setFoodCount(playersFood);
+                    Player.setResource(ResourceType.FOOD, playersFood);
                     FoodBuyPrice = calculateNewCost(FoodStock, "buy");
                     FoodSellPrice = calculateNewCost(FoodStock, "sell");
                     foodStockLabel.setText("" + getFoodStock());
@@ -1088,12 +1084,12 @@ public class Market extends Table {
         } else if ("energy".equals(Stock_Type)) {
             if (Quantity <= EnergyStock) {
                 int EnergyPrice = EnergyBuyPrice * Quantity;
-                if (Player.getMoney() >= EnergyPrice) {
+                if (Player.getResource(ResourceType.MONEY) >= EnergyPrice) {
                     EnergyStock -= Quantity;
-                    Player.setMoney(Player.getMoney() - EnergyPrice);
-                    int playersEnergy = Player.getEnergyCount();
+                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - EnergyPrice);
+                    int playersEnergy = Player.getResource(ResourceType.ENERGY);
                     playersEnergy += Quantity;
-                    Player.setEnergyCount(playersEnergy);
+                    Player.setResource(ResourceType.ENERGY, playersEnergy);
                     EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
                     EnergySellPrice = calculateNewCost(EnergyStock, "sell");
                     energyStockLabel.setText("" + getEnergyStock());
@@ -1106,9 +1102,9 @@ public class Market extends Table {
             }
         } else if ("roboticon".equals(Stock_Type)) {
             if (RoboticonStock > 0) {
-                if (Player.getMoney() >= RoboticonBuyPrice) {
+                if (Player.getResource(ResourceType.MONEY) >= RoboticonBuyPrice) {
                     RoboticonStock -= 1;
-                    Player.setMoney(Player.getMoney() - RoboticonBuyPrice);
+                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - RoboticonBuyPrice);
                     RoboticonBuyPrice += 5;
                     Player.increaseRoboticonInventory();
 
@@ -1144,16 +1140,16 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
-    public Player sell(String Stock_Type, int Quantity, Player Player) throws Exception {
-        int playersMoney = Player.getMoney();
+    public Player sell(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
+        int playersMoney = Player.getResource(ResourceType.MONEY);
         if ("ore".equals(Stock_Type)) {
-            int playersOre = Player.getOreCount();
+            int playersOre = Player.getResource(ResourceType.ORE);
             if (playersOre >= Quantity) {
                 OreStock += Quantity;
                 playersMoney += Quantity * OreSellPrice;
-                Player.setMoney(playersMoney);
+                Player.setResource(ResourceType.MONEY, playersMoney);
                 playersOre -= Quantity;
-                Player.setOreCount(playersOre);
+                Player.setResource(ResourceType.ORE, playersOre);
 
                 OreBuyPrice = calculateNewCost(OreStock, "buy");
                 OreSellPrice = calculateNewCost(OreStock, "sell");
@@ -1164,14 +1160,14 @@ public class Market extends Table {
 
             }
         } else if ("food".equals(Stock_Type)) {
-            int playersFood = Player.getFoodCount();
+            int playersFood = Player.getResource(ResourceType.FOOD);
             if (playersFood >= Quantity) {
 
                 FoodStock += Quantity;
                 playersMoney += Quantity * FoodSellPrice;
-                Player.setMoney(playersMoney);
+                Player.setResource(ResourceType.MONEY, playersMoney);
                 playersFood -= Quantity;
-                Player.setFoodCount(playersFood);
+                Player.setResource(ResourceType.FOOD, playersFood);
                 FoodBuyPrice = calculateNewCost(FoodStock, "buy");
                 FoodSellPrice = calculateNewCost(FoodStock, "sell");
                 foodStockLabel.setText("" + getFoodStock());
@@ -1180,13 +1176,13 @@ public class Market extends Table {
                 throw new Exception("Insufficient resources");
             }
         } else if ("energy".equals(Stock_Type)) {
-            int playersEnergy = Player.getEnergyCount();
+            int playersEnergy = Player.getResource(ResourceType.ENERGY);
             if (playersEnergy >= Quantity) {
                 EnergyStock += Quantity;
                 playersMoney += Quantity * EnergySellPrice;
-                Player.setMoney(playersMoney);
+                Player.setResource(ResourceType.MONEY, playersMoney);
                 playersEnergy -= Quantity;
-                Player.setEnergyCount(playersEnergy);
+                Player.setResource(ResourceType.ENERGY, playersEnergy);
                 EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
                 EnergySellPrice = calculateNewCost(EnergyStock, "sell");
                 energyStockLabel.setText("" + getEnergyStock());
@@ -1215,17 +1211,17 @@ public class Market extends Table {
      * chosen amount of money to gamble with.
      */
     public Boolean gamble(int amountToGamble, Player Player) {
-        int playersMoney = Player.getMoney();
+        int playersMoney = Player.getResource(ResourceType.MONEY);
         if (amountToGamble <= playersMoney) {
             Random rand = new Random();
             int result = rand.nextInt(2);
             if (result == 0) {
                 playersMoney -= amountToGamble;
-                Player.setMoney(playersMoney);
+                Player.setResource(ResourceType.MONEY, playersMoney);
                 return false;
             } else {
                 playersMoney += amountToGamble;
-                Player.setMoney(playersMoney);
+                Player.setResource(ResourceType.MONEY, playersMoney);
                 return true;
             }
 
@@ -1247,7 +1243,6 @@ public class Market extends Table {
      *
      * @param Stock int values of market resources.
      * @param oper  String value representing operations "buy" and "sell".
-     *
      * @return costofresources int value of the resource's new cost
      * @throws Exception Thrown if there's a wrong operator used with the function
      */
@@ -1281,14 +1276,14 @@ public class Market extends Table {
     /**
      * Enables/disables the market's purchase/sale buttons and updates their colours to reflect the player's current
      * amount of money, the game's current phase and the player's inventory
-     *
+     * <p>
      * GRAY: Cannot buy/sell resource on the current phase
      * GREEN: Can buy/sell resource
      * RED: Cannot buy/sell resource due to a lack of money or stock
      */
     public void refreshButtonAvailability() {
         if (engine.phase() == 2) {
-            if (engine.currentPlayer().getMoney() >= RoboticonBuyPrice && RoboticonStock > 0) {
+            if (engine.currentPlayer().getResource(ResourceType.MONEY) >= RoboticonBuyPrice && RoboticonStock > 0) {
                 drawer.toggleButton(buyRoboticon, true, Color.GREEN);
             } else {
                 drawer.toggleButton(buyRoboticon, false, Color.RED);
@@ -1301,21 +1296,21 @@ public class Market extends Table {
             drawer.toggleButton(buyEnergy, false, Color.GRAY);
             //Disable all of the market's other functions in phase 2
         } else if (engine.phase() == 5) {
-            if (engine.currentPlayer().getMoney() >= OreBuyPrice && OreStock > 0) {
+            if (engine.currentPlayer().getResource(ResourceType.MONEY) >= OreBuyPrice && OreStock > 0) {
                 drawer.toggleButton(buyOre, true, Color.GREEN);
             } else {
                 drawer.toggleButton(buyOre, false, Color.RED);
             }
             //Conditionally enable the ore purchase button
 
-            if (engine.currentPlayer().getMoney() >= EnergyBuyPrice && EnergyStock > 0) {
+            if (engine.currentPlayer().getResource(ResourceType.MONEY) >= EnergyBuyPrice && EnergyStock > 0) {
                 drawer.toggleButton(buyEnergy, true, Color.GREEN);
             } else {
                 drawer.toggleButton(buyEnergy, false, Color.RED);
             }
             //Conditionally enable the energy purchase button
 
-            if (engine.currentPlayer().getMoney() >= FoodBuyPrice && FoodStock > 0) {
+            if (engine.currentPlayer().getResource(ResourceType.MONEY) >= FoodBuyPrice && FoodStock > 0) {
                 drawer.toggleButton(buyFood, true, Color.GREEN);
             } else {
                 drawer.toggleButton(buyFood, false, Color.RED);
@@ -1325,21 +1320,21 @@ public class Market extends Table {
             drawer.toggleButton(buyRoboticon, false, Color.GRAY);
             //Disable the roboticon purchase button in round 5
 
-            if (engine.currentPlayer().getOreCount() > 0) {
+            if (engine.currentPlayer().getResource(ResourceType.ORE) > 0) {
                 drawer.toggleButton(sellOre, true, Color.GREEN);
             } else {
                 drawer.toggleButton(sellOre, false, Color.RED);
             }
             //Conditionally enable the ore sale button
 
-            if (engine.currentPlayer().getEnergyCount() > 0) {
+            if (engine.currentPlayer().getResource(ResourceType.ENERGY) > 0) {
                 drawer.toggleButton(sellEnergy, true, Color.GREEN);
             } else {
                 drawer.toggleButton(sellEnergy, false, Color.RED);
             }
             //Conditionally enable the energy sale button
 
-            if (engine.currentPlayer().getFoodCount() > 0) {
+            if (engine.currentPlayer().getResource(ResourceType.FOOD) > 0) {
                 drawer.toggleButton(sellFood, true, Color.GREEN);
             } else {
                 drawer.toggleButton(sellFood, false, Color.RED);
@@ -1358,108 +1353,106 @@ public class Market extends Table {
             //Disable the entire market if the game is in one of phases 1, 3 and 4
         }
     }
-    
+
     /**
      * Enables and disables various buttons in the auction based on the players inventory and the value
      * of the current resources and price of the current trade
-    */
+     */
     //new for assessment 3
-    public void refreshAuction(){
-    	drawer.toggleButton(playerBuyOre, false, Color.GRAY);
-    	drawer.toggleButton(playerSellOre, false, Color.GRAY);
-    	drawer.toggleButton(playerBuyFood, false, Color.GRAY);
-    	drawer.toggleButton(playerSellFood, false, Color.GRAY);
-    	drawer.toggleButton(playerBuyEnergy, false, Color.GRAY);
-    	drawer.toggleButton(playerSellEnergy, false, Color.GRAY);
-    	drawer.toggleButton(pricePlus1, false, Color.GRAY);
-    	drawer.toggleButton(pricePlus10, false, Color.GRAY);
-    	drawer.toggleButton(pricePlus100, false, Color.GRAY);
-    	drawer.toggleButton(priceMinus1, false, Color.GRAY);
-    	drawer.toggleButton(priceMinus10, false, Color.GRAY);
-    	drawer.toggleButton(priceMinus100, false, Color.GRAY);
-    	drawer.toggleButton(confirmSale, false, Color.GRAY);
-    	drawer.toggleButton(nextPlayerButton, false, Color.GRAY);
-    	drawer.toggleButton(prevPlayerButton, false, Color.GRAY);
-    	tradePriceLabel.setText("" + tradePrice);
-    	oreTradeLabel.setText("Ore:        " + oreTradeAmount);
-    	foodTradeLabel.setText("Food:      " + foodTradeAmount);
-    	energyTradeLabel.setText("Energy:   " + energyTradeAmount);
-    	if (engine.phase() == 5){
-    		drawer.toggleButton(pricePlus1, true, Color.WHITE);
-        	drawer.toggleButton(pricePlus10, true, Color.WHITE);
-        	drawer.toggleButton(pricePlus100, true, Color.WHITE);
-        	drawer.toggleButton(confirmSale, true, Color.RED);
-        	if (tradePrice >= 100){
-        		drawer.toggleButton(priceMinus1, true, Color.WHITE);
-        		drawer.toggleButton(priceMinus10, true, Color.WHITE);
-        		drawer.toggleButton(priceMinus100, true, Color.WHITE);
-        	}
-        	else if (tradePrice >= 10){
-        		drawer.toggleButton(priceMinus1, true, Color.WHITE);
-        		drawer.toggleButton(priceMinus10, true, Color.WHITE);
-        	}
-        	else if (tradePrice >= 1){
-        		drawer.toggleButton(priceMinus1, true, Color.WHITE);
-        	}
-        	
-        	if (engine.currentPlayer().getOreCount() > oreTradeAmount){
-        		drawer.toggleButton(playerBuyOre, true, Color.WHITE);
-        	}
-        	if (engine.currentPlayer().getEnergyCount() > energyTradeAmount){
-        		drawer.toggleButton(playerBuyEnergy, true, Color.WHITE);
-        	}
-        	if (engine.currentPlayer().getFoodCount() > foodTradeAmount){
-        		drawer.toggleButton(playerBuyFood, true, Color.WHITE);
-        	}
-        	if(otherPlayer.size - 1 > playerListPosition){
-        		drawer.toggleButton(nextPlayerButton, true, Color.WHITE);
-        	}
-        	if(playerListPosition > 0){
-        		drawer.toggleButton(prevPlayerButton, true, Color.WHITE);
-        	}
-        	if (oreTradeAmount > 0)  drawer.toggleButton(playerSellOre, true, Color.WHITE);
-        	if (energyTradeAmount > 0)  drawer.toggleButton(playerSellEnergy, true, Color.WHITE);
-        	if (foodTradeAmount > 0)  drawer.toggleButton(playerSellFood, true, Color.WHITE);
-        	if (oreTradeAmount > 0 ||energyTradeAmount > 0 || foodTradeAmount > 0 || tradePrice > 0) 
-        		drawer.toggleButton(confirmSale, true, Color.GREEN);
-        	
-    	}
+    public void refreshAuction() {
+        drawer.toggleButton(playerBuyOre, false, Color.GRAY);
+        drawer.toggleButton(playerSellOre, false, Color.GRAY);
+        drawer.toggleButton(playerBuyFood, false, Color.GRAY);
+        drawer.toggleButton(playerSellFood, false, Color.GRAY);
+        drawer.toggleButton(playerBuyEnergy, false, Color.GRAY);
+        drawer.toggleButton(playerSellEnergy, false, Color.GRAY);
+        drawer.toggleButton(pricePlus1, false, Color.GRAY);
+        drawer.toggleButton(pricePlus10, false, Color.GRAY);
+        drawer.toggleButton(pricePlus100, false, Color.GRAY);
+        drawer.toggleButton(priceMinus1, false, Color.GRAY);
+        drawer.toggleButton(priceMinus10, false, Color.GRAY);
+        drawer.toggleButton(priceMinus100, false, Color.GRAY);
+        drawer.toggleButton(confirmSale, false, Color.GRAY);
+        drawer.toggleButton(nextPlayerButton, false, Color.GRAY);
+        drawer.toggleButton(prevPlayerButton, false, Color.GRAY);
+        tradePriceLabel.setText("" + tradePrice);
+        oreTradeLabel.setText("Ore:        " + oreTradeAmount);
+        foodTradeLabel.setText("Food:      " + foodTradeAmount);
+        energyTradeLabel.setText("Energy:   " + energyTradeAmount);
+        if (engine.phase() == 5) {
+            drawer.toggleButton(pricePlus1, true, Color.WHITE);
+            drawer.toggleButton(pricePlus10, true, Color.WHITE);
+            drawer.toggleButton(pricePlus100, true, Color.WHITE);
+            drawer.toggleButton(confirmSale, true, Color.RED);
+            if (tradePrice >= 100) {
+                drawer.toggleButton(priceMinus1, true, Color.WHITE);
+                drawer.toggleButton(priceMinus10, true, Color.WHITE);
+                drawer.toggleButton(priceMinus100, true, Color.WHITE);
+            } else if (tradePrice >= 10) {
+                drawer.toggleButton(priceMinus1, true, Color.WHITE);
+                drawer.toggleButton(priceMinus10, true, Color.WHITE);
+            } else if (tradePrice >= 1) {
+                drawer.toggleButton(priceMinus1, true, Color.WHITE);
+            }
+
+            if (engine.currentPlayer().getResource(ResourceType.ORE) > oreTradeAmount) {
+                drawer.toggleButton(playerBuyOre, true, Color.WHITE);
+            }
+            if (engine.currentPlayer().getResource(ResourceType.ENERGY) > energyTradeAmount) {
+                drawer.toggleButton(playerBuyEnergy, true, Color.WHITE);
+            }
+            if (engine.currentPlayer().getResource(ResourceType.FOOD) > foodTradeAmount) {
+                drawer.toggleButton(playerBuyFood, true, Color.WHITE);
+            }
+            if (otherPlayer.size - 1 > playerListPosition) {
+                drawer.toggleButton(nextPlayerButton, true, Color.WHITE);
+            }
+            if (playerListPosition > 0) {
+                drawer.toggleButton(prevPlayerButton, true, Color.WHITE);
+            }
+            if (oreTradeAmount > 0) drawer.toggleButton(playerSellOre, true, Color.WHITE);
+            if (energyTradeAmount > 0) drawer.toggleButton(playerSellEnergy, true, Color.WHITE);
+            if (foodTradeAmount > 0) drawer.toggleButton(playerSellFood, true, Color.WHITE);
+            if (oreTradeAmount > 0 || energyTradeAmount > 0 || foodTradeAmount > 0 || tradePrice > 0)
+                drawer.toggleButton(confirmSale, true, Color.GREEN);
+
+        }
     }
-    
+
     /**
      * updates the other player list so all players except the current player are in it
      */
     //all below is new for assessment 3
-    public void refreshPlayers(){
-    	otherPlayer = new Array<Player>();
+    public void refreshPlayers() {
+        otherPlayer = new Array<Player>();
         for (Player player : engine.players()) {
             if (player != null && engine.currentPlayer() != player) {
-                otherPlayer.add(player); 
-            } 
+                otherPlayer.add(player);
+            }
         }
         playerLabel.setText("Player " + otherPlayer.get(0).getPlayerNumber());
     }
-    
-    
-	public void setPlayerListPosition(int i) {
-		playerListPosition = i;
-		
-	}
-	
-	/**
-	 * allows the market to get it's inventory of roboticons up to 10 so long as it has
-	 * at least 10 ore, each roboticon costs 3 ore
-	 */
-	public void produceRoboticon(){
-		while (this.OreStock > 10 && RoboticonStock < 10 ){
-			OreStock -= 3;
-			oreStockLabel.setText("" + getOreStock());
-			RoboticonStock += 1;
-			roboticonStockLabel.setText("" + RoboticonStock);
-			refreshButtonAvailability();
 
-		}
-	}
+
+    public void setPlayerListPosition(int i) {
+        playerListPosition = i;
+
+    }
+
+    /**
+     * allows the market to get it's inventory of roboticons up to 10 so long as it has
+     * at least 10 ore, each roboticon costs 3 ore
+     */
+    public void produceRoboticon() {
+        while (this.OreStock > 10 && RoboticonStock < 10) {
+            OreStock -= 3;
+            oreStockLabel.setText("" + getOreStock());
+            RoboticonStock += 1;
+            roboticonStockLabel.setText("" + RoboticonStock);
+            refreshButtonAvailability();
+
+        }
+    }
 }
 
 

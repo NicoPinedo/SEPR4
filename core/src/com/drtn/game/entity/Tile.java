@@ -216,23 +216,26 @@ public class Tile extends Button {
      */
     public void produce() {
         if (roboticonStored != null && owner != null) {
+
             if ((owner.getResource(ResourceType.ENERGY) >= 3) && (owner.getResource(ResourceType.FOOD) >= 2)) {
                 //TODO: why are these negative? - Kieran
-                owner.varyResource("Energy", -3);
-                owner.varyResource( "Food", -2);
+                owner.varyResource(ResourceType.ENERGY, -3);
+                owner.varyResource(ResourceType.FOOD, -2);
+
             int[] modifiers = this.roboticonStored.productionModifier();
+
             int OreProduce = modifiers[0] * this.OreCount;
-            owner.varyResource("Ore", OreProduce);
+                owner.varyResource(ResourceType.ORE, OreProduce);
             //Add the tile's ore yields to the owner's resource-counters
                 System.out.println("Ore produced: " + OreProduce);
 
             int EnergyProduce = modifiers[1] * this.EnergyCount;
-            owner.varyResource("Energy", EnergyProduce);
+                owner.varyResource(ResourceType.ENERGY, EnergyProduce);
             //Add the tile's energy yields to the owner's resource-counters
                 System.out.println("Energy produced: " + EnergyProduce);
 
             int FoodProduce = modifiers[2] * this.FoodCount;
-            owner.varyResource("Food", FoodProduce);
+                owner.varyResource(ResourceType.FOOD, FoodProduce);
             //Add the tile's food yields to the owner's resource-counters
                 System.out.println("Food produced: " + FoodProduce);
             }

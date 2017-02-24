@@ -2,6 +2,7 @@ package com.drtn.game.entity;
 
 import com.drtn.game.GameEngine;
 import com.drtn.game.Trade;
+import com.drtn.game.enums.ResourceType;
 import com.drtn.game.screens.GameScreen;
 
 import java.util.Random;
@@ -67,7 +68,7 @@ public class AiPlayer extends Player {
 
             // Buy roboticon
             case 2:
-                while(market.getRoboticonStock() > 1 && market.getRoboticonBuyPrice() < getMoney()) {
+                while (market.getRoboticonStock() > 1 && market.getRoboticonBuyPrice() < getResource(ResourceType.MONEY)) {
                     try {
                         System.out.println("AI: Bought a roboticon at price $" + market.getRoboticonBuyPrice());
                         market.buy("roboticon", 1, this);
@@ -101,19 +102,19 @@ public class AiPlayer extends Player {
 
             // Market
             case 5:
-                while(getMoney() < market.getRoboticonBuyPrice() + 20) {
+                while (getResource(ResourceType.MONEY) < market.getRoboticonBuyPrice() + 20) {
                     try {
-                        if (getOreCount() > 0) {
+                        if (getResource(ResourceType.ORE) > 0) {
                             market.sell("ore", 1, this);
                         }
-                        if (getEnergyCount() > 0) {
+                        if (getResource(ResourceType.ENERGY) > 0) {
                             market.sell("energy", 1, this);
                         }
-                        if (getFoodCount() > 0) {
+                        if (getResource(ResourceType.FOOD) > 0) {
                             market.sell("food", 1, this);
                         }
 
-                        if (getEnergyCount() + getOreCount() + getFoodCount() == 0)
+                        if (getResource(ResourceType.ENERGY) + getResource(ResourceType.ORE) + getResource(ResourceType.FOOD) == 0)
                             break;
                     } catch (Exception e) {
                         e.printStackTrace();
