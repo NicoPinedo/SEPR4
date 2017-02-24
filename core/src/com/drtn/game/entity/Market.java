@@ -449,7 +449,7 @@ public class Market extends Table {
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
 
                 try {
-                    engine.updateCurrentPlayer(sell("energy", 1, engine.currentPlayer()));
+                    engine.updateCurrentPlayer(sell(ResourceType.ENERGY, 1, engine.currentPlayer()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -467,7 +467,7 @@ public class Market extends Table {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 try {
-                    engine.updateCurrentPlayer(sell("ore", 1, engine.currentPlayer()));
+                    engine.updateCurrentPlayer(sell(ResourceType.ORE, 1, engine.currentPlayer()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -485,7 +485,7 @@ public class Market extends Table {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 try {
-                    engine.updateCurrentPlayer(sell("food", 1, engine.currentPlayer()));
+                    engine.updateCurrentPlayer(sell(ResourceType.FOOD, 1, engine.currentPlayer()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1041,6 +1041,7 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
+    //TODO: change to case switch not if
     public Player buy(String Stock_Type, int Quantity, Player Player) throws Exception {
         if ("ore".equals(Stock_Type)) {
             if (Quantity <= OreStock) {
@@ -1140,6 +1141,7 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
+    //TODO: Change to case switch not if
     public Player sell(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
         int playersMoney = Player.getResource(ResourceType.MONEY);
         if ("ore".equals(Stock_Type)) {

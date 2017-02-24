@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.drtn.game.GameEngine;
 import com.drtn.game.entity.Player;
+import com.drtn.game.enums.ResourceType;
 import com.drtn.game.util.TTFont;
 import com.teamfractal.util.screens.AbstractAnimationScreen;
 
@@ -101,15 +102,15 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
                 System.out.println(choose_gift.toString());
                 switch (choose_gift) {
                     case money:
-                        GameEngine.getInstance().currentPlayer().setMoney(GameEngine.getInstance().currentPlayer().getMoney() - 20);
-                        player.setMoney(player.getMoney() + 100);
+                        GameEngine.getInstance().currentPlayer().setResource(ResourceType.MONEY, GameEngine.getInstance().currentPlayer().getResource(ResourceType.MONEY) - 20);
+                        player.setResource(ResourceType.MONEY, player.getResource(ResourceType.MONEY) + 100);
                         break;
                     case robotcoin:
-                        GameEngine.getInstance().currentPlayer().setMoney(GameEngine.getInstance().currentPlayer().getMoney() - 20);
+                        GameEngine.getInstance().currentPlayer().setResource(ResourceType.MONEY, GameEngine.getInstance().currentPlayer().getResource(ResourceType.MONEY) - 20);
                         player.increaseRoboticonInventory();
                         break;
                     case lose_money:
-                        GameEngine.getInstance().currentPlayer().setMoney(GameEngine.getInstance().currentPlayer().getMoney() - 20);
+                        GameEngine.getInstance().currentPlayer().setResource(ResourceType.MONEY, GameEngine.getInstance().currentPlayer().getResource(ResourceType.MONEY) - 20);
                         break;
                 }
 

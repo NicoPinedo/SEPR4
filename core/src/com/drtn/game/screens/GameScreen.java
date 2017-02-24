@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.drtn.game.GameEngine;
 import com.drtn.game.Trade;
 import com.drtn.game.entity.Tile;
+import com.drtn.game.enums.ResourceType;
 import com.drtn.game.util.Drawer;
 import com.drtn.game.util.LabelledElement;
 import com.drtn.game.util.Overlay;
@@ -406,7 +407,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         miniGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (engine.currentPlayer().getMoney() >= 20){
+                if (engine.currentPlayer().getResource(ResourceType.MONEY) >= 20) {
                     engine.miniGame();
                 }
                 else{
@@ -601,15 +602,15 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
 
         Table resourceCounters = new Table();
-        foodCounter = new Label("" + engine.currentPlayer().getFoodCount(), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        foodCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.FOOD), new Label.LabelStyle(gameFont.font(), Color.WHITE));
         foodCounter.setAlignment(Align.right);
-        energyCounter = new Label("" + engine.currentPlayer().getEnergyCount(), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        energyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ENERGY), new Label.LabelStyle(gameFont.font(), Color.WHITE));
         energyCounter.setAlignment(Align.right);
-        oreCounter = new Label("" + engine.currentPlayer().getOreCount(), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        oreCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ORE), new Label.LabelStyle(gameFont.font(), Color.WHITE));
         oreCounter.setAlignment(Align.right);
         roboticonCounter = new Label("" + engine.currentPlayer().getRoboticonInventory(), new Label.LabelStyle(gameFont.font(), Color.WHITE));
         roboticonCounter.setAlignment(Align.right);
-        moneyCounter = new Label("" + engine.currentPlayer().getMoney(), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        moneyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.MONEY), new Label.LabelStyle(gameFont.font(), Color.WHITE));
         moneyCounter.setAlignment(Align.right);
 
         drawer.addTableRow(resourceCounters, new LabelledElement("Food", gameFont, Color.WHITE, foodCounter, 100, 40));
@@ -1155,10 +1156,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * This is typically called when the active player switches or when a market transaction is made
      */
     public void updateInventoryLabels(){
-        setFoodCounterValue(engine.currentPlayer().getFoodCount());
-        setEnergyCounterValue(engine.currentPlayer().getEnergyCount());
-        setOreCounterValue(engine.currentPlayer().getOreCount());
-        setMoneyCounterValue(engine.currentPlayer().getMoney());
+        setFoodCounterValue(engine.currentPlayer().getResource(ResourceType.FOOD));
+        setEnergyCounterValue(engine.currentPlayer().getResource(ResourceType.ENERGY));
+        setOreCounterValue(engine.currentPlayer().getResource(ResourceType.ORE));
+        setMoneyCounterValue(engine.currentPlayer().getResource(ResourceType.MONEY));
         setRoboticonCounterValue(engine.currentPlayer().getRoboticonInventory());
     }
 
@@ -1171,21 +1172,21 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         foodUpgradeButton.setText(String.valueOf(engine.selectedTile().getRoboticonStored().getFoodUpgradeCost()));
         //Refresh prices shown on upgrade screen
 
-        if (engine.currentPlayer().getMoney() >= engine.selectedTile().getRoboticonStored().getOreUpgradeCost()) {
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.selectedTile().getRoboticonStored().getOreUpgradeCost()) {
             drawer.toggleButton(oreUpgradeButton, true, Color.GREEN);
         } else {
             drawer.toggleButton(oreUpgradeButton, false, Color.RED);
         }
         //Conditionally enable ore upgrade button
 
-        if (engine.currentPlayer().getMoney() >= engine.selectedTile().getRoboticonStored().getEnergyUpgradeCost()) {
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.selectedTile().getRoboticonStored().getEnergyUpgradeCost()) {
             drawer.toggleButton(energyUpgradeButton, true, Color.GREEN);
         } else {
             drawer.toggleButton(energyUpgradeButton, false, Color.RED);
         }
         //Conditionally enable energy upgrade button
 
-        if (engine.currentPlayer().getMoney() >= engine.selectedTile().getRoboticonStored().getFoodUpgradeCost()) {
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.selectedTile().getRoboticonStored().getFoodUpgradeCost()) {
             drawer.toggleButton(foodUpgradeButton, true, Color.GREEN);
         } else {
             drawer.toggleButton(foodUpgradeButton, false, Color.RED);

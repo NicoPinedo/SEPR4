@@ -105,13 +105,13 @@ public class AiPlayer extends Player {
                 while (getResource(ResourceType.MONEY) < market.getRoboticonBuyPrice() + 20) {
                     try {
                         if (getResource(ResourceType.ORE) > 0) {
-                            market.sell("ore", 1, this);
+                            market.sell(ResourceType.ORE, 1, this);
                         }
                         if (getResource(ResourceType.ENERGY) > 0) {
-                            market.sell("energy", 1, this);
+                            market.sell(ResourceType.ENERGY, 1, this);
                         }
                         if (getResource(ResourceType.FOOD) > 0) {
-                            market.sell("food", 1, this);
+                            market.sell(ResourceType.FOOD, 1, this);
                         }
 
                         if (getResource(ResourceType.ENERGY) + getResource(ResourceType.ORE) + getResource(ResourceType.FOOD) == 0)
