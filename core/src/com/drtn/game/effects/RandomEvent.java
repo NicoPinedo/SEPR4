@@ -5,6 +5,7 @@ import com.drtn.game.screens.GameScreen;
 import java.util.Random;
 
 // This class was implemented during Assessment 3.
+//TODO: Update with our events
 
 public abstract class RandomEvent {
 
