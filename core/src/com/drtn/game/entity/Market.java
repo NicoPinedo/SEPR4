@@ -1043,87 +1043,97 @@ public class Market extends Table {
      */
     //TODO: change to case switch not if
     public Player buy(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
-        if (ResourceType.ORE.equals(Stock_Type)) {
-            if (Quantity <= OreStock) {
-                int OrePrice = OreBuyPrice * Quantity;
-                if (Player.getResource(ResourceType.MONEY) >= OrePrice) {
-                    OreStock -= Quantity;
-                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - OrePrice);
-                    int playersOre = Player.getResource(ResourceType.ORE);
-                    playersOre += Quantity;
-                    Player.setResource(ResourceType.ORE, playersOre);
-                    OreBuyPrice = calculateNewCost(OreStock, "buy");
-                    OreSellPrice = calculateNewCost(OreStock, "sell");
-                    oreStockLabel.setText("" + getOreStock());
-                    buyOre.setText("-" + getOreBuyPrice());
-                } else {
-                    throw new Exception("Insufficient money");
-                }
-            } else {
-                throw new Exception("Insufficient resources");
-            }
-        } else if (ResourceType.FOOD.equals(Stock_Type)) {
-            if (Quantity <= FoodStock) {
-                int FoodPrice = FoodBuyPrice * Quantity;
-                if (Player.getResource(ResourceType.MONEY) >= FoodPrice) {
-                    FoodStock -= Quantity;
-                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - FoodPrice);
-                    int playersFood = Player.getResource(ResourceType.FOOD);
-                    playersFood += Quantity;
-                    Player.setResource(ResourceType.FOOD, playersFood);
-                    FoodBuyPrice = calculateNewCost(FoodStock, "buy");
-                    FoodSellPrice = calculateNewCost(FoodStock, "sell");
-                    foodStockLabel.setText("" + getFoodStock());
-                    buyFood.setText("-" + getFoodBuyPrice());
-                } else {
-                    throw new Exception("Insufficient money");
-                }
+        switch (Stock_Type) {
 
-            } else {
-                throw new Exception("Insufficient resources");
-            }
-        } else if (ResourceType.ENERGY.equals(Stock_Type)) {
-            if (Quantity <= EnergyStock) {
-                int EnergyPrice = EnergyBuyPrice * Quantity;
-                if (Player.getResource(ResourceType.MONEY) >= EnergyPrice) {
-                    EnergyStock -= Quantity;
-                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - EnergyPrice);
-                    int playersEnergy = Player.getResource(ResourceType.ENERGY);
-                    playersEnergy += Quantity;
-                    Player.setResource(ResourceType.ENERGY, playersEnergy);
-                    EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
-                    EnergySellPrice = calculateNewCost(EnergyStock, "sell");
-                    energyStockLabel.setText("" + getEnergyStock());
-                    buyEnergy.setText("-" + getEnergyBuyPrice());
+            case ORE:
+                if (Quantity <= OreStock) {
+                    int OrePrice = OreBuyPrice * Quantity;
+                    if (Player.getResource(ResourceType.MONEY) >= OrePrice) {
+                        OreStock -= Quantity;
+                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - OrePrice);
+                        int playersOre = Player.getResource(ResourceType.ORE);
+                        playersOre += Quantity;
+                        Player.setResource(ResourceType.ORE, playersOre);
+                        OreBuyPrice = calculateNewCost(OreStock, "buy");
+                        OreSellPrice = calculateNewCost(OreStock, "sell");
+                        oreStockLabel.setText("" + getOreStock());
+                        buyOre.setText("-" + getOreBuyPrice());
+                    } else {
+                        throw new Exception("Insufficient money");
+                    }
                 } else {
-                    throw new Exception("Insufficient money");
+                    throw new Exception("Insufficient resources");
                 }
-            } else {
-                throw new Exception("Insufficient resources");
-            }
-        } else if (ResourceType.ROBOTICON.equals(Stock_Type)) {
-            if (RoboticonStock > 0) {
-                if (Player.getResource(ResourceType.MONEY) >= RoboticonBuyPrice) {
-                    RoboticonStock -= 1;
-                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - RoboticonBuyPrice);
-                    RoboticonBuyPrice += 5;
-                    Player.increaseRoboticonInventory();
+                break;
 
-                    roboticonStockLabel.setText("" + this.getRoboticonStock());
-                    buyRoboticon.setText("-" + getRoboticonBuyPrice());
+            case FOOD:
+                if (Quantity <= FoodStock) {
+                    int FoodPrice = FoodBuyPrice * Quantity;
+                    if (Player.getResource(ResourceType.MONEY) >= FoodPrice) {
+                        FoodStock -= Quantity;
+                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - FoodPrice);
+                        int playersFood = Player.getResource(ResourceType.FOOD);
+                        playersFood += Quantity;
+                        Player.setResource(ResourceType.FOOD, playersFood);
+                        FoodBuyPrice = calculateNewCost(FoodStock, "buy");
+                        FoodSellPrice = calculateNewCost(FoodStock, "sell");
+                        foodStockLabel.setText("" + getFoodStock());
+                        buyFood.setText("-" + getFoodBuyPrice());
+                    } else {
+                        throw new Exception("Insufficient money");
+                    }
+
                 } else {
-                    throw new Exception("Insufficient money");
+                    throw new Exception("Insufficient resources");
                 }
-            } else {
-                throw new Exception("No available Roboticons");
-            }
-        } else {
+                break;
 
-            throw new Exception("Wrong Stock_Type passed");
+            case ENERGY:
+                if (Quantity <= EnergyStock) {
+                    int EnergyPrice = EnergyBuyPrice * Quantity;
+                    if (Player.getResource(ResourceType.MONEY) >= EnergyPrice) {
+                        EnergyStock -= Quantity;
+                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - EnergyPrice);
+                        int playersEnergy = Player.getResource(ResourceType.ENERGY);
+                        playersEnergy += Quantity;
+                        Player.setResource(ResourceType.ENERGY, playersEnergy);
+                        EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
+                        EnergySellPrice = calculateNewCost(EnergyStock, "sell");
+                        energyStockLabel.setText("" + getEnergyStock());
+                        buyEnergy.setText("-" + getEnergyBuyPrice());
+                    } else {
+                        throw new Exception("Insufficient money");
+                    }
+                } else {
+                    throw new Exception("Insufficient resources");
+                }
+                break;
+
+            case ROBOTICON:
+                if (RoboticonStock > 0) {
+                    if (Player.getResource(ResourceType.MONEY) >= RoboticonBuyPrice) {
+                        RoboticonStock -= 1;
+                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - RoboticonBuyPrice);
+                        RoboticonBuyPrice += 5;
+                        Player.increaseRoboticonInventory();
+
+                        roboticonStockLabel.setText("" + this.getRoboticonStock());
+                        buyRoboticon.setText("-" + getRoboticonBuyPrice());
+                    } else {
+                        throw new Exception("Insufficient money");
+                    }
+                } else {
+                    throw new Exception("No available Roboticons");
+                }
+                break;
+            default:
+
+                throw new Exception("Wrong Stock_Type passed");
+
+                return Player;
+
+
         }
-        return Player;
-
-
     }
 
 
