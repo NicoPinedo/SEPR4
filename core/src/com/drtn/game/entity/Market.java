@@ -368,7 +368,7 @@ public class Market extends Table {
                 refreshAuction();
             }
         });
-        /**
+        /*
          * Button that attempts to buy a Roboticon for the current player when clicked on
          */
         buyRoboticon = new TextButton("-" + getRoboticonBuyPrice(), tableButtonStyle);
@@ -387,7 +387,7 @@ public class Market extends Table {
         });
         //Set the button for purchasing Roboticons to do just that (but only when the game is in phase 2)
 
-        /**
+        /*
          * Button that attempts to buy a unit of ore for the current player when clicked on
          */
         buyOre = new TextButton("-" + getOreBuyPrice(), tableButtonStyle);
@@ -405,7 +405,7 @@ public class Market extends Table {
         });
         //Set the button for purchasing ore to do just that (but only when the game is in phase 5)
 
-        /**
+        /*
          * Button that attempts to buy a unit of food for the current player when clicked on
          */
         buyFood = new TextButton("-" + getFoodBuyPrice(), tableButtonStyle);
@@ -422,7 +422,7 @@ public class Market extends Table {
         });
         //Set the button for purchasing food to do just that (but only when the game is in phase 5)
 
-        /**
+        /*
          * Button that attempts to buy a unit of energy for the current player when clicked on
          */
         buyEnergy = new TextButton("-" + getEnergyBuyPrice(), tableButtonStyle);
@@ -439,7 +439,7 @@ public class Market extends Table {
         });
         //Set the button for purchasing energy to do just that (but only when the game is in phase 5)
 
-        /**
+        /*
          * Button that attempts to take a unit of energy from the player's inventory and sell it back to the market
          * when clicked on
          */
@@ -458,7 +458,7 @@ public class Market extends Table {
         });
         //Set the button for selling energy to do just that (but only when the game is in phase 5)
 
-        /**
+        /*
          * Button that attempts to take a unit of ore from the player's inventory and sell it back to the market
          * when clicked on
          */
@@ -476,7 +476,7 @@ public class Market extends Table {
         });
         //Set the button for selling ore to do just that (but only when the game is in phase 5)
 
-        /**
+        /*
          * Button that attempts to take a unit of food from the player's inventory and sell it back to the market
          * when clicked on
          */
@@ -824,7 +824,7 @@ public class Market extends Table {
      *
      * @return int The number of Roboticons currently held in the market
      */
-    public int getRoboticonStock() {
+    int getRoboticonStock() {
         return this.RoboticonStock;
     }
 
@@ -844,7 +844,7 @@ public class Market extends Table {
      *
      * @return this.RoboticonBuyPrice is integer roboticon buy price value
      */
-    public int getRoboticonBuyPrice() {
+    int getRoboticonBuyPrice() {
         return this.RoboticonBuyPrice;
     }
 
@@ -1041,7 +1041,6 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
-    //TODO: change to case switch not if
     public Player buy(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
         switch (Stock_Type) {
 
@@ -1129,11 +1128,10 @@ public class Market extends Table {
             default:
 
                 throw new Exception("Wrong Stock_Type passed");
-
-                return Player;
-
-
         }
+        return Player;
+
+
     }
 
 
@@ -1151,57 +1149,63 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
-    //TODO: Change to case switch not if
     public Player sell(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
         int playersMoney = Player.getResource(ResourceType.MONEY);
-        if (ResourceType.ORE.equals(Stock_Type)) {
-            int playersOre = Player.getResource(ResourceType.ORE);
-            if (playersOre >= Quantity) {
-                OreStock += Quantity;
-                playersMoney += Quantity * OreSellPrice;
-                Player.setResource(ResourceType.MONEY, playersMoney);
-                playersOre -= Quantity;
-                Player.setResource(ResourceType.ORE, playersOre);
 
-                OreBuyPrice = calculateNewCost(OreStock, "buy");
-                OreSellPrice = calculateNewCost(OreStock, "sell");
-                oreStockLabel.setText("" + getOreStock());
-                sellOre.setText("+" + getOreSellPrice());
-            } else {
-                throw new Exception("Insufficient resources");
+        switch (Stock_Type) {
+            case ORE:
+                int playersOre = Player.getResource(ResourceType.ORE);
+                if (playersOre >= Quantity) {
+                    OreStock += Quantity;
+                    playersMoney += Quantity * OreSellPrice;
+                    Player.setResource(ResourceType.MONEY, playersMoney);
+                    playersOre -= Quantity;
+                    Player.setResource(ResourceType.ORE, playersOre);
 
-            }
-        } else if (ResourceType.FOOD.equals(Stock_Type)) {
-            int playersFood = Player.getResource(ResourceType.FOOD);
-            if (playersFood >= Quantity) {
+                    OreBuyPrice = calculateNewCost(OreStock, "buy");
+                    OreSellPrice = calculateNewCost(OreStock, "sell");
+                    oreStockLabel.setText("" + getOreStock());
+                    sellOre.setText("+" + getOreSellPrice());
+                } else {
+                    throw new Exception("Insufficient resources");
 
-                FoodStock += Quantity;
-                playersMoney += Quantity * FoodSellPrice;
-                Player.setResource(ResourceType.MONEY, playersMoney);
-                playersFood -= Quantity;
-                Player.setResource(ResourceType.FOOD, playersFood);
-                FoodBuyPrice = calculateNewCost(FoodStock, "buy");
-                FoodSellPrice = calculateNewCost(FoodStock, "sell");
-                foodStockLabel.setText("" + getFoodStock());
-                sellFood.setText("+" + getFoodSellPrice());
-            } else {
-                throw new Exception("Insufficient resources");
-            }
-        } else if (ResourceType.ENERGY.equals(Stock_Type)) {
-            int playersEnergy = Player.getResource(ResourceType.ENERGY);
-            if (playersEnergy >= Quantity) {
-                EnergyStock += Quantity;
-                playersMoney += Quantity * EnergySellPrice;
-                Player.setResource(ResourceType.MONEY, playersMoney);
-                playersEnergy -= Quantity;
-                Player.setResource(ResourceType.ENERGY, playersEnergy);
-                EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
-                EnergySellPrice = calculateNewCost(EnergyStock, "sell");
-                energyStockLabel.setText("" + getEnergyStock());
-                sellEnergy.setText("+" + getEnergySellPrice());
-            } else {
-                throw new Exception("Insufficient resources");
-            }
+                }
+                break;
+            case FOOD:
+                int playersFood = Player.getResource(ResourceType.FOOD);
+                if (playersFood >= Quantity) {
+
+                    FoodStock += Quantity;
+                    playersMoney += Quantity * FoodSellPrice;
+                    Player.setResource(ResourceType.MONEY, playersMoney);
+                    playersFood -= Quantity;
+                    Player.setResource(ResourceType.FOOD, playersFood);
+                    FoodBuyPrice = calculateNewCost(FoodStock, "buy");
+                    FoodSellPrice = calculateNewCost(FoodStock, "sell");
+                    foodStockLabel.setText("" + getFoodStock());
+                    sellFood.setText("+" + getFoodSellPrice());
+                } else {
+                    throw new Exception("Insufficient resources");
+                }
+                break;
+            case ENERGY:
+                int playersEnergy = Player.getResource(ResourceType.ENERGY);
+                if (playersEnergy >= Quantity) {
+                    EnergyStock += Quantity;
+                    playersMoney += Quantity * EnergySellPrice;
+                    Player.setResource(ResourceType.MONEY, playersMoney);
+                    playersEnergy -= Quantity;
+                    Player.setResource(ResourceType.ENERGY, playersEnergy);
+                    EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
+                    EnergySellPrice = calculateNewCost(EnergyStock, "sell");
+                    energyStockLabel.setText("" + getEnergyStock());
+                    sellEnergy.setText("+" + getEnergySellPrice());
+                } else {
+                    throw new Exception("Insufficient resources");
+                }
+                break;
+            default:
+                //Roboticon or Money passed, both invalid here
 
         }
         return Player;
