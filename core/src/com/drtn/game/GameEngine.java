@@ -10,6 +10,7 @@ import com.drtn.game.effects.Earthquake;
 import com.drtn.game.effects.Malfunction;
 import com.drtn.game.effects.RandomEvent;
 import com.drtn.game.entity.*;
+import com.drtn.game.enums.ResourceType;
 import com.drtn.game.screens.GameScreen;
 import com.drtn.game.screens.MiniGameScreen;
 import com.drtn.game.util.Drawer;
@@ -610,18 +611,19 @@ public class GameEngine {
          else if (selectedTile().getRoboticonStored().getLevel()[resource] < selectedTile().getRoboticonStored().getMaxLevel()) {
             switch (resource) {
                 case (0):
-                    currentPlayer().setMoney(currentPlayer().getMoney() - selectedTile.getRoboticonStored().getOreUpgradeCost());
+                    currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getOreUpgradeCost());
                     break;
                 case (1):
-                    currentPlayer().setMoney(currentPlayer().getMoney() - selectedTile.getRoboticonStored().getEnergyUpgradeCost());
+                    currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getEnergyUpgradeCost());
                     break;
                 case (2):
-                    currentPlayer().setMoney(currentPlayer().getMoney() - selectedTile.getRoboticonStored().getFoodUpgradeCost());
+                    currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getFoodUpgradeCost());
                     break;
             }
 
             selectedTile().getRoboticonStored().upgrade(resource);
         }
+        //TODO: change this to the enum
         //Upgrade the specified resource
         //0: ORE
         //1: ENERGY

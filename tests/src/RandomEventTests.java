@@ -5,6 +5,7 @@ import com.drtn.game.effects.Earthquake;
 import com.drtn.game.effects.Malfunction;
 import com.drtn.game.entity.Roboticon;
 import com.drtn.game.entity.Tile;
+import com.drtn.game.enums.ResourceType;
 import com.drtn.game.screens.GameScreen;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,9 +49,9 @@ public class RandomEventTests extends TesterFile {
 
 
         for (int tile = 0; tile < tilesDamagedBeforeQuake.size(); tile++) {
-            assertEquals(tilesDamagedBeforeQuake.get(tile).getOreCount() / tileDamageValue, tileDamagedAfterQuake.get(tile).getOreCount());
-            assertEquals(tilesDamagedBeforeQuake.get(tile).getEnergyCount() / tileDamageValue, tileDamagedAfterQuake.get(tile).getEnergyCount());
-            assertEquals(tilesDamagedBeforeQuake.get(tile).getFoodCount() / tileDamageValue, tileDamagedAfterQuake.get(tile).getFoodCount());
+            assertEquals(tilesDamagedBeforeQuake.get(tile).getResource(ResourceType.ORE) / tileDamageValue, tileDamagedAfterQuake.get(tile).getResource(ResourceType.ORE));
+            assertEquals(tilesDamagedBeforeQuake.get(tile).getResource(ResourceType.ENERGY) / tileDamageValue, tileDamagedAfterQuake.get(tile).getResource(ResourceType.ENERGY));
+            assertEquals(tilesDamagedBeforeQuake.get(tile).getResource(ResourceType.FOOD) / tileDamageValue, tileDamagedAfterQuake.get(tile).getResource(ResourceType.FOOD));
         }
     }
 
@@ -69,9 +70,9 @@ public class RandomEventTests extends TesterFile {
         ArrayList<Tile> tilesDamagedAferRepair = testEarthquake.getTilesDamaged();
 
         for (int tile = 0; tile < tilesDamagedBeforeQuake.size(); tile++) {
-            assertEquals(tilesDamagedBeforeQuake.get(tile).getOreCount(), tilesDamagedAferRepair.get(tile).getOreCount());
-            assertEquals(tilesDamagedBeforeQuake.get(tile).getEnergyCount(), tilesDamagedAferRepair.get(tile).getEnergyCount());
-            assertEquals(tilesDamagedBeforeQuake.get(tile).getFoodCount(), tilesDamagedAferRepair.get(tile).getFoodCount());
+            assertEquals(tilesDamagedBeforeQuake.get(tile).getResource(ResourceType.ORE), tilesDamagedAferRepair.get(tile).getResource(ResourceType.ORE));
+            assertEquals(tilesDamagedBeforeQuake.get(tile).getResource(ResourceType.ENERGY), tilesDamagedAferRepair.get(tile).getResource(ResourceType.ENERGY));
+            assertEquals(tilesDamagedBeforeQuake.get(tile).getResource(ResourceType.FOOD), tilesDamagedAferRepair.get(tile).getResource(ResourceType.FOOD));
         }
     }
 

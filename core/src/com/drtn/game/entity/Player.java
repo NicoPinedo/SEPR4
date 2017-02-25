@@ -1,6 +1,7 @@
 package com.drtn.game.entity;
 
 import com.drtn.game.Trade;
+import com.drtn.game.enums.ResourceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,77 +77,76 @@ public class Player {
     }
 
     /**
-     * Getter for the money attribute of the player
+     * Unified Getter for resource amounts
      *
-     * @return Current player money amount.
+     * @param type resource requested
+     * @return int value representing the amount of type the player currently have
      */
-    public int getMoney() {
-        return this.money;
-    }
-
-    /**
-     * Setter for the money attribute
-     *
-     * @param newMoney int value corresponding to the new money value desired
-     */
-    public void setMoney(int newMoney) {
-        if (newMoney >= 0) {
-            this.money = newMoney;
+    public int getResource(ResourceType type) {
+        switch (type) {
+            case ENERGY:
+                return this.EnergyCount;
+            case FOOD:
+                return this.FoodCount;
+            case ORE:
+                return this.OreCount;
+            case MONEY:
+                return this.money;
+            default:
+                //Unable to reach this state as a ResourceType must be passed.
+                //TODO: Improve this - Kieran
+                return 0;
         }
     }
 
     /**
-     * Getter for OreCount
+     * Unified Setter for resource amounts
      *
-     * @return this.OreCount the orecount of the player as an integer
+     * @param type     resource being set
+     * @param newCount int value the count should be updated to
      */
-    public int getOreCount() {
-        return this.OreCount;
+    public void setResource(ResourceType type, int newCount) {
+        if (!(newCount < 0)) {
+            switch (type) {
+                case ENERGY:
+                    this.EnergyCount = newCount;
+                    break;
+                case FOOD:
+                    this.FoodCount = newCount;
+                    break;
+                case ORE:
+                    this.OreCount = newCount;
+                    break;
+                case MONEY:
+                    this.money = newCount;
+                default:
+            }
+        }
     }
 
     /**
-     * Setter for Orecount
+     * Unified Setter for resource amounts
      *
-     * @param Newcount int value that the Orecount is set to
+     * @param type  resource being set
+     * @param delta difference to be applied negative for decrease, positive for increase
      */
-    public void setOreCount(int Newcount) {
-        this.OreCount = Newcount;
-    }
+    //TODO: add check to prevent going below 0
+    public void varyResource(ResourceType type, int delta) {
+        switch (type) {
+            case ENERGY:
+                this.EnergyCount += delta;
+                break;
+            case FOOD:
+                this.FoodCount += delta;
+                break;
+            case ORE:
+                this.OreCount += delta;
+                break;
+            case MONEY:
+                this.money += delta;
+            default:
 
-    /**
-     * Getter for EnergyCount
-     *
-     * @return this.EnergyCount the Energycount of the player as an integer
-     */
-    public int getEnergyCount() {
-        return this.EnergyCount;
-    }
-
-    /**
-     * Setter for Energycount
-     *
-     * @param Newcount int value that the Energycount is set to
-     */
-    public void setEnergyCount(int Newcount) {
-        this.EnergyCount = Newcount;
-    }
-
-    /**
-     * Getter for FoodCount
-     *
-     * @return this.FoodCount the Foodcount of the player as an integer
-     */
-    public int getFoodCount() {
-        return this.FoodCount;
-    }
-
-    /**
-     * Setter for Foodcount
-     *
-     * @param Newcount int value that the Foodcount is set to
-     */
-    public void setFoodCount(int Newcount) {
-        this.FoodCount = Newcount;
+        }
     }
 
     /**
@@ -175,25 +175,7 @@ public class Player {
         TileList.add(Tile);
     }
 
-    /**
-     * Increases/decreases the specified resource of the player by the specified amount
-     *
-     * @param resource The resource that is to be modified.
-     * @param amount   The amount that the player's resource is to change by. Negative value for a decrease, positive for an increase.
-     */
 
-    public void varyResource(String resource, int amount) {
-        if (resource.equals("Ore")) {
-            this.OreCount += amount;
-        } else if (resource.equals("Energy")) {
-            this.EnergyCount += amount;
-        } else if (resource.equals("Food")) {
-            this.FoodCount += amount;
-        } else if (resource.equals("Money")) {
-            this.money += amount;
-        }
-
-    }
 
     /**
      * Calculates the score of the player based on the resources that they own.
@@ -221,9 +203,10 @@ public class Player {
 
     /**
      * Getter for Inventory Roboticon Count
+     *
      * @return int value for roboticons in inventory.
      */
-    public int getInventoryRoboticons(){
+    public int getInventoryRoboticons() {
         return this.inventoryRoboticons;
     }
 
@@ -248,9 +231,9 @@ public class Player {
     public Trade getTrade() {
         return this.currentTrade;
     }
-    
+
     //two methods below are new for assessment3
-    public void setTrade(Trade trade){
-    	this.currentTrade = trade;
+    public void setTrade(Trade trade) {
+        this.currentTrade = trade;
     }
 }

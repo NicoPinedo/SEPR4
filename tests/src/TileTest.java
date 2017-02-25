@@ -3,6 +3,7 @@ import com.drtn.game.Main;
 import com.drtn.game.entity.Player;
 import com.drtn.game.entity.Roboticon;
 import com.drtn.game.entity.Tile;
+import com.drtn.game.enums.ResourceType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -34,14 +35,14 @@ public class TileTest extends TesterFile {
      */
     @Test
     public void testProduce() {
-        int TestValues[] = {TestPlayer.getEnergyCount(), TestPlayer.getFoodCount(), TestPlayer.getOreCount()};
+        int TestValues[] = {TestPlayer.getResource(ResourceType.ENERGY), TestPlayer.getResource(ResourceType.FOOD), TestPlayer.getResource(ResourceType.ORE)};
 
         TestTile.setOwner(TestPlayer);
         TestTile.produce();
 
-        assertTrue(TestPlayer.getEnergyCount() > TestValues[0]);
-        assertTrue(TestPlayer.getFoodCount() > TestValues[1]);
-        assertTrue(TestPlayer.getOreCount() > TestValues[2]);
+        assertTrue(TestPlayer.getResource(ResourceType.ENERGY) > TestValues[0]);
+        assertTrue(TestPlayer.getResource(ResourceType.FOOD) > TestValues[1]);
+        assertTrue(TestPlayer.getResource(ResourceType.ORE) > TestValues[2]);
 
     }
 
