@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // This class was implemented during Assessment 3.
+//TODO: Preserve effect but update with our style
 
 public class Malfunction extends RandomEvent {
 

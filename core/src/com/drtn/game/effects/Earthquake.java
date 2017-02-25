@@ -3,6 +3,8 @@ package com.drtn.game.effects;
 import com.drtn.game.GameEngine;
 import com.drtn.game.entity.Player;
 import com.drtn.game.entity.Tile;
+import com.drtn.game.enums.ResourceType;
+import com.drtn.game.exceptions.InvalidResourceTypeException;
 import com.drtn.game.screens.GameScreen;
 
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 // This class was implemented during Assessment 3.
+//TODO: Preserve effect but update with our style
 
 public class Earthquake extends RandomEvent {
 
@@ -50,13 +53,37 @@ public class Earthquake extends RandomEvent {
         // Divides production on each tile by damage value
         for (Tile tile : this.tilesDamaged) {
             if (doOrUndo) {
-                tile.changeOreCount(tile.getOreCount() / this.tileDamageValue);
-                tile.changeEnergyCount(tile.getEnergyCount() / this.tileDamageValue);
-                tile.changeFoodCount(tile.getFoodCount() / this.tileDamageValue);
+                try {
+                    tile.setResource(ResourceType.ORE, (tile.getResource(ResourceType.ORE)) / this.tileDamageValue);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    tile.setResource(ResourceType.ENERGY, (tile.getResource(ResourceType.ENERGY)) / this.tileDamageValue);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    tile.setResource(ResourceType.FOOD, (tile.getResource(ResourceType.FOOD)) / this.tileDamageValue);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
             } else {
-                tile.changeOreCount(tile.getOreCount() * this.tileDamageValue);
-                tile.changeEnergyCount(tile.getEnergyCount() * this.tileDamageValue);
-                tile.changeFoodCount(tile.getFoodCount() * this.tileDamageValue);
+                try {
+                    tile.setResource(ResourceType.ORE, (tile.getResource(ResourceType.ORE)) * this.tileDamageValue);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    tile.setResource(ResourceType.ENERGY, (tile.getResource(ResourceType.ENERGY)) * this.tileDamageValue);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    tile.setResource(ResourceType.FOOD, (tile.getResource(ResourceType.FOOD)) * this.tileDamageValue);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

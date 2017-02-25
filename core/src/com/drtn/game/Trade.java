@@ -1,6 +1,7 @@
 package com.drtn.game;
 
 import com.drtn.game.entity.Player;
+import com.drtn.game.enums.ResourceType;
 
 /**
  * Class to facilitate trades for assessment 3
@@ -57,17 +58,17 @@ public class Trade {
 	 * @return true if trade is successful, false if it fails
 	 */
 	public boolean execute(){
-		if (sender.getEnergyCount()> energyAmount && sender.getFoodCount() > foodAmount 
-				&& sender.getOreCount()> oreAmount){
-			if (targetPlayer.getMoney() > getPrice()){
-				targetPlayer.varyResource("Ore", this.oreAmount);
-				targetPlayer.varyResource("Energy", this.energyAmount);
-				targetPlayer.varyResource("Food", this.foodAmount);
-				targetPlayer.varyResource("Money", -this.price);
-				sender.varyResource("Ore", -this.oreAmount);
-				sender.varyResource("Energy", -this.energyAmount);
-				sender.varyResource("Food", -this.foodAmount);
-				sender.varyResource("Money", this.price);
+		if (sender.getResource(ResourceType.ENERGY) > energyAmount && sender.getResource(ResourceType.FOOD) > foodAmount
+				&& sender.getResource(ResourceType.ORE) > oreAmount) {
+			if (targetPlayer.getResource(ResourceType.MONEY) > getPrice()) {
+				targetPlayer.varyResource(ResourceType.ORE, this.oreAmount);
+				targetPlayer.varyResource(ResourceType.ENERGY, this.energyAmount);
+				targetPlayer.varyResource(ResourceType.FOOD, this.foodAmount);
+				targetPlayer.varyResource(ResourceType.MONEY, -this.price);
+				sender.varyResource(ResourceType.ORE, -this.oreAmount);
+				sender.varyResource(ResourceType.ENERGY, -this.energyAmount);
+				sender.varyResource(ResourceType.FOOD, -this.foodAmount);
+				sender.varyResource(ResourceType.MONEY, this.price);
 				return true;
 			}
 			else return false;
