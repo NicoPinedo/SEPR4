@@ -24,10 +24,7 @@ import com.drtn.game.GameEngine;
 import com.drtn.game.Trade;
 import com.drtn.game.entity.Tile;
 import com.drtn.game.enums.ResourceType;
-import com.drtn.game.util.Drawer;
-import com.drtn.game.util.LabelledElement;
-import com.drtn.game.util.Overlay;
-import com.drtn.game.util.TTFont;
+import com.drtn.game.util.*;
 import com.teamfractal.util.animation.AnimationPlayerWin;
 import com.teamfractal.util.animation.AnimationTileFlash;
 import com.teamfractal.util.animation.IAnimation;
@@ -45,8 +42,19 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      */
     private static TextButton.TextButtonStyle gameButtonStyle;
 
+    private static TTFont headerFontRegular;
+    private static TTFont headerFontLight;
+    private static TTFont smallFontRegular;
+    private static TTFont smallFontLight;
+
     static {
         gameFont = new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 36);
+
+        headerFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 24);
+        headerFontLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 24);
+
+        smallFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 16);
+        smallFontLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 16);
 
         gameButtonStyle = new TextButton.TextButtonStyle();
         gameButtonStyle.font = gameFont.font();
@@ -202,9 +210,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         this.game = game;
         //Import current game-state to access the game's renderer
 
-
-        //Start game engine up
-
         batch = new SpriteBatch();
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
@@ -234,9 +239,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(gameStage);
-        if (shown) return ;
+        if (shown) return;
 
         shown = true;
+
         drawer = new Drawer(game);
         //Import QOL drawing functions
 
@@ -392,7 +398,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Turn off the "END TURN" button right away to force players into selecting tiles
 
         //Button which can be clicked on to pause the game
-
         pauseButton = new TextButton("Pause Game", gameButtonStyle);
         pauseButton.addListener(new ChangeListener() {
             @Override
@@ -400,7 +405,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 engine.pauseGame();
             }
         });
-
 
         //Button which can be clicked on to go to the mini game
         miniGameButton = new TextButton("Mini Game ($20)", gameButtonStyle);
@@ -570,12 +574,12 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableLeft.center().top();
         //Shift the table towards the top of the screen
 
-        tableLeft.add(engine.timer()).colspan(2);
+        tableLeft.add(engine.timer()).colspan(2).size(255, 130).align(Align.center);
         //Add the timer to the table
 
         gameFont.setSize(22);
         Table phaseTable = new Table();
-        phaseLabel = new Label("", new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        phaseLabel = new Label("", new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
         phaseLabel.setAlignment(Align.center);
         phaseTable.add(phaseLabel).width(120);
         phaseTable.add().width(5);
@@ -584,10 +588,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Prepare and add the "End Phase" button to the table
 
         gameFont.setSize(36);
-        drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(gameFont.font(), Color.BLACK)), 0, 0, 10, 0, 2);
+        drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(headerFontRegular.font(), Color.BLACK)), 0, 0, 10, 0, 2);
         //Window-dressing: adds "CURRENT PLAYER" label
-
-
 
         gameFont.setSize(24);
         Table collegeInfo = new Table();
@@ -598,8 +600,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         drawer.addTableRow(collegeInfo, currentPlayerLabel);
         drawer.addTableRow(tableLeft, collegeInfo, 5, 0, 0, 0);
         //Prepare icon region to show the icon of the college which is currently active
-
-
 
         Table resourceCounters = new Table();
         foodCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.FOOD), new Label.LabelStyle(gameFont.font(), Color.WHITE));
@@ -624,13 +624,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
         drawer.addTableRow(tableLeft, miniGameButton, 105-40, 0, 0, 0, 2);
 
-
         drawer.addTableRow(tableLeft, pauseButton, 0, 0, 0, 0, 2);
         //Prepare and add the pause button to the bottom of the table
 
         gameStage.addActor(tableLeft);
         //Add left-hand table to the stage
-
 
         updatePhaseLabel();
         updatePlayerName();
@@ -776,7 +774,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * This will allow them to upgrade its food, energy or ore production stats
      */
     private void constructUpgradeOverlay() {
-        upgradeOverlay = new Overlay(this.game, Color.GRAY, Color.WHITE, 250, 200, 3);
+        upgradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 200, 3);
         //Establish the upgrade overlay
 
         upgradeOverlayVisible = false;
@@ -806,7 +804,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     //new for assessment 3
     private void constructEventMessageOverlay() {
-        eventMessageOverlay = new Overlay(this.game, Color.GRAY, Color.WHITE, 900, 200, 3);
+        eventMessageOverlay = new Overlay(Color.GRAY, Color.WHITE, 900, 200, 3);
         eventMessage = new Label("", new Label.LabelStyle(gameFont.font(), Color.WHITE));
 
         eventMessageOverlayVisible = false;
@@ -842,7 +840,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     //new for assessment 3
     private void constructTradeOverlay(Trade trade){
-    	tradeOverlay = new Overlay(this.game, Color.GRAY, Color.WHITE, 250, 300, 3);
+    	tradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 300, 3);
     	tradeOverlayVisible = false;
     	gameFont.setSize(36);
         tradeOverlay.table().add(new Label("INCOMING TRADE", new Label.LabelStyle(gameFont.font(), Color.WHITE))).padBottom(20);
@@ -865,7 +863,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     //new for assessment 3
     private void constructTooExpensiveOverlay(){
-    	tooExpensiveOverlay = new Overlay(this.game, Color.GRAY, Color.WHITE, 250, 300, 3);
+    	tooExpensiveOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 300, 3);
     	tooExpensiveOverlayVisible = false;
     	gameFont.setSize(36);
     	tooExpensiveOverlay.table().add(new Label("NOT ENOUGH MONEY!", new Label.LabelStyle(gameFont.font(), Color.WHITE))).padBottom(20);
@@ -1144,7 +1142,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         upgradeOverlayVisible = false;
         
         //Hide the upgrade overlay again
-
         Gdx.input.setInputProcessor(gameStage);
         //Direct user inputs back towards the main stage
         
