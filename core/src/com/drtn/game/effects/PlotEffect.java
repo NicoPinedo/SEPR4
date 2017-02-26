@@ -144,7 +144,9 @@ public class PlotEffect extends Array<Float[]> {
 
         newModifiers = super.pop();
         //Assume that the modifiers on the top of the stack are the modifiers to be imposed
-
+        originalModifiers[0] = Float.valueOf(tile.getResource(ResourceType.ORE));
+        originalModifiers[1] = Float.valueOf(tile.getResource(ResourceType.ENERGY));
+        originalModifiers[2] = Float.valueOf(tile.getResource(ResourceType.FOOD));
 
 
             //Save each of the specified tile's original modifiers

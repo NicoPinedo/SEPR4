@@ -291,6 +291,8 @@ public class GameEngine {
                 setEffects();
                 System.out.println("test");
                 gameScreen.updateInventoryLabels();
+                market.refreshPlayers();
+                market.refreshAuction();
             }
 
             phase ++;
