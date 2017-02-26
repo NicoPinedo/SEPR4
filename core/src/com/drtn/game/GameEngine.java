@@ -174,6 +174,11 @@ public class GameEngine {
         phase = 0;
         currentPlayerID = 0;
         trades = new Array<Trade>();
+        try {
+            setupEffects();
+        } catch (InvalidResourceTypeException e) {
+            e.printStackTrace();
+        }
 
     }
     // ---------------------------------------------------------------------------------
@@ -259,81 +264,11 @@ public class GameEngine {
         }
     }
 
-    // Added in Assessment 3: Added to keep track of random events.
-    public void checkEventDurations() {
-
-        Iterator<RandomEvent> randomEventIterator = randomEvents.iterator();
-
-        while (randomEventIterator.hasNext()) {
-
-            RandomEvent event = randomEventIterator.next();
-
-            if (event.getDuration() == 0) {
-                event.decDuration();
-                event.eventHappen(false);
-            }
-
-            else if (event.getDuration() == event.getEventCooldown()) {
-                randomEventIterator.remove();
-            }
-
-            else {
-                event.decDuration();
-            }
-
-            System.out.println(randomEvents.toString());
-        }
-    }
-
-    // Added in Assessment 3: Added to check whether a specific event is currently happening.
-    public boolean eventCurrentlyHappening(Integer eventValue) {
-        boolean eventHappened = false;
-        HashMap<Integer, String> eventLookUp = new HashMap<Integer, String>();
-
-        eventLookUp.put(0, "Earthquake");
-        eventLookUp.put(1, "Malfunction");
-
-        for (RandomEvent event : randomEvents) {
-            System.out.println(event.getClass().getName());
-            if ((event.getClass().getName() == eventLookUp.get(eventValue))) {
-                eventHappened = true;
-            }
-        }
-
-        return eventHappened;
-    }
 
 
-    // Added in Assessment 3: Added to select random events.
-    private void selectRandomEvent() {
-        Random random = new Random();
-        int eventValue = random.nextInt(4);
-        boolean eventHappened = eventCurrentlyHappening(eventValue);
-        if (!eventHappened) {
-            switch (eventValue) {
-                case 0:
-                    randomEvents.add(new Earthquake(this, gameScreen));
-                    randomEvents.get(randomEvents.size() - 1).eventHappen(true);
-                    break;
-                case 1:
-                    int playerToAffect = random.nextInt(players().length);
-                    boolean playerHasRoboticons = false;
 
-                    for (Tile tile: players()[playerToAffect].getTileList()) {
-                        if (tile.getRoboticonStored() != null) {
-                            playerHasRoboticons = true;
-                        }
-                    }
 
-                    if (playerHasRoboticons) {
-                        randomEvents.add(new Malfunction(this, gameScreen, playerToAffect));
-                        randomEvents.get(randomEvents.size() - 1).eventHappen(true);
-                    }
 
-                    break;
-            }
-        }
-    }
 
     private void produceResource() {
         Player player = currentPlayer();
@@ -352,8 +287,10 @@ public class GameEngine {
             currentPlayerID = 0;
 
             if (phase == 4) {
-                checkEventDurations();
-                selectRandomEvent();
+                clearEffects();
+                setEffects();
+                System.out.println("test");
+                gameScreen.updateInventoryLabels();
             }
 
             phase ++;
@@ -718,7 +655,7 @@ public class GameEngine {
     }
     private void setupEffects() throws InvalidResourceTypeException {
         //Initialise the fractional chance of any given effect being applied at the start of a round
-        effectChance = (float) 0.02;
+        effectChance = (float) 0.5;
 
         plotEffectSource = new PlotEffectSource(this);
         playerEffectSource = new PlayerEffectSource(this);
@@ -739,7 +676,7 @@ public class GameEngine {
             if (RNGesus.nextFloat() <= effectChance) {
                 PTE.executeRunnable();
 
-                if (!(currentPlayer() instanceof AiPlayer)) {
+                if (!(isCurrentlyAiPlayer())) {
                     gameScreen.showEventMessage(PTE.getDescription());
                 }
             }
@@ -749,7 +686,7 @@ public class GameEngine {
             if (RNGesus.nextFloat() <= effectChance) {
                 PLE.executeRunnable();
 
-                if (!(currentPlayer() instanceof AiPlayer)) {
+                if (!(isCurrentlyAiPlayer())) {
                     gameScreen.showEventMessage(PLE.getDescription());
                 }
             }

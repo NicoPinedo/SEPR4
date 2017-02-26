@@ -101,23 +101,16 @@ public class PlotEffectSource extends Array<PlotEffect> {
                     return;
                 }
 
-                Tile foodProducer = game.currentPlayer().getTileList().get(0);
 
-                for (Tile plot : game.tiles()) {
+
+                for (Tile plot : game.currentPlayer().getTileList()) {
                     try {
-                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
-                            foodProducer = plot;
-                        }
+                        spicy.impose(plot, 1);
                     } catch (InvalidResourceTypeException e) {
                         e.printStackTrace();
                     }
                 }
 
-                try {
-                    spicy.impose(foodProducer, 1);
-                } catch (InvalidResourceTypeException e) {
-                    e.printStackTrace();
-                }
             }
         }, game.getGameScreen());
         
@@ -131,22 +124,12 @@ public class PlotEffectSource extends Array<PlotEffect> {
                     return;
                 }
 
-                Tile foodProducer = game.currentPlayer().getTileList().get(0);
-
-                for (Tile plot : game.tiles()) {
+                for (Tile plot : game.currentPlayer().getTileList()) {
                     try {
-                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
-                            foodProducer = plot;
-                        }
+                        earthquakeDisaster.impose(plot, 1);
                     } catch (InvalidResourceTypeException e) {
                         e.printStackTrace();
                     }
-                }
-
-                try {
-                    earthquakeDisaster.impose(foodProducer, 1);
-                } catch (InvalidResourceTypeException e) {
-                    e.printStackTrace();
                 }
             }
         }, game.getGameScreen());
@@ -160,22 +143,12 @@ public class PlotEffectSource extends Array<PlotEffect> {
                     return;
                 }
 
-                Tile foodProducer = game.currentPlayer().getTileList().get(0);
-
-                for (Tile plot : game.tiles()) {
+                for (Tile plot : game.currentPlayer().getTileList()) {
                     try {
-                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
-                            foodProducer = plot;
-                        }
+                        tornado.impose(plot, 1);
                     } catch (InvalidResourceTypeException e) {
                         e.printStackTrace();
                     }
-                }
-
-                try {
-                    tornado.impose(foodProducer, 1);
-                } catch (InvalidResourceTypeException e) {
-                    e.printStackTrace();
                 }
             }
         }, game.getGameScreen());
@@ -190,23 +163,14 @@ public class PlotEffectSource extends Array<PlotEffect> {
                     return;
                 }
 
-                Tile foodProducer = game.currentPlayer().getTileList().get(0);
-
-                for (Tile plot : game.tiles()) {
+                for (Tile plot : game.currentPlayer().getTileList()) {
                     try {
-                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
-                            foodProducer = plot;
-                        }
+                        strike.impose(plot, 1);
                     } catch (InvalidResourceTypeException e) {
                         e.printStackTrace();
                     }
                 }
 
-                try {
-                    strike.impose(foodProducer, 1);
-                } catch (InvalidResourceTypeException e) {
-                    e.printStackTrace();
-                }
             }
         }, game.getGameScreen());
     }
