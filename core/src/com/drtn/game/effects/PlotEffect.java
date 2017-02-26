@@ -11,8 +11,9 @@
  * And a more concise report can be found in our Change3 document.
  **/
 
-package io.github.teamfractal.entity;
+package com.drtn.game.effects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -20,8 +21,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import io.github.teamfractal.screens.GameScreen;
-import io.github.teamfractal.screens.Overlay;
+import com.drtn.game.entity.Tile;
+import com.drtn.game.enums.ResourceType;
+import com.drtn.game.exceptions.InvalidResourceTypeException;
+import com.drtn.game.screens.GameScreen;
+import com.drtn.game.util.Overlay;
+import com.drtn.game.util.TTFont;
+
 
 public class PlotEffect extends Array<Float[]> {
 
@@ -43,12 +49,13 @@ public class PlotEffect extends Array<Float[]> {
     /**
      * Array storing all of the plots to have been affected by this effect (in the order by which they were affected)
      */
-    private Array<LandPlot> plotRegister;
+    private Array<Tile> plotRegister;
 
     /**
      * Overlay to provide a visual indication of the effect's presence and influences
      */
     private Overlay overlay;
+    private GameScreen gameScreen;
 
     /**
      * Constructor that imports the parameters of the effect along with a custom block of code in which it can be used
@@ -58,7 +65,7 @@ public class PlotEffect extends Array<Float[]> {
      * @param modifiers The production modifiers that the effect can impose {0: ORE | 1: ENERGY | 2: FOOD}
      * @param runnable The code to be executed when the effect is imposed through natural means
      */
-    public PlotEffect(String name, String description, Float[] modifiers, Runnable runnable) {
+    public PlotEffect(String name, String description, Float[] modifiers, Runnable runnable,GameScreen gameScreen) {
         this.name = name;
         this.description = description;
         //Stores the effect's name and description for future reference
@@ -67,56 +74,33 @@ public class PlotEffect extends Array<Float[]> {
         //Store the effect's modifiers at the base of the internal stack
 
         this.runnable = runnable;
+        this.gameScreen = gameScreen;
         //Assign the effect to the proprietary method provided
 
-        this.plotRegister = new Array<LandPlot>();
+        this.plotRegister = new Array<Tile>();
         //Establish the separate LandPlot stack to track affected tiles
 
-        this.overlay = new Overlay(Color.GOLDENROD, Color.WHITE, 3);
+        this.overlay = new Overlay(gameScreen.getGame(), Color.GRAY, Color.WHITE, 900, 200, 3);
         //Construct a visual interface through which the effect can be identified
     }
 
-    /**
-     * Overloaded constructor that imports the parameters of the effect and sets it up to be applied to a specific
-     * plot in a specific way upon usage
-     *
-     * @param name The name of the effect
-     * @param description A description of the effect
-     * @param modifiers The production modifiers that the effect can impose {0: ORE | 1: ENERGY | 2: FOOD}
-     * @param plot The plot which the effect is to be applied to
-     */
-    public PlotEffect(String name, String description, Float[] modifiers, final LandPlot plot, final int mode) {
-        this(name, description, modifiers, new Runnable() {
-            @Override
-            public void run() {
-                /*
-                Intentionally empty.
-                */
-            }
-        });
 
-        this.runnable = new Runnable() {
-            @Override
-            public void run() {
-                impose(plot, mode);
-            }
-        };
-    }
 
     /**
      * Method that populates the effect's associated overlay
      */
     public void constructOverlay(final GameScreen gameScreen) {
         TextButton.TextButtonStyle overlayButtonStyle = new TextButton.TextButtonStyle();
-        overlayButtonStyle.font = gameScreen.getGame().headerFontRegular.font();
+        TTFont gameFont = new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 36);
+        overlayButtonStyle.font = gameFont.font();
         overlayButtonStyle.pressedOffsetX = -1;
         overlayButtonStyle.pressedOffsetY = -1;
         overlayButtonStyle.fontColor = Color.WHITE;
         //Set the visual parameters for the [CLOSE] button on the overlay
 
-        Label headerLabel = new Label("PLOT EFFECT IMPOSED", new Label.LabelStyle(gameScreen.getGame().headerFontRegular.font(), Color.YELLOW));
-        Label titleLabel = new Label(name, new Label.LabelStyle(gameScreen.getGame().headerFontLight.font(), Color.WHITE));
-        Label descriptionLabel = new Label(description, new Label.LabelStyle(gameScreen.getGame().smallFontLight.font(), Color.WHITE));
+        Label headerLabel = new Label("PLOT EFFECT IMPOSED", new Label.LabelStyle(gameFont.font(), Color.YELLOW));
+        Label titleLabel = new Label(name, new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        Label descriptionLabel = new Label(description, new Label.LabelStyle(gameFont.font(), Color.WHITE));
         //Construct labels to state the type, name and description of this effect
 
         headerLabel.setAlignment(Align.left);
@@ -135,14 +119,14 @@ public class PlotEffect extends Array<Float[]> {
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.removeOverlay();
+                gameScreen.hideEventMessage();
             }
         });
 
         overlay.table().add(closeButton);
         //Set up and add a [CLOSE] button to the overlay
 
-        overlay.resize(descriptionLabel.getWidth() + 20, headerLabel.getHeight() + descriptionLabel.getHeight() + closeButton.getHeight() + 35);
+
         //Resize the overlay to fit around the sizes of the labels that were added to it
     }
 
@@ -150,10 +134,10 @@ public class PlotEffect extends Array<Float[]> {
      * Imposes the effect's modifiers on the provided plot
      * Assumes that the modifiers to be imposed at any given time will be at the head of the internal stack
      *
-     * @param plot The plot to be affected
+     * @param tile The plot to be affected
      * @param mode The mode of effect [0: ADD | 1: MULTIPLY | 2: OVERWRITE]
      */
-    public void impose(LandPlot plot, int mode) {
+    public void impose(Tile tile, int mode) throws InvalidResourceTypeException {
         Float[] originalModifiers = new Float[3];
         Float[] newModifiers;
         //Declare temporary arrays to handle modifier modifications
@@ -161,25 +145,31 @@ public class PlotEffect extends Array<Float[]> {
         newModifiers = super.pop();
         //Assume that the modifiers on the top of the stack are the modifiers to be imposed
 
-        for (int i = 0; i < 3; i++) {
-            originalModifiers[i] = plot.productionModifiers[i];
+
+
             //Save each of the specified tile's original modifiers
 
             switch (mode) {
                 case (0):
-                    plot.productionModifiers[i] = plot.productionModifiers[i] + newModifiers[i];
+                    tile.setResource(ResourceType.ORE, (int) (tile.getResource(ResourceType.ORE) + newModifiers[0]));
+                    tile.setResource(ResourceType.ENERGY, (int) (tile.getResource(ResourceType.ENERGY) + newModifiers[1]));
+                    tile.setResource(ResourceType.FOOD, (int) (tile.getResource(ResourceType.FOOD) + newModifiers[2]));
                     //MODE 0: Add/subtract to/from the original modifiers
                     break;
                 case (1):
-                    plot.productionModifiers[i] = plot.productionModifiers[i] * newModifiers[i];
+                    tile.setResource(ResourceType.ORE, (int) (tile.getResource(ResourceType.ORE) * newModifiers[0]));
+                    tile.setResource(ResourceType.ENERGY, (int) (tile.getResource(ResourceType.ENERGY) * newModifiers[1]));
+                    tile.setResource(ResourceType.FOOD, (int) (tile.getResource(ResourceType.FOOD) * newModifiers[2]));
                     //MODE 1: Multiply the original modifiers
                     break;
                 case (2):
-                    plot.productionModifiers[i] = newModifiers[i];
+                    tile.setResource(ResourceType.ORE, Math.round(newModifiers[0]));
+                    tile.setResource(ResourceType.ENERGY,Math.round(newModifiers[1]));
+                    tile.setResource(ResourceType.FOOD,Math.round(newModifiers[2]));
                     //MODE 2: Replace the original modifiers
                     break;
             }
-        }
+
 
         super.add(originalModifiers);
         //Add the tile's original modifiers to the stack for later access...
@@ -187,7 +177,7 @@ public class PlotEffect extends Array<Float[]> {
         super.add(newModifiers);
         //...and return the imposed modifiers to the top of the stack
 
-        plotRegister.add(plot);
+        plotRegister.add(tile);
         //Push the plot that was modified on to the appropriate registration stack
     }
 
@@ -197,7 +187,7 @@ public class PlotEffect extends Array<Float[]> {
     private void revert() {
         if (plotRegister.size > 0) {
             Float[] originalModifiers;
-            LandPlot lastPlot;
+            Tile lastPlot;
 
             swapTop();
             originalModifiers = super.pop();
@@ -207,9 +197,10 @@ public class PlotEffect extends Array<Float[]> {
             lastPlot = plotRegister.pop();
             //Retrieve the last plot that this effect was imposed upon
 
-            for (int i = 0; i < 3; i++) {
-                lastPlot.productionModifiers[i] = originalModifiers[i];
-            }
+
+            lastPlot.setResource(ResourceType.ORE, Math.round( originalModifiers[0]));
+            lastPlot.setResource(ResourceType.ENERGY,Math.round( originalModifiers[1]));
+            lastPlot.setResource(ResourceType.FOOD,Math.round( originalModifiers[2]));
             //Restore the original production modifiers of the aforementioned plot
         }
     }
@@ -246,4 +237,8 @@ public class PlotEffect extends Array<Float[]> {
      * @return The overlay of the effect
      */
     public Overlay overlay() { return overlay; }
+
+    public String getDescription(){
+        return this.description;
+    }
 }

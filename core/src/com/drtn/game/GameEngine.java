@@ -6,11 +6,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.drtn.game.effects.Earthquake;
-import com.drtn.game.effects.Malfunction;
-import com.drtn.game.effects.RandomEvent;
+import com.drtn.game.effects.*;
 import com.drtn.game.entity.*;
 import com.drtn.game.enums.ResourceType;
+import com.drtn.game.exceptions.InvalidResourceTypeException;
 import com.drtn.game.screens.GameScreen;
 import com.drtn.game.screens.MiniGameScreen;
 import com.drtn.game.util.Drawer;
@@ -18,7 +17,6 @@ import com.drtn.game.util.GameTimer;
 import com.drtn.game.util.TTFont;
 
 import java.util.*;
-
 
 
 // Changed in Assessment 3: Added so no more than one GameEngine can be instantiated at any one time.
@@ -91,6 +89,9 @@ public class GameEngine {
     private Array<Trade> trades;
 	private College[] colleges;
     private ArrayList<RandomEvent> randomEvents = new ArrayList<RandomEvent>();
+    private PlotEffectSource plotEffectSource;
+    private PlayerEffectSource playerEffectSource;
+    private float effectChance;
 
     /**
      * Constructs the game's engine. Imports the game's state (for direct renderer access) and the data held by the
@@ -715,6 +716,60 @@ public class GameEngine {
         game.setScreen(getGameScreen());
 
     }
+    private void setupEffects() throws InvalidResourceTypeException {
+        //Initialise the fractional chance of any given effect being applied at the start of a round
+        effectChance = (float) 0.02;
+
+        plotEffectSource = new PlotEffectSource(this);
+        playerEffectSource = new PlayerEffectSource(this);
+
+        for (PlotEffect PTE : plotEffectSource) {
+            PTE.constructOverlay(gameScreen);
+        }
+
+        for (PlayerEffect PLE : playerEffectSource) {
+            PLE.constructOverlay(gameScreen);
+        }
+    }
+
+    private void setEffects() {
+        Random RNGesus = new Random();
+
+        for (PlotEffect PTE : plotEffectSource) {
+            if (RNGesus.nextFloat() <= effectChance) {
+                PTE.executeRunnable();
+
+                if (!(currentPlayer() instanceof AiPlayer)) {
+                    gameScreen.showEventMessage(PTE.getDescription());
+                }
+            }
+        }
+
+        for (PlayerEffect PLE : playerEffectSource) {
+            if (RNGesus.nextFloat() <= effectChance) {
+                PLE.executeRunnable();
+
+                if (!(currentPlayer() instanceof AiPlayer)) {
+                    gameScreen.showEventMessage(PLE.getDescription());
+                }
+            }
+        }
+
+
+    }
+
+    private void clearEffects() {
+        for (PlotEffect PE : plotEffectSource) {
+            PE.revertAll();
+        }
+    }
+
+
+
+
+
+
+
     /**
      * Encodes possible play-states
      * These are not to be confused with the game-state (which is directly linked to the renderer)

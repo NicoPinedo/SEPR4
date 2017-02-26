@@ -11,17 +11,20 @@
  * And a more concise report can be found in our Change3 document.
  **/
 
-package io.github.teamfractal.entity;
+package com.drtn.game.effects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import io.github.teamfractal.entity.enums.ResourceType;
-import io.github.teamfractal.screens.GameScreen;
-import io.github.teamfractal.screens.Overlay;
+import com.drtn.game.entity.Player;
+import com.drtn.game.enums.ResourceType;
+import com.drtn.game.screens.GameScreen;
+import com.drtn.game.util.Overlay;
+import com.drtn.game.util.TTFont;
 
 
 public class PlayerEffect {
@@ -59,6 +62,8 @@ public class PlayerEffect {
      */
     private Overlay overlay;
 
+    private GameScreen gameScreen;
+
     /**
      * Constructor that imports the parameters of the effect along with a custom block of code in which it can be used
      *
@@ -72,11 +77,11 @@ public class PlayerEffect {
      *                 a player's resource-counts
      * @param runnable The code to be executed when the effect is imposed through natural means
      */
-    public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply, Runnable runnable) {
+    public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply, Runnable runnable, GameScreen gameScreen) {
         this.name = name;
         this.description = description;
         //Store the effect's name and description for future reference
-
+        this.gameScreen = gameScreen;
         this.modifiers = new float[4];
         this.modifiers[0] = oreModifier;
         this.modifiers[1] = energyModifier;
@@ -92,7 +97,7 @@ public class PlayerEffect {
         this.runnable = runnable;
         //Import the code to be run whenever the effect is imposed (if any is provided at all)
 
-        this.overlay = new Overlay(Color.OLIVE, Color.WHITE, 3);
+        this.overlay = new Overlay(gameScreen.getGame(), Color.GRAY, Color.WHITE, 900, 200, 3);
         //Construct a visual interface through which the effect can be identified
     }
 
@@ -101,15 +106,16 @@ public class PlayerEffect {
      */
     public void constructOverlay(final GameScreen gameScreen) {
         TextButton.TextButtonStyle overlayButtonStyle = new TextButton.TextButtonStyle();
-        overlayButtonStyle.font = gameScreen.getGame().headerFontRegular.font();
+        TTFont gameFont = new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 36);
+        overlayButtonStyle.font = gameFont.font();
         overlayButtonStyle.pressedOffsetX = -1;
         overlayButtonStyle.pressedOffsetY = -1;
         overlayButtonStyle.fontColor = Color.WHITE;
         //Set the visual parameters for the [CLOSE] button on the overlay
 
-        Label headerLabel = new Label("PLAYER EFFECT IMPOSED", new Label.LabelStyle(gameScreen.getGame().headerFontRegular.font(), Color.CHARTREUSE));
-        Label titleLabel = new Label(name, new Label.LabelStyle(gameScreen.getGame().headerFontLight.font(), Color.WHITE));
-        Label descriptionLabel = new Label(description, new Label.LabelStyle(gameScreen.getGame().smallFontLight.font(), Color.WHITE));
+        Label headerLabel = new Label("PLAYER EFFECT IMPOSED", new Label.LabelStyle(gameFont.font(), Color.CHARTREUSE));
+        Label titleLabel = new Label(name, new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        Label descriptionLabel = new Label(description, new Label.LabelStyle(gameFont.font(), Color.WHITE));
         //Construct labels to state the type, name and description of this effect
 
         headerLabel.setAlignment(Align.left);
@@ -128,14 +134,14 @@ public class PlayerEffect {
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.removeOverlay();
+                gameScreen.hideEventMessage();
             }
         });
 
         overlay.table().add(closeButton);
         //Set up and add a [CLOSE] button to the overlay
 
-        overlay.resize(descriptionLabel.getWidth() + 20, headerLabel.getHeight() + descriptionLabel.getHeight() + closeButton.getHeight() + 35);
+
         //Resize the overlay to fit around the sizes of the labels that were added to it
     }
 
@@ -147,15 +153,15 @@ public class PlayerEffect {
      */
     public void impose(Player player) {
         if (multiply) {
-            player.setResource(ResourceType.ORE, (int) ((float) player.getOre() * modifiers[0]));
-            player.setResource(ResourceType.ENERGY, (int) ((float) player.getEnergy() * modifiers[1]));
-            player.setResource(ResourceType.FOOD, (int) ((float) player.getFood() * modifiers[2]));
-            player.setMoney((int) ((float) player.getMoney() * modifiers[3]));
+            player.setResource(ResourceType.ORE, (int) ((float) player.getResource(ResourceType.ORE) * modifiers[0]));
+            player.setResource(ResourceType.ENERGY, (int) ((float) player.getResource(ResourceType.ENERGY) * modifiers[1]));
+            player.setResource(ResourceType.FOOD, (int) ((float) player.getResource(ResourceType.FOOD) * modifiers[2]));
+            player.setResource(ResourceType.MONEY,(int) ((float) player.getResource(ResourceType.MONEY) * modifiers[3]));
         } else {
-            player.setResource(ResourceType.ORE, player.getOre() + (int) modifiers[0]);
-            player.setResource(ResourceType.ENERGY, player.getEnergy() + (int) modifiers[1]);
-            player.setResource(ResourceType.FOOD, player.getFood() + (int) modifiers[2]);
-            player.setMoney(player.getMoney() + (int) modifiers[3]);
+            player.setResource(ResourceType.ORE, player.getResource(ResourceType.ORE) + (int) modifiers[0]);
+            player.setResource(ResourceType.ENERGY,player.getResource(ResourceType.ENERGY) + (int) modifiers[1]);
+            player.setResource(ResourceType.FOOD, player.getResource(ResourceType.FOOD) + (int) modifiers[2]);
+            player.setResource(ResourceType.MONEY, player.getResource(ResourceType.MONEY) + (int) modifiers[3]);
         }
     }
 
@@ -170,5 +176,8 @@ public class PlayerEffect {
      */
     public void executeRunnable() {
         runnable.run();
+    }
+    public String getDescription(){
+        return this.description;
     }
 }

@@ -11,11 +11,11 @@
  * And a more concise report can be found in our Change3 document.
  **/
 
-package io.github.teamfractal.util;
+package com.drtn.game.effects;
 
 import com.badlogic.gdx.utils.Array;
-import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.entity.PlayerEffect;
+import com.drtn.game.GameEngine;
+
 
 public class PlayerEffectSource extends Array<PlayerEffect> {
 
@@ -28,7 +28,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
     /**
      * The game's engine
      */
-    private RoboticonQuest game;
+    private GameEngine game;
 
     public PlayerEffect partyHard;
 
@@ -46,7 +46,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
      *
      * @param game The game's engine
      */
-    public PlayerEffectSource(final RoboticonQuest game) {
+    public PlayerEffectSource(final GameEngine game) {
         this.game = game;
         //Import the game's engine for use by the effects
 
@@ -64,42 +64,42 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
                 "all over them with a permanent marker, thereby\nrendering them worthess.\n\n-30 Money", 0, 0, 0, -30, false, new Runnable() {
             @Override
             public void run() {
-                partyHard.impose(game.getPlayer());
+                partyHard.impose(game.currentPlayer());
             }
-        });
+        }, game.getGameScreen());
 
         uhOh = new PlayerEffect("Uh Oh!", "Someone left the lights on over night again. Who was it? \nI bet it was Darrell," +
                 " it's always Darrell. Either way, \nlooks like it used a lot of your energy. \n\n -50 Energy", 0, -50, 0, 0, false, new Runnable() {
             @Override
             public void run() {
-                uhOh.impose(game.getPlayer());
+                uhOh.impose(game.currentPlayer());
             }
-        });
+        }, game.getGameScreen());
         
         vikingRaid = new PlayerEffect("Viking Raid", "You have been raided by a band of intergalactic Vikings. " +
                 "They took:\n\n-10 Ore -10 Energy -10 Food and -10 Money", -10, -10, -10, -10, false, new Runnable() {
             @Override
             public void run() {
-                vikingRaid.impose(game.getPlayer());
+                vikingRaid.impose(game.currentPlayer());
             }
-        });
+        }, game.getGameScreen());
 
         freshersFair = new PlayerEffect("Freshers Fair", "It's the University of York freshers fair! That means only one thing." +
                 " Free stuff!\nYou receive 10 of each resource!", 10, 10, 10, 10, false, new Runnable() {
             @Override
             public void run() {
-                freshersFair.impose(game.getPlayer());
+                freshersFair.impose(game.currentPlayer());
             }
-        });
+        },game.getGameScreen());
 
         brexit = new PlayerEffect("Brexit", "Oh no, it looks like Britain finally pulled out of the European Union. " +
                 "It only took a few centuries!\nNo need to pay for that membership fee anymore but there are more tariffs on food items." +
                 "\n\n +30 Money  -20 Food", 0, 0, -20, 30, false, new Runnable() {
             @Override
             public void run() {
-                brexit.impose(game.getPlayer());
+                brexit.impose(game.currentPlayer());
             }
-        });
+        },game.getGameScreen());
     }
 
     /**

@@ -11,13 +11,13 @@
  * And a more concise report can be found in our Change3 document.
  **/
 
-package io.github.teamfractal.util;
+package com.drtn.game.effects;
 
 import com.badlogic.gdx.utils.Array;
-import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.entity.LandPlot;
-import io.github.teamfractal.entity.PlotEffect;
-import io.github.teamfractal.entity.enums.ResourceType;
+import com.drtn.game.GameEngine;
+import com.drtn.game.entity.Tile;
+import com.drtn.game.enums.ResourceType;
+import com.drtn.game.exceptions.InvalidResourceTypeException;
 
 /**
  * Created by Joseph on 13/02/2017.
@@ -33,7 +33,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
     /**
      * The game's engine
      */
-    private RoboticonQuest game;
+    private GameEngine game;
 
     public PlotEffect duckRelatedDisaster;
 
@@ -51,7 +51,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
      *
      * @param game The game's engine
      */
-    public PlotEffectSource(final RoboticonQuest game) {
+    public PlotEffectSource(final GameEngine game) throws InvalidResourceTypeException {
         this.game = game;
         //Import the game's engine for use by the effects
 
@@ -62,44 +62,64 @@ public class PlotEffectSource extends Array<PlotEffect> {
     /**
      * Subroutine that instantiates each effect declared above
      */
-    public void configureEffects() {
+    public void configureEffects() throws InvalidResourceTypeException {
         duckRelatedDisaster = new PlotEffect("Duck-Related Disaster", "A horde of ducks pillage your most " +
                 "food-producing tile, ruining many of the crops on it. Food\nproduction on that tile is reduced by " +
                 "80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
             @Override
             public void run() {
-                if (game.getPlayer().getLandList().size() == 0) {
+                if (game.currentPlayer().getTileList().size() == 0) {
                     return;
                 }
 
-                LandPlot foodProducer = game.getPlayer().getLandList().get(0);
+                Tile foodProducer = game.currentPlayer().getTileList().get(0);
 
-                for (LandPlot plot : game.getPlayer().getLandList()) {
-                    if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
-                        foodProducer = plot;
+                for (Tile plot : game.tiles()) {
+                    try {
+                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
+                            foodProducer = plot;
+                        }
+                    } catch (InvalidResourceTypeException e) {
+                        e.printStackTrace();
                     }
                 }
 
-                duckRelatedDisaster.impose(foodProducer, 1);
+                try {
+                    duckRelatedDisaster.impose(foodProducer, 1);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
             }
-        });
+        }, game.getGameScreen());
 
         spicy = new PlotEffect("It's getting spicy", "Some students got hold of some hot pepper seeds and all of your food " +
                 "production \nhas been turned over to peppers. Increasing Food output by 200% However this spicy craze " +
                 "\nhas caused all other production values to drop to 0.", new Float[]{(float) 0, (float) 0, (float) 2}, new Runnable() {
             @Override
-            public void  run() {
-                if (game.getPlayer().getLandList().size() == 0) {
+            public void run() {
+                if (game.currentPlayer().getTileList().size() == 0) {
                     return;
                 }
 
-                for (LandPlot plot : game.getPlayer().getLandList()) {
-                    spicy.impose(plot, 1);
+                Tile foodProducer = game.currentPlayer().getTileList().get(0);
+
+                for (Tile plot : game.tiles()) {
+                    try {
+                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
+                            foodProducer = plot;
+                        }
+                    } catch (InvalidResourceTypeException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-
+                try {
+                    spicy.impose(foodProducer, 1);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
             }
-        });
+        }, game.getGameScreen());
         
         earthquakeDisaster = new PlotEffect("Earthquake disaster", "Due to experiments committed in" +
                 "University's of York secret laboratory, a massive\n earthquake hit the surroundings of York." +
@@ -107,35 +127,58 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 new Float[]{(float) 0.1, (float) 1, (float) 1}, new Runnable() {
             @Override
             public void run() {
-                if (game.getPlayer().getLandList().size() == 0) {
+                if (game.currentPlayer().getTileList().size() == 0) {
                     return;
                 }
 
-                for (LandPlot plot : game.getPlayer().getLandList()) {
-                    earthquakeDisaster.impose(plot, 1);
+                Tile foodProducer = game.currentPlayer().getTileList().get(0);
+
+                for (Tile plot : game.tiles()) {
+                    try {
+                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
+                            foodProducer = plot;
+                        }
+                    } catch (InvalidResourceTypeException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-
+                try {
+                    earthquakeDisaster.impose(foodProducer, 1);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
             }
-        });
-
+        }, game.getGameScreen());
         tornado = new PlotEffect("Tornado","Looks like a tornado has struck the campus!" +
         "\nThe gale force winds have blown some of your crops away, reducing food production by 50%. "+
         "\nHowever the winds have increased the output of your wind farms, increasing energy production by 60%",
          new Float[]{(float) 1, (float) 0.5, (float) 1.6}, new Runnable(){
             @Override
             public void run() {
-                if (game.getPlayer().getLandList().size() == 0) {
+                if (game.currentPlayer().getTileList().size() == 0) {
                     return;
                 }
 
-                for (LandPlot plot : game.getPlayer().getLandList()) {
-                    tornado.impose(plot, 1);
+                Tile foodProducer = game.currentPlayer().getTileList().get(0);
+
+                for (Tile plot : game.tiles()) {
+                    try {
+                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
+                            foodProducer = plot;
+                        }
+                    } catch (InvalidResourceTypeException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-
+                try {
+                    tornado.impose(foodProducer, 1);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
             }
-        });
+        }, game.getGameScreen());
 
         strike = new PlotEffect("Roboticon Strike","Some of your roboticons have decided to go on strike." +
                 "\nThey are bored of standing in the same place doing the same thing all the time."+
@@ -143,17 +186,29 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 new Float[]{(float) 0.7, (float) 0.7, (float) 0.7}, new Runnable(){
             @Override
             public void run() {
-                if (game.getPlayer().getLandList().size() == 0) {
+                if (game.currentPlayer().getTileList().size() == 0) {
                     return;
                 }
 
-                for (LandPlot plot : game.getPlayer().getLandList()) {
-                    strike.impose(plot, 1);
+                Tile foodProducer = game.currentPlayer().getTileList().get(0);
+
+                for (Tile plot : game.tiles()) {
+                    try {
+                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
+                            foodProducer = plot;
+                        }
+                    } catch (InvalidResourceTypeException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-
+                try {
+                    strike.impose(foodProducer, 1);
+                } catch (InvalidResourceTypeException e) {
+                    e.printStackTrace();
+                }
             }
-        });
+        }, game.getGameScreen());
     }
 
     /**
