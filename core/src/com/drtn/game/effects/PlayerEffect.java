@@ -13,18 +13,8 @@
 
 package com.drtn.game.effects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.drtn.game.entity.Player;
 import com.drtn.game.enums.ResourceType;
-import com.drtn.game.screens.GameScreen;
-import com.drtn.game.util.Overlay;
-import com.drtn.game.util.TTFont;
 
 
 public class PlayerEffect {
@@ -60,9 +50,9 @@ public class PlayerEffect {
     /**
      * Overlay to provide a visual indication of the effect's applications and influences
      */
-    private Overlay overlay;
 
-    private GameScreen gameScreen;
+
+
 
     /**
      * Constructor that imports the parameters of the effect along with a custom block of code in which it can be used
@@ -77,11 +67,11 @@ public class PlayerEffect {
      *                 a player's resource-counts
      * @param runnable The code to be executed when the effect is imposed through natural means
      */
-    public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply, Runnable runnable, GameScreen gameScreen) {
+    public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply, Runnable runnable) {
         this.name = name;
         this.description = description;
         //Store the effect's name and description for future reference
-        this.gameScreen = gameScreen;
+
         this.modifiers = new float[4];
         this.modifiers[0] = oreModifier;
         this.modifiers[1] = energyModifier;
@@ -97,53 +87,13 @@ public class PlayerEffect {
         this.runnable = runnable;
         //Import the code to be run whenever the effect is imposed (if any is provided at all)
 
-        this.overlay = new Overlay(gameScreen.getGame(), Color.GRAY, Color.WHITE, 900, 200, 3);
-        //Construct a visual interface through which the effect can be identified
+
     }
 
     /**
      * Method that populates the effect's associated overlay
      */
-    public void constructOverlay(final GameScreen gameScreen) {
-        TextButton.TextButtonStyle overlayButtonStyle = new TextButton.TextButtonStyle();
-        TTFont gameFont = new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 36);
-        overlayButtonStyle.font = gameFont.font();
-        overlayButtonStyle.pressedOffsetX = -1;
-        overlayButtonStyle.pressedOffsetY = -1;
-        overlayButtonStyle.fontColor = Color.WHITE;
-        //Set the visual parameters for the [CLOSE] button on the overlay
 
-        Label headerLabel = new Label("PLAYER EFFECT IMPOSED", new Label.LabelStyle(gameFont.font(), Color.CHARTREUSE));
-        Label titleLabel = new Label(name, new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        Label descriptionLabel = new Label(description, new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        //Construct labels to state the type, name and description of this effect
-
-        headerLabel.setAlignment(Align.left);
-        titleLabel.setAlignment(Align.right);
-        descriptionLabel.setAlignment(Align.left);
-        //Align the aforementioned labels against the edges of the overlay's internal table
-
-        overlay.table().add(headerLabel).width(330).left();
-        overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 330).right();
-        overlay.table().row();
-        overlay.table().add(descriptionLabel).left().colspan(2).padTop(5).padBottom(20);
-        //...and then add them to it
-
-        overlay.table().row().colspan(2);
-        TextButton closeButton = new TextButton("CLOSE", overlayButtonStyle);
-        closeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.hideEventMessage();
-            }
-        });
-
-        overlay.table().add(closeButton);
-        //Set up and add a [CLOSE] button to the overlay
-
-
-        //Resize the overlay to fit around the sizes of the labels that were added to it
-    }
 
     /**
      * Imposes the effect on the player by changing the resources that they have
@@ -165,11 +115,7 @@ public class PlayerEffect {
         }
     }
 
-    /**
-     * Getter for the overlay
-     * @return The overlay of the effect
-     */
-    public Overlay overlay() { return overlay; }
+
 
     /**
      * Executes the runnable

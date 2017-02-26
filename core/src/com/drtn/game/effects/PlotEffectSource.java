@@ -90,7 +90,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
                     e.printStackTrace();
                 }
             }
-        }, game.getGameScreen());
+        });
 
         spicy = new PlotEffect("It's getting spicy", "Some students got hold of some hot pepper seeds and all of your food " +
                 "production \nhas been turned over to peppers. Increasing Food output by 200% However this spicy craze " +
@@ -112,7 +112,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 }
 
             }
-        }, game.getGameScreen());
+        });
         
         earthquakeDisaster = new PlotEffect("Earthquake disaster", "Due to experiments committed in" +
                 "University's of York secret laboratory, a massive\n earthquake hit the surroundings of York." +
@@ -132,7 +132,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
                     }
                 }
             }
-        }, game.getGameScreen());
+        });
         tornado = new PlotEffect("Tornado","Looks like a tornado has struck the campus!" +
         "\nThe gale force winds have blown some of your crops away, reducing food production by 50%. "+
         "\nHowever the winds have increased the output of your wind farms, increasing energy production by 60%",
@@ -151,7 +151,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
                     }
                 }
             }
-        }, game.getGameScreen());
+        });
 
         strike = new PlotEffect("Roboticon Strike","Some of your roboticons have decided to go on strike." +
                 "\nThey are bored of standing in the same place doing the same thing all the time."+
@@ -172,7 +172,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 }
 
             }
-        }, game.getGameScreen());
+        });
     }
 
     /**

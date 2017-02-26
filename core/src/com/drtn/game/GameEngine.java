@@ -88,7 +88,7 @@ public class GameEngine {
     // ---------------------------------------------------------------------------------
     private Array<Trade> trades;
 	private College[] colleges;
-    private ArrayList<RandomEvent> randomEvents = new ArrayList<RandomEvent>();
+
     private PlotEffectSource plotEffectSource;
     private PlayerEffectSource playerEffectSource;
     private float effectChance;
@@ -662,13 +662,6 @@ public class GameEngine {
         plotEffectSource = new PlotEffectSource(this);
         playerEffectSource = new PlayerEffectSource(this);
 
-        for (PlotEffect PTE : plotEffectSource) {
-            PTE.constructOverlay(gameScreen);
-        }
-
-        for (PlayerEffect PLE : playerEffectSource) {
-            PLE.constructOverlay(gameScreen);
-        }
     }
 
     private void setEffects() {

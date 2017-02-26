@@ -66,7 +66,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
             public void run() {
                 partyHard.impose(game.currentPlayer());
             }
-        }, game.getGameScreen());
+        });
 
         uhOh = new PlayerEffect("Uh Oh!", "Someone left the lights on over night again. Who was it? \nI bet it was Darrell," +
                 " it's always Darrell. Either way, \nlooks like it used a lot of your energy. \n\n -50 Energy", 0, -50, 0, 0, false, new Runnable() {
@@ -74,7 +74,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
             public void run() {
                 uhOh.impose(game.currentPlayer());
             }
-        }, game.getGameScreen());
+        });
         
         vikingRaid = new PlayerEffect("Viking Raid", "You have been raided by a band of intergalactic Vikings. " +
                 "They took:\n\n-10 Ore -10 Energy -10 Food and -10 Money", -10, -10, -10, -10, false, new Runnable() {
@@ -82,7 +82,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
             public void run() {
                 vikingRaid.impose(game.currentPlayer());
             }
-        }, game.getGameScreen());
+        });
 
         freshersFair = new PlayerEffect("Freshers Fair", "It's the University of York freshers fair! That means only one thing." +
                 " Free stuff!\nYou receive 10 of each resource!", 10, 10, 10, 10, false, new Runnable() {
@@ -90,7 +90,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
             public void run() {
                 freshersFair.impose(game.currentPlayer());
             }
-        },game.getGameScreen());
+        });
 
         brexit = new PlayerEffect("Brexit", "Oh no, it looks like Britain finally pulled out of the European Union. " +
                 "It only took a few centuries!\nNo need to pay for that membership fee anymore but there are more tariffs on food items." +
@@ -99,7 +99,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
             public void run() {
                 brexit.impose(game.currentPlayer());
             }
-        },game.getGameScreen());
+        });
     }
 
     /**

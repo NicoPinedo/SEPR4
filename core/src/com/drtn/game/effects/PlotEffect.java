@@ -13,20 +13,10 @@
 
 package com.drtn.game.effects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.drtn.game.entity.Tile;
 import com.drtn.game.enums.ResourceType;
 import com.drtn.game.exceptions.InvalidResourceTypeException;
-import com.drtn.game.screens.GameScreen;
-import com.drtn.game.util.Overlay;
-import com.drtn.game.util.TTFont;
 
 
 public class PlotEffect extends Array<Float[]> {
@@ -54,8 +44,8 @@ public class PlotEffect extends Array<Float[]> {
     /**
      * Overlay to provide a visual indication of the effect's presence and influences
      */
-    private Overlay overlay;
-    private GameScreen gameScreen;
+
+
 
     /**
      * Constructor that imports the parameters of the effect along with a custom block of code in which it can be used
@@ -65,7 +55,7 @@ public class PlotEffect extends Array<Float[]> {
      * @param modifiers The production modifiers that the effect can impose {0: ORE | 1: ENERGY | 2: FOOD}
      * @param runnable The code to be executed when the effect is imposed through natural means
      */
-    public PlotEffect(String name, String description, Float[] modifiers, Runnable runnable,GameScreen gameScreen) {
+    public PlotEffect(String name, String description, Float[] modifiers, Runnable runnable) {
         this.name = name;
         this.description = description;
         //Stores the effect's name and description for future reference
@@ -74,61 +64,19 @@ public class PlotEffect extends Array<Float[]> {
         //Store the effect's modifiers at the base of the internal stack
 
         this.runnable = runnable;
-        this.gameScreen = gameScreen;
+
         //Assign the effect to the proprietary method provided
 
         this.plotRegister = new Array<Tile>();
         //Establish the separate LandPlot stack to track affected tiles
 
-        this.overlay = new Overlay(gameScreen.getGame(), Color.GRAY, Color.WHITE, 900, 200, 3);
-        //Construct a visual interface through which the effect can be identified
+
+
     }
 
 
 
-    /**
-     * Method that populates the effect's associated overlay
-     */
-    public void constructOverlay(final GameScreen gameScreen) {
-        TextButton.TextButtonStyle overlayButtonStyle = new TextButton.TextButtonStyle();
-        TTFont gameFont = new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 36);
-        overlayButtonStyle.font = gameFont.font();
-        overlayButtonStyle.pressedOffsetX = -1;
-        overlayButtonStyle.pressedOffsetY = -1;
-        overlayButtonStyle.fontColor = Color.WHITE;
-        //Set the visual parameters for the [CLOSE] button on the overlay
 
-        Label headerLabel = new Label("PLOT EFFECT IMPOSED", new Label.LabelStyle(gameFont.font(), Color.YELLOW));
-        Label titleLabel = new Label(name, new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        Label descriptionLabel = new Label(description, new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        //Construct labels to state the type, name and description of this effect
-
-        headerLabel.setAlignment(Align.left);
-        titleLabel.setAlignment(Align.right);
-        descriptionLabel.setAlignment(Align.left);
-        //Align the aforementioned labels against the edges of the overlay's internal table...
-
-        overlay.table().add(headerLabel).width(300).left();
-        overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 300).right();
-        overlay.table().row();
-        overlay.table().add(descriptionLabel).left().colspan(2).padTop(5).padBottom(20);
-        //...and then add them to it
-
-        overlay.table().row().colspan(2);
-        TextButton closeButton = new TextButton("CLOSE", overlayButtonStyle);
-        closeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.hideEventMessage();
-            }
-        });
-
-        overlay.table().add(closeButton);
-        //Set up and add a [CLOSE] button to the overlay
-
-
-        //Resize the overlay to fit around the sizes of the labels that were added to it
-    }
 
     /**
      * Imposes the effect's modifiers on the provided plot
@@ -238,7 +186,7 @@ public class PlotEffect extends Array<Float[]> {
      * Getter for the overlay
      * @return The overlay of the effect
      */
-    public Overlay overlay() { return overlay; }
+
 
     public String getDescription(){
         return this.description;
