@@ -240,6 +240,12 @@ public class GameEngine {
                 timer.setTime(0, 5);
                 timer.start();
                 produceResource();
+		clearEffects();
+                setEffects();
+                System.out.println("test");
+                gameScreen.updateInventoryLabels();
+                market.refreshPlayers();
+                market.refreshAuction();	
                 break;
 
             case 5:
@@ -291,14 +297,9 @@ public class GameEngine {
         if (currentPlayerID >= players.length) {
             currentPlayerID = 0;
 
-            if (phase == 4) {
-                clearEffects();
-                setEffects();
-                System.out.println("test");
-                gameScreen.updateInventoryLabels();
-                market.refreshPlayers();
-                market.refreshAuction();
-            }
+           
+                
+            
 
             phase ++;
             if (phase >= 6) {
@@ -662,7 +663,7 @@ public class GameEngine {
     }
     private void setupEffects() throws InvalidResourceTypeException {
         //Initialise the fractional chance of any given effect being applied at the start of a round
-        effectChance = (float) 0.5;
+        effectChance = (float) 0.25;
 
         plotEffectSource = new PlotEffectSource(this);
         playerEffectSource = new PlayerEffectSource(this);
@@ -679,6 +680,7 @@ public class GameEngine {
                 if (!(isCurrentlyAiPlayer())) {
                     gameScreen.showEventMessage(PTE.getDescription());
                 }
+		break;    
             }
         }
 
