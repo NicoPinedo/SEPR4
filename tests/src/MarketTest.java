@@ -26,6 +26,7 @@ public class MarketTest extends TesterFile{
 
     @Before
     public void setup() {
+
         testGameEngine = new GameEngine(testGame,testScreen);
         testGameEngine.initialisePlayers(0, 2);
         testMarket = new Market(testGame,testGameEngine);

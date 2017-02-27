@@ -51,6 +51,8 @@ public class Overlay extends Stage {
      */
     private Color lineColor;
 
+
+
     /**
      * Creates a stage that itself places a table of the specified parameters in the centre of the screen
      * The overlay's [draw()] method is unlike that of the standard Stage class as it also draws a bordered
@@ -101,6 +103,8 @@ public class Overlay extends Stage {
         super.draw();
         //...before drawing everything encompassed by the overlay's internal table
     }
+
+
 
     /**
      * Returns the table that serves as the overlay's spatial framework

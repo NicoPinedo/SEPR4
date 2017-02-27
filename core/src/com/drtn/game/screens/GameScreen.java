@@ -830,7 +830,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
   //new for assessment 3
-  private void hideEventMessage() {
+  public void hideEventMessage() {
         eventMessageOverlayVisible = false;
         if (upgradeOverlayVisible) {
             Gdx.input.setInputProcessor(upgradeOverlay);
@@ -1258,6 +1258,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     void assignEngine(GameEngine engine) {
         this.engine = engine;
+    }
+
+    public Game getGame(){
+        return this.game;
     }
 	
     
