@@ -2,7 +2,7 @@ package duckrelatedteamname.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.drtn.game.Main;
+import drtn.game.Main;
 
 /**
  * URL for executable: https://teamfractal.github.io/assessment3/Game.jar

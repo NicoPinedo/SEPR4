@@ -7,6 +7,9 @@ Master Build Status:      [![Build Status](https://travis-ci.org/jm179796/SEPR.s
 
 Development Build Status: [![Build Status](https://travis-ci.org/jm179796/SEPR.svg?branch=Development)](https://travis-ci.org/jm179796/SEPR)
 
+Code coverage (development): [![Code Coverage](https://img.shields.io/codecov/c/github/NicoPinedo/SEPR4/development.svg)](https://codecov.io/github/NicoPinedo/SEPR4?branch=development)
+
+
 
 ## Using our project
 - Our project utilises Gradle, we highly recommend using IntelliJ IDEA as your IDE as we've already set up all the Run Configrations you'll need for it
