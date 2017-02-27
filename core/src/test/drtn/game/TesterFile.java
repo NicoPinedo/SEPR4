@@ -1,4 +1,4 @@
-package drtn.game;
+package main.drtn.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;

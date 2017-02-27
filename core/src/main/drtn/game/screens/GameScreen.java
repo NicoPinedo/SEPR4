@@ -1,4 +1,4 @@
-package drtn.game.screens;
+package main.drtn.game.screens;
 
 
 import com.badlogic.gdx.Game;
@@ -20,14 +20,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-import drtn.game.GameEngine;
-import drtn.game.Trade;
-import drtn.game.entity.Tile;
-import drtn.game.enums.ResourceType;
-import drtn.game.util.Drawer;
-import drtn.game.util.LabelledElement;
-import drtn.game.util.Overlay;
-import drtn.game.util.TTFont;
+import main.drtn.game.GameEngine;
+import main.drtn.game.Trade;
+import main.drtn.game.entity.Tile;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.LabelledElement;
+import main.drtn.game.util.Overlay;
+import main.drtn.game.util.TTFont;
 import main.teamfractal.util.animation.AnimationPlayerWin;
 import main.teamfractal.util.animation.AnimationTileFlash;
 import main.teamfractal.util.animation.IAnimation;

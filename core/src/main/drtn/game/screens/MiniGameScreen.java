@@ -1,4 +1,4 @@
-package drtn.game.screens;
+package main.drtn.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,14 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import drtn.game.GameEngine;
-import drtn.game.entity.Player;
-import drtn.game.enums.ResourceType;
-import drtn.game.util.TTFont;
+import main.drtn.game.GameEngine;
+import main.drtn.game.entity.Player;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.util.TTFont;
 import main.teamfractal.util.screens.AbstractAnimationScreen;
-import drtn.game.GameEngine;
-import drtn.game.entity.Player;
-import drtn.game.enums.ResourceType;
+import main.drtn.game.GameEngine;
+import main.drtn.game.entity.Player;
+import main.drtn.game.enums.ResourceType;
 import main.teamfractal.util.screens.AbstractAnimationScreen;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package drtn.game.screens;
+package main.drtn.game.screens;
 
 
 import com.badlogic.gdx.Game;

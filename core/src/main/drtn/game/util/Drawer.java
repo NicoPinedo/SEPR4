@@ -1,4 +1,4 @@
-package drtn.game.util;
+package main.drtn.game.util;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,8 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import drtn.game.entity.Roboticon;
-import drtn.game.entity.Roboticon;
+import main.drtn.game.entity.Roboticon;
+import main.drtn.game.entity.Roboticon;
 
 
 public class Drawer {

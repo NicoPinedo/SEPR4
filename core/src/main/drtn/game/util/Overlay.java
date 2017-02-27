@@ -1,4 +1,4 @@
-package drtn.game.util;
+package main.drtn.game.util;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

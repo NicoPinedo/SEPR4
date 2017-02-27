@@ -1,4 +1,4 @@
-package drtn.game.exceptions;
+package main.drtn.game.exceptions;
 
 /**
  * Created by Kieran on 24/02/2017.

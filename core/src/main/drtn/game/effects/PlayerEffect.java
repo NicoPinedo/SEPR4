@@ -11,11 +11,11 @@
  * And a more concise report can be found in our Change3 document.
  **/
 
-package drtn.game.effects;
+package main.drtn.game.effects;
 
-import drtn.game.entity.Player;
-import drtn.game.enums.ResourceType;
-import drtn.game.enums.ResourceType;
+import main.drtn.game.entity.Player;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.enums.ResourceType;
 
 
 public class PlayerEffect {

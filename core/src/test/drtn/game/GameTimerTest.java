@@ -1,9 +1,9 @@
-package drtn.game;
+package main.drtn.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import drtn.game.util.GameTimer;
-import drtn.game.util.TTFont;
+import main.drtn.game.util.GameTimer;
+import main.drtn.game.util.TTFont;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

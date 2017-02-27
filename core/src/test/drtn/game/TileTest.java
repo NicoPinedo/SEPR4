@@ -1,11 +1,11 @@
-package drtn.game;
+package main.drtn.game;
 
 import com.badlogic.gdx.Game;
-import drtn.game.Main;
-import drtn.game.entity.Player;
-import drtn.game.entity.Roboticon;
-import drtn.game.entity.Tile;
-import drtn.game.enums.ResourceType;
+import main.drtn.game.Main;
+import main.drtn.game.entity.Player;
+import main.drtn.game.entity.Roboticon;
+import main.drtn.game.entity.Tile;
+import main.drtn.game.enums.ResourceType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

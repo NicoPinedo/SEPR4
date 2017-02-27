@@ -1,9 +1,9 @@
-package drtn.game;
+package main.drtn.game;
 
 import com.badlogic.gdx.Game;
-import drtn.game.GameEngine;
-import drtn.game.Main;
-import drtn.game.screens.GameScreen;
+import main.drtn.game.GameEngine;
+import main.drtn.game.Main;
+import main.drtn.game.screens.GameScreen;
 import org.junit.Before;
 
 /**
