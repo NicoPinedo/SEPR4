@@ -93,6 +93,11 @@ public class GameEngine {
     private ArrayList<RandomEvent> randomEvents = new ArrayList<RandomEvent>();
 
     /**
+     * Holds data for the "Catch the Chancellor" mini-game
+     */
+    private Chancellor chancellor;
+
+    /**
      * Constructs the game's engine. Imports the game's state (for direct renderer access) and the data held by the
      * GameScreen which this engine directly controls; then goes on to set up player-data for the game's players,
      * tile-data for the on-screen map and the in-game market for in-play manipulation. In the cases of the latter
@@ -221,7 +226,7 @@ public class GameEngine {
                 break;
 
             case 3:
-            	timer.setTime(0, 30);
+            	timer.setTime(0, 45);
                 timer.start();
                 break;
 
