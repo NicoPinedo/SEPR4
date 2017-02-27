@@ -499,6 +499,11 @@ public class GameEngine {
     }
 
     /**
+     * Begins "Catch the Chancellor" mini-game
+     */
+    public void beginChancellorMinigame(){Chancellor chancellor = new Chancellor(players[currentPlayerID], tiles);}
+
+    /**
      * Return's the game's current play-state, which can either be [State.RUN] or [State.PAUSE]
      * This is not to be confused with the game-state (which is directly linked to the renderer)
      *

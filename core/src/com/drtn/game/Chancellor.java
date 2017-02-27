@@ -20,10 +20,6 @@ public class Chancellor {
      */
     private Tile[] tiles;
     /**
-     * The tile ID dictating which tile the Chancellor is currently on
-     */
-    private int tileID;
-    /**
      * The tile that the Chancellor is currently on
      */
     private Tile currentTile;
@@ -47,8 +43,9 @@ public class Chancellor {
 
     public void moveChancellor(){
         Random rand = new Random();
-        this.tileID = rand.nextInt(16); //Chooses random tile value (0-15)
-
+        int tileID;
+        tileID = rand.nextInt(16); //Chooses random tile value (0-15)
+        this.currentTile = tiles[tileID];
 
     }
 
