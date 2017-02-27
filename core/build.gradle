@@ -9,8 +9,3 @@ sourceSets.main.resources.srcDirs = ["assets"]
 sourceSets.test.java.srcDirs = ["src/test"]
 sourceSets.test.resources.srcDirs = ["assets"]
 
-
-
-eclipse.project {
-    name = appName + "-core"
-}

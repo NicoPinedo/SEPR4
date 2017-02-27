@@ -11,9 +11,15 @@ buildscript {
 }
 
 allprojects {
-    apply plugin: "eclipse"
+    apply plugin: "java"
+    apply plugin: "maven"
     apply plugin: "idea"
-    apply plugin: "jacoco"
+    apply plugin: 'jacoco'
+
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+    }
 
     version = '1.0'
     ext {
@@ -30,45 +36,60 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "http://repo1.maven.org/maven2/" }
+    }
+
+}
+subprojects {
+    project(":desktop") {
+
+        dependencies {
+            compile project(":core")
+            compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+            compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+            compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+            compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+            compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
+            compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
+            compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        }
+    }
+
+    project(":core") {
+
+        dependencies {
+            compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+            compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+            compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+            compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+
+
+            testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
+            testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+            testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+            testCompile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+            testCompile 'junit:junit:4.+'
+            testCompile "org.mockito:mockito-all:1.9.+"
+        }
     }
 }
 
-project(":desktop") {
-    apply plugin: "java"
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 
+    subprojects.each {
+        sourceSets it.sourceSets.main
+    }
 
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    reports {
+        xml.enabled true
+        xml.destination "${buildDir}/reports/jacoco/report.xml"
+        html.enabled true
+        csv.enabled false
     }
 }
 
-project(":core") {
-    apply plugin: "java"
-
-
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-
-
-        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        testCompile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        testCompile 'junit:junit:4.+'
-        testCompile "org.mockito:mockito-all:1.9.+"
-    }
+codeCoverageReport.dependsOn {
+    subprojects*.test
 }
 
-tasks.eclipse.doLast {
-    delete ".project"
-}
