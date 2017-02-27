@@ -1,9 +1,9 @@
-package com.drtn.game;
+package drtn.game.entity;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.drtn.game.entity.Player;
-import com.drtn.game.entity.Tile;
+import drtn.game.entity.Player;
+import drtn.game.entity.Tile;
 
 import java.util.Random;
 
