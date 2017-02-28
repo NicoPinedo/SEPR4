@@ -37,14 +37,13 @@ import teamfractal.util.screens.AbstractAnimationScreen;
 
 public class GameScreen extends AbstractAnimationScreen implements Screen {
     private final static int tileXOffset = 256;
-    /**
-     * Font which will be adopted by the game-screen's main interface
-     */
-    private static TTFont gameFont;
+
     /**
      * Establish visual parameters for in-game buttons
      */
-    private static TextButton.TextButtonStyle gameButtonStyle;
+    private static TextButton.TextButtonStyle largeButtonStyle;
+
+    private static TextButton.TextButtonStyle smallButtonStyle;
 
     private static TTFont headerFontRegular;
     private static TTFont headerFontLight;
@@ -52,19 +51,23 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private static TTFont smallFontLight;
 
     static {
-        gameFont = new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 36);
-
         headerFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 24);
         headerFontLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 24);
 
         smallFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 16);
         smallFontLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 16);
 
-        gameButtonStyle = new TextButton.TextButtonStyle();
-        gameButtonStyle.font = gameFont.font();
-        gameButtonStyle.fontColor = Color.WHITE;
-        gameButtonStyle.pressedOffsetX = 1;
-        gameButtonStyle.pressedOffsetY = -1;
+        largeButtonStyle = new TextButton.TextButtonStyle();
+        largeButtonStyle.font = headerFontRegular.font();
+        largeButtonStyle.fontColor = Color.WHITE;
+        largeButtonStyle.pressedOffsetX = 1;
+        largeButtonStyle.pressedOffsetY = -1;
+
+        smallButtonStyle = new TextButton.TextButtonStyle();
+        smallButtonStyle.font = smallFontRegular.font();
+        smallButtonStyle.fontColor = Color.WHITE;
+        smallButtonStyle.pressedOffsetX = 1;
+        smallButtonStyle.pressedOffsetY = -1;
     }
 
     private boolean shown = false;
@@ -224,12 +227,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         this(game, true);
     }
 
-    static TextButton.TextButtonStyle getGameButtonStyle() {
-        return gameButtonStyle;
-    }
-
-    static TTFont getGameFont() {
-        return gameFont;
+    static TextButton.TextButtonStyle getLargeButtonStyle() {
+        return largeButtonStyle;
     }
 
     /**
@@ -391,7 +390,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private void constructButtons() {
         //Button that, when clicked, ends the current turn for the current player prematurely
 
-        endTurnButton = new TextButton("NEXT PHASE", gameButtonStyle);
+        endTurnButton = new TextButton("NEXT PHASE", largeButtonStyle);
         endTurnButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -402,7 +401,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Turn off the "END TURN" button right away to force players into selecting tiles
 
         //Button which can be clicked on to pause the game
-        pauseButton = new TextButton("Pause Game", gameButtonStyle);
+        pauseButton = new TextButton("Pause Game", largeButtonStyle);
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -411,7 +410,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         });
 
         //Button which can be clicked on to go to the mini game
-        miniGameButton = new TextButton("Mini Game ($20)", gameButtonStyle);
+        miniGameButton = new TextButton("Mini Game ($20)", largeButtonStyle);
         miniGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -424,12 +423,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        gameFont.setSize(30);
-        gameButtonStyle.font = gameFont.font();
-
         //Button which allows players to claim selected tiles
-
-        claimTileButton = new TextButton("CLAIM", gameButtonStyle);
+        claimTileButton = new TextButton("CLAIM", smallButtonStyle);
         claimTileButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -441,7 +436,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         });
 
         //Button which allows players to deploy Roboticons onto selected tiles
-        deployRoboticonButton = new TextButton("DEPLOY", gameButtonStyle);
+        deployRoboticonButton = new TextButton("DEPLOY", smallButtonStyle);
         deployRoboticonButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -464,12 +459,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        gameFont.setSize(24);
-        gameButtonStyle.font = gameFont.font();
-
         //Button allowing players to upgrade roboticons' food-production capabilities
-
-        foodUpgradeButton = new TextButton("PRICE", gameButtonStyle);
+        foodUpgradeButton = new TextButton("PRICE", smallButtonStyle);
         foodUpgradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -481,7 +472,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         });
 
         //Button allowing players to upgrade roboticons' ore-production capabilities
-        oreUpgradeButton = new TextButton("PRICE", gameButtonStyle);
+        oreUpgradeButton = new TextButton("PRICE", smallButtonStyle);
         oreUpgradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -495,7 +486,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         /*
          * Button allowing players to upgrade roboticons' energy-production capabilities
          */
-        energyUpgradeButton = new TextButton("PRICE", gameButtonStyle);
+        energyUpgradeButton = new TextButton("PRICE", smallButtonStyle);
         energyUpgradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -508,7 +499,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
         //Button allowing players to escape from the upgrade overlay if they decide against upgrading roboticons
 
-        closeUpgradeOverlayButton = new TextButton("CLOSE", gameButtonStyle);
+        closeUpgradeOverlayButton = new TextButton("CLOSE", smallButtonStyle);
         closeUpgradeOverlayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -516,7 +507,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        confirmTradeButton = new TextButton("Confirm", gameButtonStyle);
+        confirmTradeButton = new TextButton("Confirm", smallButtonStyle);
         confirmTradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -532,7 +523,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        cancelTradeButton = new TextButton("Cancel", gameButtonStyle);
+        cancelTradeButton = new TextButton("Cancel", smallButtonStyle);
         cancelTradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -541,7 +532,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        closePriceOverlayButton = new TextButton("close", gameButtonStyle);
+        closePriceOverlayButton = new TextButton("close", smallButtonStyle);
         closePriceOverlayButton.addListener(new ChangeListener(){
         	@Override
         	public void changed(ChangeEvent event, Actor actor) {
@@ -549,7 +540,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         	}
         });
 
-        closeEventMessageButton = new TextButton("CLOSE MESSAGE", gameButtonStyle);
+        closeEventMessageButton = new TextButton("CLOSE MESSAGE", smallButtonStyle);
         closeEventMessageButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -581,7 +572,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableLeft.add(engine.timer()).colspan(2).size(255, 130).align(Align.center);
         //Add the timer to the table
 
-        gameFont.setSize(22);
         Table phaseTable = new Table();
         phaseLabel = new Label("", new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
         phaseLabel.setAlignment(Align.center);
@@ -591,37 +581,35 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         drawer.addTableRow(tableLeft, phaseTable, 0, 0, 15, 0, 2);
         //Prepare and add the "End Phase" button to the table
 
-        gameFont.setSize(36);
         drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(headerFontRegular.font(), Color.BLACK)), 0, 0, 10, 0, 2);
         //Window-dressing: adds "CURRENT PLAYER" label
 
-        gameFont.setSize(24);
         Table collegeInfo = new Table();
         currentPlayerIcon = new Image();
-        currentPlayerLabel = new Label("", new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        currentPlayerLabel = new Label("", new Label.LabelStyle(smallFontRegular.font(), Color.WHITE));
         drawer.addTableRow(collegeInfo, currentPlayerIcon, 64, 64);
-        drawer.addTableRow(collegeInfo, new Label("COLLEGE", new Label.LabelStyle(gameFont.font(), Color.WHITE)));
+        drawer.addTableRow(collegeInfo, new Label("COLLEGE", new Label.LabelStyle(smallFontLight.font(), Color.WHITE)));
         drawer.addTableRow(collegeInfo, currentPlayerLabel);
         drawer.addTableRow(tableLeft, collegeInfo, 5, 0, 0, 0);
         //Prepare icon region to show the icon of the college which is currently active
 
         Table resourceCounters = new Table();
-        foodCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.FOOD), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        foodCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.FOOD), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
         foodCounter.setAlignment(Align.right);
-        energyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ENERGY), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        energyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ENERGY), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
         energyCounter.setAlignment(Align.right);
-        oreCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ORE), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        oreCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ORE), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
         oreCounter.setAlignment(Align.right);
-        roboticonCounter = new Label("" + engine.currentPlayer().getRoboticonInventory(), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        roboticonCounter = new Label("" + engine.currentPlayer().getRoboticonInventory(), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
         roboticonCounter.setAlignment(Align.right);
-        moneyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.MONEY), new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        moneyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.MONEY), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
         moneyCounter.setAlignment(Align.right);
 
-        drawer.addTableRow(resourceCounters, new LabelledElement("Food", gameFont, Color.WHITE, foodCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Energy", gameFont, Color.WHITE, energyCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Ore", gameFont, Color.WHITE, oreCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Roboticons", gameFont, Color.WHITE, roboticonCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Money", gameFont, Color.WHITE, moneyCounter, 100, 40));
+        drawer.addTableRow(resourceCounters, new LabelledElement("Food", smallFontRegular, Color.WHITE, foodCounter, 100, 40));
+        drawer.addTableRow(resourceCounters, new LabelledElement("Energy", smallFontRegular, Color.WHITE, energyCounter, 100, 40));
+        drawer.addTableRow(resourceCounters, new LabelledElement("Ore", smallFontRegular, Color.WHITE, oreCounter, 100, 40));
+        drawer.addTableRow(resourceCounters, new LabelledElement("Roboticons", smallFontRegular, Color.WHITE, roboticonCounter, 100, 40));
+        drawer.addTableRow(resourceCounters, new LabelledElement("Money", smallFontRegular, Color.WHITE, moneyCounter, 100, 40));
         tableLeft.add(resourceCounters).size(150, 120).align(Align.right);
         //Add resource-counters to the table
         //These will show the current resource stocks for the current player
@@ -656,8 +644,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableRight.center().top();
         //Shift the table towards the top of the screen
 
-        gameFont.setSize(40);
-        selectedTileLabel = new Label("NO TILE SELECTED", new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        selectedTileLabel = new Label("NO TILE SELECTED", new Label.LabelStyle(smallFontRegular.font(), Color.WHITE));
         selectedTileLabel.setAlignment(Align.center);
         drawer.addTableRow(tableRight, selectedTileLabel, 240, 43, 0, 0, 10, 0, 2);
         //Set up and deploy label to identify tiles when they're clicked on
@@ -675,9 +662,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableRight.add(selectedTileRoboticonIcon).size(64, 64).center();
         //Instantiate and deploy icons to represent tiles' owners and Roboticons
 
-        gameFont.setSize(20);
-        Label collegeFootLabel = new Label("COLLEGE", new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        Label roboticonFootLabel = new Label("ROBOTICON", new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        Label collegeFootLabel = new Label("COLLEGE", new Label.LabelStyle(smallFontRegular.font(), Color.WHITE));
+        Label roboticonFootLabel = new Label("ROBOTICON", new Label.LabelStyle(smallFontRegular.font(), Color.WHITE));
         collegeFootLabel.setAlignment(Align.center);
         roboticonFootLabel.setAlignment(Align.center);
         tableRight.row();
@@ -784,17 +770,15 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         upgradeOverlayVisible = false;
         //Stop the GameScreen's renderer from rendering the overlay right away
 
-        gameFont.setSize(36);
-        upgradeOverlay.table().add(new Label("UPGRADE ROBOTICON", new Label.LabelStyle(gameFont.font(), Color.WHITE))).padBottom(20);
+        upgradeOverlay.table().add(new Label("UPGRADE ROBOTICON", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
         //Visual guff
 
-        gameFont.setSize(24);
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("FOOD", gameFont, Color.WHITE, foodUpgradeButton, 175, 0)).left();
+        upgradeOverlay.table().add(new LabelledElement("FOOD", smallFontRegular, Color.WHITE, foodUpgradeButton, 175, 0)).left();
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("ENERGY", gameFont, Color.WHITE, energyUpgradeButton, 175, 0)).left();
+        upgradeOverlay.table().add(new LabelledElement("ENERGY", smallFontRegular, Color.WHITE, energyUpgradeButton, 175, 0)).left();
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("ORE", gameFont, Color.WHITE, oreUpgradeButton, 175, 0)).left().padBottom(20);
+        upgradeOverlay.table().add(new LabelledElement("ORE", smallFontRegular, Color.WHITE, oreUpgradeButton, 175, 0)).left().padBottom(20);
         //Add buttons for upgrading roboticons to the overlay
         //Like in the market, each button's label is the monetary price of the upgrade that it performs
 
@@ -809,15 +793,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     //new for assessment 3
     private void constructEventMessageOverlay() {
         eventMessageOverlay = new Overlay(Color.GRAY, Color.WHITE, 900, 200, 3);
-        eventMessage = new Label("", new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        eventMessage = new Label("", new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
 
         eventMessageOverlayVisible = false;
 
-        gameFont.setSize(26);
-
-        eventMessageOverlay.table().add(new Label("RANDOM EVENT!", new Label.LabelStyle(gameFont.font(), Color.WHITE)));
-
-        gameFont.setSize(20);
+        eventMessageOverlay.table().add(new Label("RANDOM EVENT!", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE)));
         eventMessageOverlay.table().row();
         eventMessageOverlay.table().add(eventMessage);
 
@@ -846,20 +826,18 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private void constructTradeOverlay(Trade trade){
     	tradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 300, 3);
     	tradeOverlayVisible = false;
-    	gameFont.setSize(36);
-        tradeOverlay.table().add(new Label("INCOMING TRADE", new Label.LabelStyle(gameFont.font(), Color.WHITE))).padBottom(20);
+        tradeOverlay.table().add(new Label("INCOMING TRADE", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
 
-        gameFont.setSize(24);
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("From: Player " + trade.getSender().getPlayerNumber(), new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("From: Player " + trade.getSender().getPlayerNumber(), new Label.LabelStyle(smallFontLight.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("ORE: " + trade.oreAmount, new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("ORE: " + trade.oreAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("ENERGY: " + trade.energyAmount, new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("ENERGY: " + trade.energyAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("FOOD " + trade.foodAmount, new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("FOOD " + trade.foodAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("PRICE: " + trade.getPrice(), new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("PRICE: " + trade.getPrice(), new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
         tradeOverlay.table().add(confirmTradeButton);
         tradeOverlay.table().add(cancelTradeButton);
@@ -869,13 +847,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private void constructTooExpensiveOverlay(){
     	tooExpensiveOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 300, 3);
     	tooExpensiveOverlayVisible = false;
-    	gameFont.setSize(36);
-    	tooExpensiveOverlay.table().add(new Label("NOT ENOUGH MONEY!", new Label.LabelStyle(gameFont.font(), Color.WHITE))).padBottom(20);
+
+    	tooExpensiveOverlay.table().add(new Label("NOT ENOUGH MONEY!", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
     	tooExpensiveOverlay.table().row();
-    	gameFont.setSize(24);
     	tooExpensiveOverlay.table().add(closePriceOverlayButton);
-
-
     }
 
     /**

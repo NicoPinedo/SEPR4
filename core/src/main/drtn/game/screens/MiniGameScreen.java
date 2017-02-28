@@ -18,10 +18,6 @@ import drtn.game.entity.Player;
 import drtn.game.enums.ResourceType;
 import drtn.game.util.TTFont;
 import teamfractal.util.screens.AbstractAnimationScreen;
-import drtn.game.GameEngine;
-import drtn.game.entity.Player;
-import drtn.game.enums.ResourceType;
-import teamfractal.util.screens.AbstractAnimationScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +41,8 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
         textures.add(cardTextureAddMoney);
         textures.add(cardTextureAddRoboticon);
         textures.add(cardTextureNothing);
+
+        smallFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 16);
     }
 
     private Random rnd = new Random();
@@ -57,6 +55,8 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
     private int high;
     private Stage stage;
 
+    private static TTFont smallFontRegular;
+
     @Override
     public void show() {
 
@@ -68,10 +68,8 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
         button2 = new ImageButton(cardTexture);
         button3 = new ImageButton(cardTexture);
 
-        TextButton.TextButtonStyle buttonStyle = GameScreen.getGameButtonStyle();
-        TTFont gameFont = GameScreen.getGameFont();
-        gameFont.setSize(30);
-        buttonStyle.font = gameFont.font();
+        TextButton.TextButtonStyle buttonStyle = GameScreen.getLargeButtonStyle();
+        buttonStyle.font = smallFontRegular.font();
 
         TextButton buttonBack = new TextButton("BACK", buttonStyle);
         table.add(button1).padRight(10);
