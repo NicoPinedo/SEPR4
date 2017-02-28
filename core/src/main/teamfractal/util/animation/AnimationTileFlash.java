@@ -1,9 +1,9 @@
-package main.teamfractal.util.animation;
+package teamfractal.util.animation;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import drtn.game.GameEngine;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
 import drtn.game.GameEngine;
 
 import java.util.ArrayList;

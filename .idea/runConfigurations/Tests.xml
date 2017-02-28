@@ -1,6 +1,31 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Tests" type="JUnit" factoryName="JUnit">
-    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="jacoco">
+      <pattern>
+        <option name="PATTERN" value="drtn.*" />
+        <option name="ENABLED" value="false" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.effects.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.entity.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.enums.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.exceptions.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.util.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
     <module name="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
