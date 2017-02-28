@@ -674,7 +674,6 @@ public class Market extends Table {
      * Once this method has finished executing, the market can be drawn to a stage like any other actor
      */
     private void constructInterface() {
-
         tableFont.setSize(36);
         drawer.toggleButton(marketButton, false, Color.GRAY);
         drawer.toggleButton(auctionButton, true, Color.WHITE);
