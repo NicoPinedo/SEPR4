@@ -11,6 +11,7 @@ Development Build Status: [![Build Status](https://travis-ci.org/jm179796/SEPR.s
 
 Code coverage (development): [![Code Coverage](https://img.shields.io/codecov/c/github/NicoPinedo/SEPR4/development.svg)](https://codecov.io/github/NicoPinedo/SEPR4?branch=development)
 
+Code coverage (development): [![Code Coverage](https://img.shields.io/codecov/c/github/NicoPinedo/SEPR4/codeCoverage.svg)](https://codecov.io/github/NicoPinedo/SEPR4?branch=codeCoverage)
 
 
 ## Using our project
