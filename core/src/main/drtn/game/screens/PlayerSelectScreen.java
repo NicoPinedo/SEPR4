@@ -159,8 +159,6 @@ public class PlayerSelectScreen implements Screen {
         stage = new Stage();
         table = new Table();
         //Initialise stage and button-table
-        
-        
 
         titleFont = new TTFont(Gdx.files.internal("font/earthorbiterxtrabold.ttf"), 120, 2, Color.BLACK, false);
         menuFont = new TTFont(Gdx.files.internal("font/enterthegrid.ttf"), 36, 2, Color.BLACK, false);
@@ -339,6 +337,4 @@ public class PlayerSelectScreen implements Screen {
 		playerAmountLabel.setText("" + playerAmount);
 		AIPlayerAmountLabel.setText("" + AIPlayerAmount);
 	}
-	
-
 }

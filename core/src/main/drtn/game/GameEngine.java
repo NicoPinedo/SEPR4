@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import drtn.game.effects.PlayerEffectSource;
 import drtn.game.effects.PlotEffect;
@@ -122,18 +123,13 @@ public class GameEngine {
         drawer = new Drawer(this.game);
         //Import QOL drawing function
 
-
-        //Set up objects to hold player-data
-        //Start the game such that player 1 makes the first move
-
-        //Start the game in the first phase (of 5, which recur until all tiles are claimed)
-
-        timer = new GameTimer(0, new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 120), Color.WHITE, new Runnable() {
+        timer = new GameTimer(0, new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 70), Color.WHITE, new Runnable() {
             @Override
             public void run() {
                 nextPhase(); // Timeout event
             }
         });
+        timer.setAlignment(Align.center);
         //Set up game timer
         //Game timer automatically ends the current turn when it reaches 0
 
