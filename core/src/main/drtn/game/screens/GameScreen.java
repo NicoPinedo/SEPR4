@@ -19,13 +19,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
 import drtn.game.GameEngine;
 import drtn.game.Trade;
 import drtn.game.entity.Tile;
 import drtn.game.enums.ResourceType;
 import drtn.game.screens.tables.PhaseInfoTable;
 import drtn.game.screens.tables.PlayerInfoTable;
+import drtn.game.screens.tables.SelectedTileInfoTable;
 import drtn.game.util.Drawer;
 import drtn.game.util.LabelledElement;
 import drtn.game.util.Overlay;
@@ -74,6 +74,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     public PlayerInfoTable playerInfoTable;
     public PhaseInfoTable phaseInfoTable;
+    public SelectedTileInfoTable selectedTileInfoTable;
 
     private boolean shown = false;
     private IAnimation lastTileClickedFlash;
@@ -406,42 +407,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        //Button which allows players to claim selected tiles
-        claimTileButton = new TextButton("CLAIM", smallButtonStyle);
-        claimTileButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.claimTile();
-
-                selectTile(engine.selectedTile(), false);
-                //Refresh tile information and tile management UI
-            }
-        });
-
-        //Button which allows players to deploy Roboticons onto selected tiles
-        deployRoboticonButton = new TextButton("DEPLOY", smallButtonStyle);
-        deployRoboticonButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (!engine.selectedTile().hasRoboticon()) {
-                    engine.deployRoboticon();
-
-                    selectTile(engine.selectedTile(), false);
-                    //Re-select the current tile to update the UI
-                } else {
-                    updateUpgradeOptions();
-                    //Refresh the upgrade options shown on the roboticon upgrade overlay
-
-                    upgradeOverlayVisible = true;
-                    //Set the renderer to show the upgrade overlay if this button is clicked after a tile with a
-                    //roboticon was clicked on
-
-                    Gdx.input.setInputProcessor(upgradeOverlay);
-                    //Direct user inputs towards the roboticon upgrade overlay
-                }
-            }
-        });
-
         //Button allowing players to upgrade roboticons' food-production capabilities
         foodUpgradeButton = new TextButton("PRICE", smallButtonStyle);
         foodUpgradeButton.addListener(new ChangeListener() {
@@ -605,40 +570,39 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableRight.center().top();
         //Shift the table towards the top of the screen
 
-        selectedTileLabel = new Label("NO TILE SELECTED", new Label.LabelStyle(smallFontRegular.font(), Color.WHITE));
-        selectedTileLabel.setAlignment(Align.center);
-        drawer.addTableRow(tableRight, selectedTileLabel, 240, 43, 0, 0, 10, 0, 2);
-        //Set up and deploy label to identify tiles when they're clicked on
+        selectedTileInfoTable = new SelectedTileInfoTable();
+        selectedTileInfoTable.setClaimTileButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.claimTile();
 
-        selectedTileOwnerIcon = new Image();
-        selectedTileOwnerIcon.setVisible(false);
-        selectedTileOwnerIcon.setScaling(Scaling.fit);
-        selectedTileOwnerIcon.setAlign(Align.center);
-        selectedTileRoboticonIcon = new Image();
-        selectedTileRoboticonIcon.setVisible(false);
-        selectedTileRoboticonIcon.setScaling(Scaling.fit);
-        selectedTileRoboticonIcon.setAlign(Align.center);
-        tableRight.row();
-        tableRight.add(selectedTileOwnerIcon).size(64, 64).center();
-        tableRight.add(selectedTileRoboticonIcon).size(64, 64).center();
-        //Instantiate and deploy icons to represent tiles' owners and Roboticons
+                selectTile(engine.selectedTile(), false);
+                //Refresh tile information and tile management UI
+            }
+        });
+        selectedTileInfoTable.setDeployRoboticonButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (!engine.selectedTile().hasRoboticon()) {
+                    engine.deployRoboticon();
 
-        Label collegeFootLabel = new Label("COLLEGE", new Label.LabelStyle(smallFontRegular.font(), Color.WHITE));
-        Label roboticonFootLabel = new Label("ROBOTICON", new Label.LabelStyle(smallFontRegular.font(), Color.WHITE));
-        collegeFootLabel.setAlignment(Align.center);
-        roboticonFootLabel.setAlignment(Align.center);
-        tableRight.row();
-        tableRight.add(collegeFootLabel).padBottom(10).width(120);
-        tableRight.add(roboticonFootLabel).padBottom(10).width(120);
-        //Even more window-dressing
+                    selectTile(engine.selectedTile(), false);
+                    //Re-select the current tile to update the UI
+                } else {
+                    updateUpgradeOptions();
+                    //Refresh the upgrade options shown on the roboticon upgrade overlay
 
-        drawer.toggleButton(claimTileButton, false, Color.GRAY);
-        drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
-        //Disable the claim and deploy button until a tile is selected under the appropriate conditions
+                    upgradeOverlayVisible = true;
+                    //Set the renderer to show the upgrade overlay if this button is clicked after a tile with a
+                    //roboticon was clicked on
 
-        drawer.addTableRow(tableRight, claimTileButton, 0, 0, 15, 0);
-        tableRight.add(deployRoboticonButton).padBottom(15);
-        //Add tile claim/deploy buttons to interface
+                    Gdx.input.setInputProcessor(upgradeOverlay);
+                    //Direct user inputs towards the roboticon upgrade overlay
+                }
+            }
+        });
+
+        tableRight.add(selectedTileInfoTable);
 
         drawer.addTableRow(tableRight, engine.market(), 2);
         //Establish market and add market interface to right-hand table
@@ -935,61 +899,34 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             addAnimation(lastTileClickedFlash);
         }
 
-        selectedTileLabel.setText("TILE " + tile.getID());
+        selectedTileInfoTable.showTileInfo(tile);
 
-        drawRoboticonIcon = false;
         if (tile.isOwned()) {
-            selectedTileOwnerIcon.setVisible(true);
-            selectedTileOwnerIcon.setDrawable(new TextureRegionDrawable(new TextureRegion(tile.getOwner().getCollege().getLogoTexture())));
-            selectedTileOwnerIcon.setSize(64, 64);
-            //Update tile owner college icon
-
-            drawer.toggleButton(claimTileButton, false, Color.GRAY);
+            selectedTileInfoTable.toggleClaimTileButton(false);
             //Disable the button for claiming the tile if it's already been claimed
 
             if (tile.hasRoboticon()) {
-                deployRoboticonButton.setText("UPGRADE");
-
-                drawRoboticonIcon = true;
-                // selectedTileRoboticonIcon.setVisible(true);
-                selectedTileRoboticonIcon.setDrawable(new TextureRegionDrawable(new TextureRegion(tile.getRoboticonStored().getIconTexture())));
-                selectedTileOwnerIcon.setSize(64, 64);
-
                 if (engine.phase() == 3 && tile.getOwner() == engine.currentPlayer()) {
-                    drawer.toggleButton(deployRoboticonButton, true, Color.WHITE);
+                    selectedTileInfoTable.toggleDeployRoboticonButton(true);
                 } else {
-                    drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
+                    selectedTileInfoTable.toggleDeployRoboticonButton(false);
                 }
-                //If the tile already has a Roboticon, offer an upgrade button if the Roboticon upgrade conditions are met
-                //Also show an icon representing the Roboticon inhabiting the tile
-                //This will only happen if the game is in phase 3
             } else {
-                deployRoboticonButton.setText("DEPLOY");
-
-                selectedTileRoboticonIcon.setVisible(false);
-
                 if (engine.phase() == 3 && tile.getOwner() == engine.currentPlayer() && engine.currentPlayer().getRoboticonInventory() > 0) {
-                    drawer.toggleButton(deployRoboticonButton, true, Color.WHITE);
+                    selectedTileInfoTable.toggleDeployRoboticonButton(true);
                 } else {
-                    drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
+                    selectedTileInfoTable.toggleDeployRoboticonButton(false);
                 }
-                //If the tile doesn't have a Robotion, offer a deployment button if the current player owns at least 1 Roboticon
-                //This will only happen if the game is in phase 3
             }
         } else {
-            // tile.getX()
-
-            selectedTileOwnerIcon.setVisible(false);
-            selectedTileRoboticonIcon.setVisible(false);
-
             if (engine.phase() == 1) {
-                drawer.toggleButton(claimTileButton, true, Color.WHITE);
+                selectedTileInfoTable.toggleClaimTileButton(true);
+            } else {
+                selectedTileInfoTable.toggleClaimTileButton(false);
             }
 
-            deployRoboticonButton.setText("DEPLOY");
-            drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
+            selectedTileInfoTable.toggleDeployRoboticonButton(false);
         }
-        //If the tile isn't yet owned by anyone, allow the current player to claim it if the game is in phase 1
     }
 
     /**
