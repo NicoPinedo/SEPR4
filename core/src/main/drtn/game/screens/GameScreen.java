@@ -24,6 +24,7 @@ import drtn.game.GameEngine;
 import drtn.game.Trade;
 import drtn.game.entity.Tile;
 import drtn.game.enums.ResourceType;
+import drtn.game.screens.tables.PlayerInfoTable;
 import drtn.game.util.Drawer;
 import drtn.game.util.LabelledElement;
 import drtn.game.util.Overlay;
@@ -70,6 +71,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         smallButtonStyle.pressedOffsetY = -1;
     }
 
+    public PlayerInfoTable playerInfoTable;
+
     private boolean shown = false;
     private IAnimation lastTileClickedFlash;
     private IAnimation playerWin;
@@ -101,26 +104,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * Label identifying the current phase number
      */
     private Label phaseLabel;
-    /**
-     * Label counter providing a visual representation of the current player's food stocks
-     */
-    private Label foodCounter;
-    /**
-     * Label counter providing a visual representation of the current player's energy stocks
-     */
-    private Label energyCounter;
-    /**
-     * Label counter providing a visual representation of the current player's ore stocks
-     */
-    private Label oreCounter;
-    /**
-     * Label counter providing a visual representation of the current player's roboticon stocks
-     */
-    private Label roboticonCounter;
-    /**
-     * Label counter providing a visual representation of the current player's money
-     */
-    private Label moneyCounter;
     /**
      * Label stating the getID of the currently-selected tile
      */
@@ -466,7 +449,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(2);
 
-                updateInventoryLabels();
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.FOOD);
                 updateUpgradeOptions();
             }
         });
@@ -478,7 +461,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(0);
 
-                updateInventoryLabels();
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.ORE);
                 updateUpgradeOptions();
             }
         });
@@ -492,7 +475,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(1);
 
-                updateInventoryLabels();
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.ENERGY);
                 updateUpgradeOptions();
             }
         });
@@ -516,7 +499,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             	   openTooExpensiveOverlay();
                }
                else{
-            	   updateInventoryLabels();
+                   playerInfoTable.showPlayerInventory(engine.currentPlayer());
             	   engine.testTrade();
                }
 
@@ -584,35 +567,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(headerFontRegular.font(), Color.BLACK)), 0, 0, 10, 0, 2);
         //Window-dressing: adds "CURRENT PLAYER" label
 
-        Table collegeInfo = new Table();
-        currentPlayerIcon = new Image();
-        currentPlayerLabel = new Label("", new Label.LabelStyle(smallFontRegular.font(), Color.WHITE));
-        drawer.addTableRow(collegeInfo, currentPlayerIcon, 64, 64);
-        drawer.addTableRow(collegeInfo, new Label("COLLEGE", new Label.LabelStyle(smallFontLight.font(), Color.WHITE)));
-        drawer.addTableRow(collegeInfo, currentPlayerLabel);
-        drawer.addTableRow(tableLeft, collegeInfo, 5, 0, 0, 0);
-        //Prepare icon region to show the icon of the college which is currently active
-
-        Table resourceCounters = new Table();
-        foodCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.FOOD), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
-        foodCounter.setAlignment(Align.right);
-        energyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ENERGY), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
-        energyCounter.setAlignment(Align.right);
-        oreCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ORE), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
-        oreCounter.setAlignment(Align.right);
-        roboticonCounter = new Label("" + engine.currentPlayer().getRoboticonInventory(), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
-        roboticonCounter.setAlignment(Align.right);
-        moneyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.MONEY), new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
-        moneyCounter.setAlignment(Align.right);
-
-        drawer.addTableRow(resourceCounters, new LabelledElement("Food", smallFontRegular, Color.WHITE, foodCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Energy", smallFontRegular, Color.WHITE, energyCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Ore", smallFontRegular, Color.WHITE, oreCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Roboticons", smallFontRegular, Color.WHITE, roboticonCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Money", smallFontRegular, Color.WHITE, moneyCounter, 100, 40));
-        tableLeft.add(resourceCounters).size(150, 120).align(Align.right);
-        //Add resource-counters to the table
-        //These will show the current resource stocks for the current player
+        playerInfoTable = new PlayerInfoTable();
+        playerInfoTable.showPlayerInfo(engine.currentPlayer());
+        tableLeft.row();
+        tableLeft.add(playerInfoTable).padTop(5);
 
         drawer.addTableRow(tableLeft, miniGameButton, 105-40, 0, 0, 0, 2);
 
@@ -623,7 +581,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Add left-hand table to the stage
 
         updatePhaseLabel();
-        updatePlayerName();
+        playerInfoTable.showPlayerInfo(engine.currentPlayer());
     }
 
     /**
@@ -874,51 +832,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     /**
-     * Sets the value represented by the food-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game food counter
-     */
-    private void setFoodCounterValue(int value) {
-        foodCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Sets the value represented by the energy-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game energy counter
-     */
-    private void setEnergyCounterValue(int value) {
-        energyCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Sets the value represented by the ore-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game ore counter
-     */
-    private void setOreCounterValue(int value) {
-        oreCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Sets the value represented by the Roboticon-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game Roboticon counter
-     */
-    private void setRoboticonCounterValue(int value) {
-        roboticonCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Sets the value represented by the money-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game money counter
-     */
-    private void setMoneyCounterValue(int value) {
-        moneyCounter.setText(String.valueOf(value));
-    }
-
-    /**
      * Updates the label on the right-hand side of the in-game interface to visualise the identity of the selected tile
      *
      * @param value The ID value of the tile to be described on the interface
@@ -1128,18 +1041,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     /**
-     * Updates the on-screen counters for food, energy, ore, money and Roboticons
-     * This is typically called when the active player switches or when a market transaction is made
-     */
-    public void updateInventoryLabels(){
-        setFoodCounterValue(engine.currentPlayer().getResource(ResourceType.FOOD));
-        setEnergyCounterValue(engine.currentPlayer().getResource(ResourceType.ENERGY));
-        setOreCounterValue(engine.currentPlayer().getResource(ResourceType.ORE));
-        setMoneyCounterValue(engine.currentPlayer().getResource(ResourceType.MONEY));
-        setRoboticonCounterValue(engine.currentPlayer().getRoboticonInventory());
-    }
-
-    /**
      * Updates the options available to the current player on the roboticon upgrade screen based on their money count
      */
     private void updateUpgradeOptions() {
@@ -1187,11 +1088,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     public void showPlayerWin(int playerId){
         playerWin = new AnimationPlayerWin(playerId + 1);
         addAnimation(playerWin);
-    }
-
-    public void updatePlayerName() {
-        currentPlayerLabel.setText("Player " + engine.currentPlayer().getPlayerNumber());
-        currentPlayerIcon.setDrawable(engine.currentPlayer().getCollege().getLogo().getDrawable());
     }
 
     private void openTradeOverlay() {

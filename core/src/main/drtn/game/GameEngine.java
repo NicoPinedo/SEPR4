@@ -239,7 +239,7 @@ public class GameEngine {
 		clearEffects();
                 setEffects();
                 System.out.println("test");
-                gameScreen.updateInventoryLabels();
+                gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
                 market.refreshPlayers();
                 market.refreshAuction();	
                 break;
@@ -307,13 +307,10 @@ public class GameEngine {
 
         // Find and draw the icon representing the "new" player's associated college
         if (!isCurrentlyAiPlayer()){
-	        gameScreen.currentPlayerIcon().setDrawable(new TextureRegionDrawable(new TextureRegion(players[currentPlayerID].getCollege().getLogoTexture())));
-	        gameScreen.currentPlayerIcon().setSize(64, 64);
+	        gameScreen.playerInfoTable.showPlayerInfo(currentPlayer());
 	
 	        // Display the "new" player's inventory on-screen
-	        gameScreen.updateInventoryLabels();
-	
-	        gameScreen.updatePlayerName();
+            gameScreen.playerInfoTable.showPlayerInfo(currentPlayer());
         }
     }
 
@@ -429,7 +426,7 @@ public class GameEngine {
                     selectedTile.assignRoboticon(Roboticon);
                     roboticonIDCounter += 1;
                     players[currentPlayerID].decreaseRoboticonInventory();
-                    gameScreen.updateInventoryLabels();
+                    gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
                 }
             }
         }
@@ -538,7 +535,7 @@ public class GameEngine {
     public void updateCurrentPlayer(Player currentPlayer) {
         players[currentPlayerID] = currentPlayer;
 
-        gameScreen.updateInventoryLabels();
+        gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
         //Refresh the on-screen inventory labels to reflect the new object's possessions
     }
 
