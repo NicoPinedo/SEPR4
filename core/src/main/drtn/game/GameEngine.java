@@ -59,11 +59,6 @@ public class GameEngine {
      */
     private boolean tileAcquired;
     /**
-     * Timer used to dictate the pace and flow of the game
-     * This has a visual interface which will be displayed in the top-left corner of the game-screen
-     */
-    private GameTimer timer;
-    /**
      * Object providing QOL drawing functions to simplify visual construction and rendering tasks
      */
     private Drawer drawer;
@@ -122,16 +117,6 @@ public class GameEngine {
 
         drawer = new Drawer(this.game);
         //Import QOL drawing function
-
-        timer = new GameTimer(0, new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 70), Color.WHITE, new Runnable() {
-            @Override
-            public void run() {
-                nextPhase(); // Timeout event
-            }
-        });
-        timer.setAlignment(Align.center);
-        //Set up game timer
-        //Game timer automatically ends the current turn when it reaches 0
 
         tiles = new Tile[16];
         //Initialise data for all 16 tiles on the screen
@@ -208,7 +193,7 @@ public class GameEngine {
 
     // Changed in Assessment 3: Refactored nextPhase() from giant if-else statement to switch statement.
     public void nextPhase() {
-        timer.stop();
+        gameScreen.phaseInfoTable.timer.stop();
         nextPlayer();
         System.out.println("Player " + currentPlayerID + " | Phase " + phase);
         
@@ -221,20 +206,20 @@ public class GameEngine {
                 break;
 
             case 2:
-                timer.setTime(0, 30);
-                timer.start();
+                gameScreen.phaseInfoTable.timer.setTime(0, 30);
+                gameScreen.phaseInfoTable.timer.start();
 
                 drawer.toggleButton(gameScreen.endTurnButton(), true, Color.WHITE);
                 break;
 
             case 3:
-            	timer.setTime(0, 30);
-                timer.start();
+                gameScreen.phaseInfoTable.timer.setTime(0, 30);
+                gameScreen.phaseInfoTable.timer.start();
                 break;
 
             case 4:
-                timer.setTime(0, 5);
-                timer.start();
+                gameScreen.phaseInfoTable.timer.setTime(0, 5);
+                gameScreen.phaseInfoTable.timer.start();
                 produceResource();
 		clearEffects();
                 setEffects();
@@ -254,6 +239,7 @@ public class GameEngine {
         }
 
         gameScreen.updatePhaseLabel();
+        gameScreen.phaseInfoTable.updateLabels(phase);
         market.refreshPlayers();
         market.setPlayerListPosition(0);
         market.refreshAuction();
@@ -319,7 +305,7 @@ public class GameEngine {
      * Specifically pauses the game's timer and marks the engine's internal play-state to [State.PAUSE]
      */
     public void pauseGame() {
-        timer.stop();
+        gameScreen.phaseInfoTable.timer.stop();
         //Stop the game's timer
 
         gameScreen.openPauseStage();
@@ -343,9 +329,9 @@ public class GameEngine {
         gameScreen.openGameStage();
         //Show the main in-game interface again and prepare it to accept inputs
 
-        if (timer.minutes() > 0 || timer.seconds() > 0) {
-            timer.increment();
-            timer.start();
+        if (gameScreen.phaseInfoTable.timer.minutes() > 0 || gameScreen.phaseInfoTable.timer.seconds() > 0) {
+            gameScreen.phaseInfoTable.timer.increment();
+            gameScreen.phaseInfoTable.timer.start();
         }
         //Restart the game's timer from where it left off
         //The timer needs to be incremented by 1 second before being restarted because, for a reason that I can't
@@ -473,15 +459,6 @@ public class GameEngine {
      */
     public int currentPlayerID() {
         return currentPlayerID;
-    }
-
-    /**
-     * Returns the GameTimer declared and managed by the engine
-     *
-     * @return GameTimer The game's internal timer
-     */
-    public GameTimer timer() {
-        return timer;
     }
 
     /**

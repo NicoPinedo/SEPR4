@@ -24,6 +24,7 @@ import drtn.game.GameEngine;
 import drtn.game.Trade;
 import drtn.game.entity.Tile;
 import drtn.game.enums.ResourceType;
+import drtn.game.screens.tables.PhaseInfoTable;
 import drtn.game.screens.tables.PlayerInfoTable;
 import drtn.game.util.Drawer;
 import drtn.game.util.LabelledElement;
@@ -72,6 +73,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     public PlayerInfoTable playerInfoTable;
+    public PhaseInfoTable phaseInfoTable;
 
     private boolean shown = false;
     private IAnimation lastTileClickedFlash;
@@ -274,8 +276,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //First instruction sets background colour
 
         if (engine.state() == GameEngine.State.RUN) {
-            drawRectangles();
-
             gameStage.act(delta);
             gameStage.draw();
             //Draw the stage onto the screen
@@ -552,7 +552,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableLeft.center().top();
         //Shift the table towards the top of the screen
 
-        tableLeft.add(engine.timer()).colspan(2).size(255, 130).align(Align.center);
+        phaseInfoTable = new PhaseInfoTable();
+        phaseInfoTable.timer.setTerminalMethod(() -> engine.nextPhase());
+        phaseInfoTable.updateLabels(engine.phase());
+        tableLeft.add(phaseInfoTable).colspan(2).align(Align.center);
         //Add the timer to the table
 
         Table phaseTable = new Table();
@@ -809,26 +812,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     	tooExpensiveOverlay.table().add(new Label("NOT ENOUGH MONEY!", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
     	tooExpensiveOverlay.table().row();
     	tooExpensiveOverlay.table().add(closePriceOverlayButton);
-    }
-
-    /**
-     * Draw auxiliary rectangles to provide window-dressing for the interface
-     */
-    private void drawRectangles() {
-        drawer.lineRectangle(Color.WHITE, (int) map.getX(), (int) map.getY(), (int) map.getWidth() + 1, (int) map.getHeight(), 1);
-        //Draw border around the map
-
-        drawer.filledRectangle(Color.WHITE, 0, (int) engine.timer().getHeight(), 256, 1);
-        drawer.filledRectangle(Color.WHITE, 0, (int) (engine.timer().getHeight() + phaseLabel.getHeight()), 256, 1);
-        drawer.borderedRectangle(Color.GRAY, Color.WHITE, 19, (int) (engine.timer().getHeight() + phaseLabel.getHeight()) + 15, 219, 40, 1);
-        //drawer.lineRectangle(Color.WHITE, ((int) (Gdx.graphics.getWidth() * 0.125)) - 110, 240, 66, 66);
-        drawer.filledRectangle(Color.WHITE, 0, Gdx.graphics.getHeight() - 46, 256, 1);
-        //Draw lines and rectangles in left-hand table
-
-        drawer.lineRectangle(Color.WHITE, ((int) (Gdx.graphics.getWidth() * 0.875)) - 93, 52, 66, 66, 1);
-        drawer.lineRectangle(Color.WHITE, ((int) (Gdx.graphics.getWidth() * 0.875)) + 27, 52, 66, 66, 1);
-        drawer.filledRectangle(Color.WHITE, Gdx.graphics.getWidth() - 256, 190, 256, 1);
-        //Draw lines in right-hand table
     }
 
     /**
