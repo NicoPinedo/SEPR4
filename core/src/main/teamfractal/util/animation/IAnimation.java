@@ -1,8 +1,8 @@
-package main.teamfractal.util.animation;
+package teamfractal.util.animation;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
 
 public interface IAnimation {
     /**
