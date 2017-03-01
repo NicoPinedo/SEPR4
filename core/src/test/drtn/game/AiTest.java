@@ -20,6 +20,7 @@ public class AiTest extends TesterFile {
     public void aiShouldIdentifyThem (){
         assertTrue("AI think they are human.", aiPlayer.isAi());
         assertFalse("Human think they are AI.", humanPlayer.isAi());
+
     }
 
     @Test
