@@ -8,8 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import drtn.game.entity.Player;
 import drtn.game.enums.ResourceType;
 import drtn.game.util.TTFont;
+
+import java.util.ArrayList;
 
 /**
  * Created by Joseph on 28/02/2017.
@@ -17,6 +20,9 @@ import drtn.game.util.TTFont;
 public class MarketInterfaceTable extends Table {
 
     private boolean market;
+
+    private TextButton.TextButtonStyle regularButtonStyle;
+    private TextButton.TextButtonStyle lightButtonStyle;
 
     private TextButton marketButton;
     private TextButton auctionButton;
@@ -30,30 +36,96 @@ public class MarketInterfaceTable extends Table {
     private TextButton sellEnergyButton;
     private TextButton sellFoodButton;
 
+    private TextButton playerBuyOre;
+    private TextButton playerBuyEnergy;
+    private TextButton playerBuyFood;
+    private TextButton playerSellOre;
+    private TextButton playerSellEnergy;
+    private TextButton playerSellFood;
+
+    private TextButton pricePlus1;
+    private TextButton pricePlus10;
+    private TextButton pricePlus100;
+    private TextButton priceMinus1;
+    private TextButton priceMinus10;
+    private TextButton priceMinus100;
+
+    private TextButton confirmSale;
+
+    private TextButton nextPlayerButton;
+    private TextButton prevPlayerButton;
+
     private Label oreStockLabel;
     private Label foodStockLabel;
     private Label energyStockLabel;
     private Label roboticonStockLabel;
 
+    private Label oreTradeLabel;
+    private Label energyTradeLabel;
+    private Label foodTradeLabel;
+    private Label tradePriceLabel;
+    private Label playerLabel;
+
     private TTFont regularFont;
     private TTFont lightFont;
+
+    private int oreTradeAmount;
+    private int energyTradeAmount;
+    private int foodTradeAmount;
+    private int playerListPosition;
+    private int tradePrice;
+
+    private ArrayList<Player> otherPlayer;
 
     public MarketInterfaceTable() {
         regularFont = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 16);
         lightFont = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 16);
 
-        TextButton.TextButtonStyle regularButtonStyle = new TextButton.TextButtonStyle();
+        regularButtonStyle = new TextButton.TextButtonStyle();
         regularButtonStyle.font = regularFont.font();
         regularButtonStyle.fontColor = Color.WHITE;
         regularButtonStyle.pressedOffsetX = 1;
         regularButtonStyle.pressedOffsetY = -1;
 
-        TextButton.TextButtonStyle lightButtonStyle = new TextButton.TextButtonStyle();
+        lightButtonStyle = new TextButton.TextButtonStyle();
         lightButtonStyle.font = lightFont.font();
         lightButtonStyle.fontColor = Color.WHITE;
         lightButtonStyle.pressedOffsetX = 1;
         lightButtonStyle.pressedOffsetY = -1;
 
+        constructMarketElements();
+        constructAuctionElements();
+
+        market = true;
+
+        showMarketInterface();
+    }
+
+    public void switchInterface() {
+        market = !market;
+
+        clearChildren();
+
+        if (market) {
+            marketButton.setColor(Color.GRAY);
+            marketButton.setTouchable(Touchable.disabled);
+
+            auctionButton.setColor(Color.WHITE);
+            auctionButton.setTouchable(Touchable.enabled);
+
+            showMarketInterface();
+        } else {
+            marketButton.setColor(Color.WHITE);
+            marketButton.setTouchable(Touchable.enabled);
+
+            auctionButton.setColor(Color.GRAY);
+            auctionButton.setTouchable(Touchable.disabled);
+
+            showAuctionInterface();
+        }
+    }
+
+    private void constructMarketElements() {
         marketButton = new TextButton("MARKET", regularButtonStyle);
         marketButton.setColor(Color.GRAY);
         marketButton.setTouchable(Touchable.disabled);
@@ -86,41 +158,145 @@ public class MarketInterfaceTable extends Table {
         energyStockLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
         foodStockLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
         roboticonStockLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
-
-        market = true;
-
-        constructMarketInterface();
     }
 
-    public void switchInterface() {
-        market = !market;
+    private void constructAuctionElements() {
+        oreTradeLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
+        energyTradeLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
+        foodTradeLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
 
-        clearChildren();
+        tradePriceLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
 
-        if (market) {
-            marketButton.setColor(Color.GRAY);
-            marketButton.setTouchable(Touchable.disabled);
+        playerLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
 
-            auctionButton.setColor(Color.WHITE);
-            auctionButton.setTouchable(Touchable.enabled);
+        playerBuyOre = new TextButton("+", lightButtonStyle);
+        playerBuyOre.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                oreTradeAmount += 1;
+                oreTradeLabel.setText("Ore: " + oreTradeAmount);
+            }
+        });
 
-            constructMarketInterface();
-        } else {
-            marketButton.setColor(Color.WHITE);
-            marketButton.setTouchable(Touchable.enabled);
+        playerBuyEnergy = new TextButton("+", lightButtonStyle);
+        playerBuyEnergy.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                energyTradeAmount += 1;
+                energyTradeLabel.setText("Ore: " + energyTradeAmount);
+            }
+        });
 
-            auctionButton.setColor(Color.GRAY);
-            auctionButton.setTouchable(Touchable.disabled);
+        playerBuyFood = new TextButton("+", lightButtonStyle);
+        playerBuyFood.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                foodTradeAmount += 1;
+                foodTradeLabel.setText("Ore: " + foodTradeAmount);
+            }
+        });
 
-            //constructAuctionInterface();
-        }
+        playerSellOre = new TextButton("-", lightButtonStyle);
+        playerSellOre.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                oreTradeAmount -= 1;
+                oreTradeLabel.setText("Ore: " + oreTradeAmount);
+            }
+        });
+
+        playerSellEnergy = new TextButton("-", lightButtonStyle);
+        playerSellEnergy.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                energyTradeAmount -= 1;
+                energyTradeLabel.setText("Ore: " + energyTradeAmount);
+            }
+        });
+
+        playerSellFood = new TextButton("-", lightButtonStyle);
+        playerSellFood.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                foodTradeAmount -= 1;
+                foodTradeLabel.setText("Ore: " + foodTradeAmount);
+            }
+        });
+
+        pricePlus1 = new TextButton("+ 1", lightButtonStyle);
+        pricePlus1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setTradePrice(tradePrice + 1);
+            }
+        });
+
+        pricePlus10 = new TextButton("+ 10", lightButtonStyle);
+        pricePlus10.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setTradePrice(tradePrice + 10);
+            }
+        });
+
+        pricePlus100 = new TextButton("+ 100", lightButtonStyle);
+        pricePlus100.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setTradePrice(tradePrice + 100);
+            }
+        });
+
+        priceMinus1 = new TextButton("- 1", lightButtonStyle);
+        priceMinus1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setTradePrice(tradePrice - 1);
+            }
+        });
+
+        priceMinus10 = new TextButton("- 10", lightButtonStyle);
+        priceMinus10.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setTradePrice(tradePrice - 10);
+            }
+        });
+
+        priceMinus100 = new TextButton("- 100", lightButtonStyle);
+        priceMinus100.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setTradePrice(tradePrice - 100);
+            }
+        });
+
+        confirmSale = new TextButton("Confirm", lightButtonStyle);
+
+        nextPlayerButton = new TextButton(">", lightButtonStyle);
+        nextPlayerButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                playerListPosition += 1;
+                playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+            }
+        });
+
+        prevPlayerButton = new TextButton("<", lightButtonStyle);
+        prevPlayerButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                playerListPosition -= 1;
+                playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+            }
+        });
     }
 
     /**
      * Builds the market's visual interface by populating it with labels and buttons
      * Once this method has finished executing, the market can be drawn to a stage like any other actor
      */
-    private void constructMarketInterface() {
+    private void showMarketInterface() {
         add(marketButton);
         add(auctionButton).left();
         row();
@@ -159,54 +335,96 @@ public class MarketInterfaceTable extends Table {
         add(roboticonStockLabel).left();
     }
 
-    public void setButtonFunction(ResourceType resource, boolean buy, ChangeListener event) {
+    private void showAuctionInterface() {
+        playerListPosition = 0;
+
+        setTradePrice(0);
+    }
+
+    public void setMarketButtonFunction(ResourceType resource, boolean buy, ChangeListener event) {
         if (buy) {
-            if (resource == ResourceType.ORE) {
-                buyOreButton.addListener(event);
-            } else if (resource == ResourceType.ENERGY) {
-                buyEnergyButton.addListener(event);
-            } else if (resource == ResourceType.FOOD) {
-                buyFoodButton.addListener(event);
-            } else if (resource == ResourceType.ROBOTICON) {
-                buyRoboticonButton.addListener(event);
+            switch (resource) {
+                case ORE:
+                    buyOreButton.addListener(event);
+                    break;
+                case ENERGY:
+                    buyEnergyButton.addListener(event);
+                    break;
+                case FOOD:
+                    buyFoodButton.addListener(event);
+                    break;
+                case ROBOTICON:
+                    buyRoboticonButton.addListener(event);
+                    break;
             }
         } else {
-            if (resource == ResourceType.ORE) {
-                sellOreButton.addListener(event);
-            } else if (resource == ResourceType.ENERGY) {
-                sellEnergyButton.addListener(event);
-            } else if (resource == ResourceType.FOOD) {
-                sellFoodButton.addListener(event);
+            switch (resource) {
+                case ORE:
+                    sellOreButton.addListener(event);
+                    break;
+                case ENERGY:
+                    sellEnergyButton.addListener(event);
+                    break;
+                case FOOD:
+                    sellFoodButton.addListener(event);
+                    break;
             }
         }
     }
 
+
     public void toggleButton(ResourceType resource, boolean buy, boolean enabled, Color color) {
         if (buy) {
-            if (resource == ResourceType.ORE) {
-                buyOreButton.getLabel().setColor(color);
-                buyOreButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
-            } else if (resource == ResourceType.ENERGY) {
-                buyEnergyButton.getLabel().setColor(color);
-                buyEnergyButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
-            } else if (resource == ResourceType.FOOD) {
-                buyFoodButton.getLabel().setColor(color);
-                buyFoodButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
-            } else if (resource == ResourceType.ROBOTICON) {
-                buyRoboticonButton.getLabel().setColor(color);
-                buyRoboticonButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+            switch (resource) {
+                case ORE:
+                    buyOreButton.getLabel().setColor(color);
+                    buyOreButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case ENERGY:
+                    buyEnergyButton.getLabel().setColor(color);
+                    buyEnergyButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case FOOD:
+                    buyFoodButton.getLabel().setColor(color);
+                    buyFoodButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case ROBOTICON:
+                    buyRoboticonButton.getLabel().setColor(color);
+                    buyRoboticonButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
             }
         } else {
-            if (resource == ResourceType.ORE) {
-                sellOreButton.getLabel().setColor(color);
-                sellOreButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
-            } else if (resource == ResourceType.ENERGY) {
-                sellEnergyButton.getLabel().setColor(color);
-                sellEnergyButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
-            } else if (resource == ResourceType.FOOD) {
-                sellFoodButton.getLabel().setColor(color);
-                sellFoodButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+            switch (resource) {
+                case ORE:
+                    sellOreButton.getLabel().setColor(color);
+                    sellOreButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case ENERGY:
+                    sellEnergyButton.getLabel().setColor(color);
+                    sellEnergyButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case FOOD:
+                    sellFoodButton.getLabel().setColor(color);
+                    sellFoodButton.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
             }
         }
+    }
+
+    private void setTradePrice(int tradePrice) {
+        this.tradePrice = tradePrice;
+        tradePriceLabel.setText(String.valueOf(tradePrice));
+    }
+
+    public void refreshPlayers(ArrayList<Player> players, Player currentPlayer) {
+        otherPlayer = new ArrayList<Player>();
+
+        for (Player player : players) {
+            if (player != currentPlayer && player != null) {
+                otherPlayer.add(player.getPlayerNumber(), player);
+            }
+        }
+
+        playerLabel.setText("Player " + otherPlayer.get(0).getPlayerNumber());
     }
 }

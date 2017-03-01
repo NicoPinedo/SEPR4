@@ -23,6 +23,7 @@ import drtn.game.GameEngine;
 import drtn.game.Trade;
 import drtn.game.entity.Tile;
 import drtn.game.enums.ResourceType;
+import drtn.game.screens.tables.MarketInterfaceTable;
 import drtn.game.screens.tables.PhaseInfoTable;
 import drtn.game.screens.tables.PlayerInfoTable;
 import drtn.game.screens.tables.SelectedTileInfoTable;
@@ -75,6 +76,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     public PlayerInfoTable playerInfoTable;
     public PhaseInfoTable phaseInfoTable;
     public SelectedTileInfoTable selectedTileInfoTable;
+    public MarketInterfaceTable marketInterfaceTable;
 
     private boolean shown = false;
     private IAnimation lastTileClickedFlash;
@@ -604,7 +606,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
         tableRight.add(selectedTileInfoTable);
 
-        drawer.addTableRow(tableRight, engine.market(), 2);
+        marketInterfaceTable = new MarketInterfaceTable();
+        drawer.addTableRow(tableRight, marketInterfaceTable, 2);
         //Establish market and add market interface to right-hand table
 
         gameStage.addActor(tableRight);
