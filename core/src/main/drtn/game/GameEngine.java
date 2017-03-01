@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import drtn.game.effects.PlayerEffect;
 import drtn.game.effects.PlayerEffectSource;
 import drtn.game.effects.PlotEffect;
+import drtn.game.effects.PlotEffectSource;
 import drtn.game.entity.*;
 import drtn.game.enums.ResourceType;
 import drtn.game.exceptions.InvalidResourceTypeException;
@@ -16,10 +18,6 @@ import drtn.game.screens.MiniGameScreen;
 import drtn.game.util.Drawer;
 import drtn.game.util.GameTimer;
 import drtn.game.util.TTFont;
-import drtn.game.effects.PlayerEffect;
-import drtn.game.effects.PlotEffectSource;
-import drtn.game.enums.ResourceType;
-import drtn.game.screens.GameScreen;
 
 import java.util.*;
 
@@ -249,13 +247,14 @@ public class GameEngine {
                 break;
 
             case 5:
+                if(checkGameEnd()){
+                    System.out.println("Someone win");
+                    gameScreen.showPlayerWin(getWinner());
+                }
                 break;
         }
 
-        if(checkGameEnd()){
-            System.out.println("Someone win");
-            gameScreen.showPlayerWin(getWinner());
-        }
+
 
         gameScreen.updatePhaseLabel();
         market.refreshPlayers();
