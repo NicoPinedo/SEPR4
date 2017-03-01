@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import drtn.game.GameEngine;
 import drtn.game.util.Drawer;
 import drtn.game.util.TTFont;
-import drtn.game.GameEngine;
 
 /**
  * New Class for Assessment 3, allows user to slect the number of players
@@ -328,7 +327,7 @@ public class PlayerSelectScreen implements Screen {
 			drawer.toggleButton(removeAIPlayerButton, true, Color.WHITE);
 		}
 		
-		if(AIPlayerAmount + playerAmount < 9){
+		if(AIPlayerAmount + playerAmount < 4){
 			drawer.toggleButton(addPlayerButton, true, Color.WHITE);
 			drawer.toggleButton(addAIPlayerButton, true, Color.WHITE);
 		}
