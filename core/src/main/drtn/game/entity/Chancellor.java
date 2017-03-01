@@ -35,18 +35,34 @@ public class Chancellor {
     public Chancellor(Player Player, Tile[] tiles){
         this.currentPlayer = Player;
         this.tiles = tiles;
-        this.moveChancellor();
+        //this.iconTexture = new Texture();
+        //this.icon = new Image(iconTexture);
 
-
-
+        this.move();
     }
 
-    public void moveChancellor(){
+    public void move(){
         Random rand = new Random();
         int tileID;
         tileID = rand.nextInt(16); //Chooses random tile value (0-15)
         this.currentTile = tiles[tileID];
+    }
+
+    public void appear(){
 
     }
 
+    public void disappear(){
+
+
+        this.currentTile = null;
+    }
+
+    public void captured(){
+
+    }
+
+    public void drawChancellor(){
+        //notHere.
+    }
 }
