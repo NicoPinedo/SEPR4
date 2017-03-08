@@ -339,6 +339,62 @@ public class MarketInterfaceTable extends Table {
         playerListPosition = 0;
 
         setTradePrice(0);
+
+        add(marketButton);
+        add(auctionButton).left();
+        row();
+
+        add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(90);
+        add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(30);
+        add(new Label("Less", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
+        //Visual guff
+
+        row();
+        oreTradeAmount = 0;
+        add(oreTradeLabel).left();
+        add(playerBuyOre).left().padLeft(10);
+        add(playerSellOre).left().padLeft(10);
+
+        row();
+        energyTradeAmount = 0;
+        add(energyTradeLabel).left();
+        add(playerBuyEnergy).left().padLeft(10);
+        add(playerSellEnergy).left().padLeft(10);
+
+        row();
+        foodTradeAmount = 0;
+        add(foodTradeLabel).left().padBottom(15);
+        add(playerBuyFood).left().padLeft(10).padBottom(15);
+        add(playerSellFood).left().padLeft(10).padBottom(15);
+
+        row();
+        tradePrice = 0;
+        add(new Label("Price:", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+
+        row();
+
+        add();
+        add(pricePlus1).left();
+        add(priceMinus1).left();
+
+        row();
+
+        add(tradePriceLabel);
+        add(pricePlus10).left();
+        add(priceMinus10).left();
+
+        row();
+
+        add();
+        add(pricePlus100).left();
+        add(priceMinus100).left();
+
+        row();
+        add(prevPlayerButton);
+        add(playerLabel);
+        add(nextPlayerButton);
+        row();
+        add(confirmSale).left();
     }
 
     public void setMarketButtonFunction(ResourceType resource, boolean buy, ChangeListener event) {
