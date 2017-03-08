@@ -18,8 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import main.drtn.game.entity.Chancellor;
 import main.drtn.game.entity.Roboticon;
+import main.drtn.game.entity.Chancellor;
 
 
 public class Drawer {
@@ -368,7 +368,9 @@ public class Drawer {
         batch.end();
     }
 
+    public void drawChancellor(float x, float y){
         batch.begin();
+        batch.draw(chancellorSprite, x, y, 32, 32); //TODO get Width/Height
         batch.end();
     }
 }

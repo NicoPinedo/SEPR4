@@ -317,6 +317,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
 
             //TODO: Change x,y values
+            if (engine.chancellor().getIsVisible() == Boolean.TRUE){
+                updateChancellor(600, 200);
             }
 
             if (eventMessageOverlayVisible) {
@@ -1199,6 +1201,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     public void updateChancellor(float x, float y){
+            drawer.drawChancellor(x, y);
     }
 
     @Override
