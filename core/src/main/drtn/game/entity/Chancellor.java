@@ -24,6 +24,10 @@ public class Chancellor {
      */
     private Tile currentTile;
     /**
+     * Boolean representing whether the chancellor is visible or not
+     */
+    private Boolean isVisible;
+    /**
      * The image object providing the Chancellor's visual representation
      */
     private Image icon;
@@ -32,37 +36,36 @@ public class Chancellor {
      */
     private Texture iconTexture;
 
-    public Chancellor(Player Player, Tile[] tiles){
+    public Chancellor(Player Player, Tile[] tiles) {
         this.currentPlayer = Player;
         this.tiles = tiles;
-        //this.iconTexture = new Texture();
-        //this.icon = new Image(iconTexture);
+        this.isVisible = Boolean.FALSE;
+        this.iconTexture = new Texture("image/chancellor.png");
+        this.icon = new Image(iconTexture);
 
         this.move();
     }
 
-    public void move(){
+    public void move() {
         Random rand = new Random();
         int tileID;
         tileID = rand.nextInt(16); //Chooses random tile value (0-15)
         this.currentTile = tiles[tileID];
     }
 
-    public void appear(){
-
+    public void appear() {
+        this.isVisible = Boolean.TRUE;
     }
 
-    public void disappear(){
-
-
+    public void disappear() {
+        this.isVisible = Boolean.FALSE;
         this.currentTile = null;
     }
 
-    public void captured(){
+    public void captured() {
 
     }
 
-    public void drawChancellor(){
-        //notHere.
-    }
+    public boolean getIsVisible() {return isVisible;}
+
 }

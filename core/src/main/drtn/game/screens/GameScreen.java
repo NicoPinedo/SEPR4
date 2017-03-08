@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import main.drtn.game.GameEngine;
 import main.drtn.game.Trade;
+import main.drtn.game.entity.Chancellor;
 import main.drtn.game.entity.Tile;
 import main.drtn.game.enums.ResourceType;
 import main.drtn.game.util.Drawer;
@@ -313,6 +314,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                         tableRight.getX() + selectedTileRoboticonIcon.getX(),
                         selectedTileRoboticonIcon.getY()
                 );
+            }
+
+            //TODO: Change x,y values
             }
 
             if (eventMessageOverlayVisible) {
@@ -1192,6 +1196,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             drawer.toggleButton(foodUpgradeButton, false, Color.RED);
         }
         //Conditionally enable food upgrade button
+    }
+
+    public void updateChancellor(float x, float y){
     }
 
     @Override

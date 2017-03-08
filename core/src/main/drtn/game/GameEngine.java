@@ -85,6 +85,10 @@ public class GameEngine {
      */
     private State state;
     /**
+     * Holds data for the "Catch the Chancellor" mini-game
+     */
+    private Chancellor chancellor;
+    /**
      * An integer signifying the ID of the next roboticon to be created
      *
      */
@@ -98,10 +102,7 @@ public class GameEngine {
     private PlayerEffectSource playerEffectSource;
     private float effectChance;
 
-    /**
-     * Holds data for the "Catch the Chancellor" mini-game
-     */
-    private Chancellor chancellor;
+
 
     /**
      * Constructs the game's engine. Imports the game's state (for direct renderer access) and the data held by the
@@ -197,9 +198,7 @@ public class GameEngine {
         return _instance;
     }
 
-    public void selectTile(Tile tile) {
-        selectedTile = tile;
-    }
+    public void selectTile(Tile tile) {selectedTile = tile;}
 
     /**
      * Advances the game's progress upon call
@@ -372,6 +371,7 @@ public class GameEngine {
      */
     public void claimTile() {
         if (phase == 1 && !selectedTile.isOwned()) {
+            this.beginChancellorMinigame(); //TODO: TESTING PURPOSES, WILL REMOVE
             players[currentPlayerID].assignTile(selectedTile);
             //Assign selected tile to current player
 
@@ -447,7 +447,10 @@ public class GameEngine {
     /**
      * Begins "Catch the Chancellor" mini-game
      */
-    public void beginChancellorMinigame(){Chancellor chancellor = new Chancellor(players[currentPlayerID], tiles);}
+    public void beginChancellorMinigame(){
+        chancellor.appear();
+        gameScreen.updateChancellor(200, 200); //TODO Get actual x,y
+    }
 
     /**
      * Return's the game's current play-state, which can either be [State.RUN] or [State.PAUSE]
@@ -459,6 +462,9 @@ public class GameEngine {
         return state;
     }
 
+    public Chancellor chancellor() {
+        return chancellor;
+    }
     /**
      * Return's the game's phase as a number between (or possibly one of) 1 and 5
      *
@@ -646,6 +652,7 @@ public class GameEngine {
     	}
     	currentPlayerID = length - 1;
         market = new Market(game, this);
+        this.chancellor = new Chancellor(players[currentPlayerID], tiles);
     }
 
     public void testTrade(){
