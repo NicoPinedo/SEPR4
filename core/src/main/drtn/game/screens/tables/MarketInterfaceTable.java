@@ -21,6 +21,8 @@ public class MarketInterfaceTable extends Table {
 
     private boolean market;
 
+    private Table navigationTable;
+
     private TextButton.TextButtonStyle regularButtonStyle;
     private TextButton.TextButtonStyle lightButtonStyle;
 
@@ -96,6 +98,12 @@ public class MarketInterfaceTable extends Table {
         constructMarketElements();
         constructAuctionElements();
 
+        navigationTable = new Table();
+        navigationTable.add(marketButton).width(100);
+        navigationTable.add(auctionButton).width(100);
+        add(navigationTable).colspan(4);
+        row();
+
         market = true;
 
         showMarketInterface();
@@ -105,6 +113,9 @@ public class MarketInterfaceTable extends Table {
         market = !market;
 
         clearChildren();
+
+        add(navigationTable).colspan(4);
+        row();
 
         if (market) {
             marketButton.getLabel().setColor(Color.GRAY);
@@ -297,9 +308,6 @@ public class MarketInterfaceTable extends Table {
      * Once this method has finished executing, the market can be drawn to a stage like any other actor
      */
     private void showMarketInterface() {
-        add(marketButton);
-        add(auctionButton).left();
-        row();
         add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(90);
         add(new Label("Buy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(40);
         add(new Label("Sell", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(20);
@@ -316,8 +324,8 @@ public class MarketInterfaceTable extends Table {
         add(buyFoodButton).left();
         add(sellFoodButton).left();
         row();
-        add(new Label("Roboticons", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
-        add(buyRoboticonButton).left().padBottom(15);
+        add(new Label("Roboticons", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().top().padBottom(10);
+        add(buyRoboticonButton).left().top().padBottom(10);
         row();
         add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(new Label("Stock", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
@@ -333,16 +341,14 @@ public class MarketInterfaceTable extends Table {
         row();
         add(new Label("Roboticons", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(roboticonStockLabel).left();
+
+        debug();
     }
 
     private void showAuctionInterface() {
         playerListPosition = 0;
 
         setTradePrice(0);
-
-        add(marketButton);
-        add(auctionButton).left();
-        row();
 
         add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(90);
         add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(30);
@@ -428,6 +434,40 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    public void setMarketButtonText(ResourceType resource, boolean buy, String text) {
+        if (buy) {
+            switch (resource) {
+                case ORE:
+                    buyOreButton.setText(text);
+                    break;
+                case ENERGY:
+                    buyEnergyButton.setText(text);
+                    break;
+                case FOOD:
+                    buyFoodButton.setText(text);
+                    break;
+                case ROBOTICON:
+                    buyRoboticonButton.setText(text);
+                    break;
+            }
+        } else {
+            switch (resource) {
+                case ORE:
+                    sellOreButton.setText(text);
+                    break;
+                case ENERGY:
+                    sellEnergyButton.setText(text);
+                    break;
+                case FOOD:
+                    sellFoodButton.setText(text);
+                    break;
+            }
+        }
+    }
+
+    public void setMarketButtonText(ResourceType resource, boolean buy, int price) {
+        setMarketButtonText(resource, buy, String.valueOf(price));
+    }
 
     public void toggleButton(ResourceType resource, boolean buy, boolean enabled, Color color) {
         if (buy) {
