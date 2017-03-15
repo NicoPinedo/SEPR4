@@ -17,11 +17,11 @@ import drtn.game.GameEngine;
 import drtn.game.entity.Player;
 import drtn.game.enums.ResourceType;
 import drtn.game.util.TTFont;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
 import drtn.game.GameEngine;
 import drtn.game.entity.Player;
 import drtn.game.enums.ResourceType;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
 
 import java.util.ArrayList;
 import java.util.List;

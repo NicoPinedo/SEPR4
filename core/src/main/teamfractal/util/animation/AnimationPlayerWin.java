@@ -1,10 +1,10 @@
-package main.teamfractal.util.animation;
+package teamfractal.util.animation;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Align;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
 
 public class AnimationPlayerWin implements IAnimation {
     private final int playerId;

@@ -1,23 +1,22 @@
 package drtn.game;
 
 import com.badlogic.gdx.Game;
-import drtn.game.Main;
+import com.badlogic.gdx.graphics.Color;
 import drtn.game.entity.Player;
 import drtn.game.entity.Roboticon;
 import drtn.game.entity.Tile;
 import drtn.game.enums.ResourceType;
+import drtn.game.exceptions.InvalidResourceTypeException;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Duck Related Team Name in Big Massive Letters
  * @since Assessment 2
- * @version Assessment 2
+ * @version Assessment 4
  *
- * An executable version of the game can be found at: https://jm179796.github.io/SEPR/DRTN-Assessment2.jar
- * Our website is: https://jm179796.github.io/SEPR/
+ * This test class gets Tile to 65% for methods and 66% for lines. This is acceptable coverage as the rest of the methods implement UI.
  */
 
 public class TileTest extends TesterFile {
@@ -52,6 +51,7 @@ public class TileTest extends TesterFile {
     public void testAssignRoboticon(){
         TestTile.assignRoboticon(TestRoboticon);
         assertTrue(TestTile.hasRoboticon());
+        assertEquals(TestRoboticon, TestTile.getRoboticonStored());
     }
     @Test
     public void testUnassignRoboticon(){
@@ -74,6 +74,37 @@ public class TileTest extends TesterFile {
         TestTile.assignRoboticon(TestRoboticon);
         assertTrue(TestTile.hasRoboticon());
 
+    }
+
+    @Test
+    public void testSetColor() {
+        TestTile.setTileBorderColor(Color.BLUE);
+        assertEquals(Color.BLUE, TestTile.tileBorderColor());
+    }
+
+    @Test
+    public void testgetters() {
+        TestTile.setOwner(TestPlayer);
+        assertEquals(TestTile.getID(), 0);
+        assertEquals(TestTile.getOwner(), TestPlayer);
+    }
+
+    @Test
+    public void testSetandGetResource() throws InvalidResourceTypeException {
+        assertEquals(5, TestTile.getResource(ResourceType.ORE));
+        assertEquals(5, TestTile.getResource(ResourceType.FOOD));
+        assertEquals(5, TestTile.getResource(ResourceType.ENERGY));
+        try {
+            assertEquals(5, TestTile.getResource(ResourceType.MONEY));
+            fail("Expected to throw exception");
+        } catch (InvalidResourceTypeException ignored) {
+        }
+        TestTile.setResource(ResourceType.ORE, 1);
+        TestTile.setResource(ResourceType.FOOD, 1);
+        TestTile.setResource(ResourceType.ENERGY, 1);
+        assertEquals(1, TestTile.getResource(ResourceType.ORE));
+        assertEquals(1, TestTile.getResource(ResourceType.FOOD));
+        assertEquals(1, TestTile.getResource(ResourceType.ENERGY));
     }
 
 }

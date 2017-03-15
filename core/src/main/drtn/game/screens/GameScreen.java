@@ -28,10 +28,10 @@ import drtn.game.util.Drawer;
 import drtn.game.util.LabelledElement;
 import drtn.game.util.Overlay;
 import drtn.game.util.TTFont;
-import main.teamfractal.util.animation.AnimationPlayerWin;
-import main.teamfractal.util.animation.AnimationTileFlash;
-import main.teamfractal.util.animation.IAnimation;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.animation.AnimationPlayerWin;
+import teamfractal.util.animation.AnimationTileFlash;
+import teamfractal.util.animation.IAnimation;
+import teamfractal.util.screens.AbstractAnimationScreen;
 
 
 public class GameScreen extends AbstractAnimationScreen implements Screen {
