@@ -184,8 +184,7 @@ public class MarketInterfaceTable extends Table {
         playerBuyOre.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                oreTradeAmount += 1;
-                oreTradeLabel.setText("Ore: " + oreTradeAmount);
+                setTradeAmount(ResourceType.ORE, oreTradeAmount + 1);
             }
         });
 
@@ -193,8 +192,7 @@ public class MarketInterfaceTable extends Table {
         playerBuyEnergy.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                energyTradeAmount += 1;
-                energyTradeLabel.setText("Ore: " + energyTradeAmount);
+                setTradeAmount(ResourceType.ENERGY, energyTradeAmount + 1);
             }
         });
 
@@ -202,8 +200,7 @@ public class MarketInterfaceTable extends Table {
         playerBuyFood.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                foodTradeAmount += 1;
-                foodTradeLabel.setText("Ore: " + foodTradeAmount);
+                setTradeAmount(ResourceType.FOOD, foodTradeAmount + 1);
             }
         });
 
@@ -211,8 +208,7 @@ public class MarketInterfaceTable extends Table {
         playerSellOre.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                oreTradeAmount -= 1;
-                oreTradeLabel.setText("Ore: " + oreTradeAmount);
+                setTradeAmount(ResourceType.ORE, oreTradeAmount - 1);
             }
         });
 
@@ -220,8 +216,7 @@ public class MarketInterfaceTable extends Table {
         playerSellEnergy.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                energyTradeAmount -= 1;
-                energyTradeLabel.setText("Ore: " + energyTradeAmount);
+                setTradeAmount(ResourceType.ENERGY, energyTradeAmount - 1);
             }
         });
 
@@ -229,8 +224,7 @@ public class MarketInterfaceTable extends Table {
         playerSellFood.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                foodTradeAmount -= 1;
-                foodTradeLabel.setText("Ore: " + foodTradeAmount);
+                setTradeAmount(ResourceType.FOOD, foodTradeAmount - 1);
             }
         });
 
@@ -510,6 +504,23 @@ public class MarketInterfaceTable extends Table {
     private void setTradePrice(int tradePrice) {
         this.tradePrice = tradePrice;
         tradePriceLabel.setText(String.valueOf(tradePrice));
+    }
+
+    public void setTradeAmount(ResourceType resource, int value) {
+        switch (resource) {
+            case ORE:
+                oreTradeAmount = value;
+                oreTradeLabel.setText("Ore: " + oreTradeAmount);
+                break;
+            case ENERGY:
+                energyTradeAmount = value;
+                energyTradeLabel.setText("Energy: " + oreTradeAmount);
+                break;
+            case FOOD:
+                foodTradeAmount = value;
+                foodTradeLabel.setText("Food: " + oreTradeAmount);
+                break;
+        }
     }
 
     public void refreshPlayers(ArrayList<Player> players, Player currentPlayer) {
