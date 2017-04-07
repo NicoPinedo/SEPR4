@@ -1,11 +1,7 @@
 package drtn.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import drtn.game.effects.PlayerEffectSource;
 import drtn.game.effects.PlotEffect;
@@ -15,12 +11,8 @@ import drtn.game.exceptions.InvalidResourceTypeException;
 import drtn.game.screens.GameScreen;
 import drtn.game.screens.MiniGameScreen;
 import drtn.game.util.Drawer;
-import drtn.game.util.GameTimer;
-import drtn.game.util.TTFont;
 import drtn.game.effects.PlayerEffect;
 import drtn.game.effects.PlotEffectSource;
-import drtn.game.enums.ResourceType;
-import drtn.game.screens.GameScreen;
 
 import java.util.*;
 
@@ -257,12 +249,6 @@ public class GameEngine {
         }
     }
 
-
-
-
-
-
-
     private void produceResource() {
         Player player = currentPlayer();
         for (Tile tile : player.getTileList()) {
@@ -279,10 +265,6 @@ public class GameEngine {
         if (currentPlayerID >= players.length) {
             currentPlayerID = 0;
 
-           
-                
-            
-
             phase ++;
             if (phase >= 6) {
                 phase = 1;
@@ -293,10 +275,10 @@ public class GameEngine {
 
         // Find and draw the icon representing the "new" player's associated college
         if (!isCurrentlyAiPlayer()){
-	        gameScreen.playerInfoTable.showPlayerInfo(currentPlayer());
-	
 	        // Display the "new" player's inventory on-screen
             gameScreen.playerInfoTable.showPlayerInfo(currentPlayer());
+
+            gameScreen.marketInterfaceTable.refreshPlayers(players, currentPlayer());
         }
     }
 

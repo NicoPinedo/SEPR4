@@ -282,7 +282,11 @@ public class MarketInterfaceTable extends Table {
         nextPlayerButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                playerListPosition += 1;
+                if (playerListPosition < otherPlayer.size() - 1) {
+                    playerListPosition += 1;
+                } else {
+                    playerListPosition = 0;
+                }
                 playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
             }
         });
@@ -291,7 +295,11 @@ public class MarketInterfaceTable extends Table {
         prevPlayerButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                playerListPosition -= 1;
+                if (playerListPosition > 0) {
+                    playerListPosition -= 1;
+                } else {
+                    playerListPosition = otherPlayer.size() - 1;
+                }
                 playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
             }
         });
@@ -523,15 +531,16 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
-    public void refreshPlayers(ArrayList<Player> players, Player currentPlayer) {
+    public void refreshPlayers(Player[] players, Player currentPlayer) {
         otherPlayer = new ArrayList<Player>();
 
         for (Player player : players) {
             if (player != currentPlayer && player != null) {
-                otherPlayer.add(player.getPlayerNumber(), player);
+                otherPlayer.add(player);
             }
         }
 
+        playerListPosition = 0;
         playerLabel.setText("Player " + otherPlayer.get(0).getPlayerNumber());
     }
 }
