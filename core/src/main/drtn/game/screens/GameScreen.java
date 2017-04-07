@@ -316,9 +316,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 );
             }
 
-            //TODO: Change x,y values
-            if (engine.chancellor().getIsVisible() == Boolean.TRUE){
-                updateChancellor(600, 200);
+            if (engine.chancellor().getisActive() == Boolean.TRUE && engine.timer().seconds() <= 15){
+                updateChancellor(256, 0); //TODO Get actual x,y
             }
 
             if (eventMessageOverlayVisible) {

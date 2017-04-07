@@ -370,7 +370,7 @@ public class Drawer {
 
     public void drawChancellor(float x, float y){
         batch.begin();
-        batch.draw(chancellorSprite, x, y, 32, 32); //TODO get Width/Height
+        batch.draw(chancellorSprite, x, y, 32, 45); //TODO get Width/Height
         batch.end();
     }
 }

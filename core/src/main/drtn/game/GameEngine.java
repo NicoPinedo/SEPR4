@@ -231,16 +231,17 @@ public class GameEngine {
             case 2:
                 timer.setTime(0, 30);
                 timer.start();
-
                 drawer.toggleButton(gameScreen.endTurnButton(), true, Color.WHITE);
                 break;
 
             case 3:
             	timer.setTime(0, 45);
                 timer.start();
+                this.beginChancellorMinigame();
                 break;
 
             case 4:
+                this.stopChancellorMinigame();
                 timer.setTime(0, 5);
                 timer.start();
                 produceResource();
@@ -371,7 +372,6 @@ public class GameEngine {
      */
     public void claimTile() {
         if (phase == 1 && !selectedTile.isOwned()) {
-            this.beginChancellorMinigame(); //TODO: TESTING PURPOSES, WILL REMOVE
             players[currentPlayerID].assignTile(selectedTile);
             //Assign selected tile to current player
 
@@ -447,10 +447,9 @@ public class GameEngine {
     /**
      * Begins "Catch the Chancellor" mini-game
      */
-    public void beginChancellorMinigame(){
-        chancellor.appear();
-        gameScreen.updateChancellor(200, 200); //TODO Get actual x,y
-    }
+    public void beginChancellorMinigame(){ chancellor.activate(); }
+
+    public void stopChancellorMinigame(){ chancellor.deactivate(); }
 
     /**
      * Return's the game's current play-state, which can either be [State.RUN] or [State.PAUSE]
