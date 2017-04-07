@@ -317,7 +317,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
 
             if (engine.chancellor().getisActive() == Boolean.TRUE && engine.timer().seconds() <= 15){
-                updateChancellor(256, 0); //TODO Get actual x,y
+                updateChancellor();
+                engine.chancellor().move(); //TODO: FOR THE LOLS, WILL REMOVE
             }
 
             if (eventMessageOverlayVisible) {
@@ -1199,8 +1200,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Conditionally enable food upgrade button
     }
 
-    public void updateChancellor(float x, float y){
-            drawer.drawChancellor(x, y);
+    public void updateChancellor(){
+            drawer.drawChancellor(engine.chancellor().getCoordX(), engine.chancellor().getCoordY());
     }
 
     @Override
