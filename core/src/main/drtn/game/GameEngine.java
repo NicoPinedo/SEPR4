@@ -188,8 +188,7 @@ public class GameEngine {
         gameScreen.phaseInfoTable.timer.stop();
         nextPlayer();
         System.out.println("Player " + currentPlayerID + " | Phase " + phase);
-        
-        market.refreshButtonAvailability();
+
         switch (phase) {
             case 1:
                 tileAcquired = false;
@@ -213,12 +212,10 @@ public class GameEngine {
                 gameScreen.phaseInfoTable.timer.setTime(0, 5);
                 gameScreen.phaseInfoTable.timer.start();
                 produceResource();
-		clearEffects();
+		        clearEffects();
                 setEffects();
                 System.out.println("test");
                 gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
-                market.refreshPlayers();
-                market.refreshAuction();	
                 break;
 
             case 5:
@@ -232,9 +229,6 @@ public class GameEngine {
 
         gameScreen.updatePhaseLabel();
         gameScreen.phaseInfoTable.updateLabels(phase);
-        market.refreshPlayers();
-        market.setPlayerListPosition(0);
-        market.refreshAuction();
 
         //If the upgrade overlay is open, close it when the next phase begins
         if (gameScreen.getUpgradeOverlayVisible()) {

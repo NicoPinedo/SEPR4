@@ -522,11 +522,11 @@ public class MarketInterfaceTable extends Table {
                 break;
             case ENERGY:
                 energyTradeAmount = value;
-                energyTradeLabel.setText("Energy: " + oreTradeAmount);
+                energyTradeLabel.setText("Energy: " + energyTradeAmount);
                 break;
             case FOOD:
                 foodTradeAmount = value;
-                foodTradeLabel.setText("Food: " + oreTradeAmount);
+                foodTradeLabel.setText("Food: " + foodTradeAmount);
                 break;
         }
     }
