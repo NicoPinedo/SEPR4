@@ -6,6 +6,8 @@ import main.drtn.game.entity.Player;
 import main.drtn.game.entity.Tile;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Nico on 27/02/2017.
@@ -58,8 +60,6 @@ public class Chancellor {
         this.isActive = Boolean.FALSE;
         this.iconTexture = new Texture("image/chancellor.png");
         this.icon = new Image(iconTexture);
-
-        this.move();
     }
 
     public void move() {
@@ -70,8 +70,6 @@ public class Chancellor {
 
         int tileWidth;
         tileWidth = 128;
-
-        System.out.println("TILENUM == " + tileNum);
 
         switch(tileNum){
             case 0:
@@ -147,10 +145,19 @@ public class Chancellor {
 
         offset = rand.nextInt(tileWidth - 44); //44 is height of chancellor image
         setCoordY(getCoordY() + offset);
+
     }
 
     public void activate() {
         this.isActive = Boolean.TRUE;
+
+        Timer moveDelay = new Timer();
+        moveDelay.schedule(new TimerTask(){
+            @Override
+            public void run() {
+                move();
+            }
+        }, 0,750);
     }
 
     public void deactivate() {
@@ -166,10 +173,9 @@ public class Chancellor {
 
     private void setCoordY(int y) { location[1] = y;}
 
-
-    public boolean getisActive() {return isActive;}
-
     public int getCoordX() {return location[0];}
 
     public int getCoordY() {return location[1];}
+
+    public boolean getisActive() {return isActive;}
 }
