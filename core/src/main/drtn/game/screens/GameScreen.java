@@ -33,7 +33,18 @@ import main.teamfractal.util.animation.AnimationPlayerWin;
 import main.teamfractal.util.animation.AnimationTileFlash;
 import main.teamfractal.util.animation.IAnimation;
 import main.teamfractal.util.screens.AbstractAnimationScreen;
-
+import main.drtn.game.GameEngine;
+import main.drtn.game.Trade;
+import main.drtn.game.entity.Tile;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.LabelledElement;
+import main.drtn.game.util.Overlay;
+import main.drtn.game.util.TTFont;
+import main.teamfractal.util.animation.AnimationPlayerWin;
+import main.teamfractal.util.animation.AnimationTileFlash;
+import main.teamfractal.util.animation.IAnimation;
+import main.teamfractal.util.screens.AbstractAnimationScreen;
 
 public class GameScreen extends AbstractAnimationScreen implements Screen {
     private final static int tileXOffset = 256;
@@ -316,9 +327,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 );
             }
 
-            if (engine.chancellor().getisActive() == Boolean.TRUE && engine.timer().seconds() <= 15){
+            if (engine.chancellor().getisActive() == Boolean.TRUE && engine.timer().seconds() <= 42){
                 updateChancellor();
-                engine.chancellor().move(); //TODO: FOR THE LOLS, WILL REMOVE
+                //engine.chancellor().move(); //TODO: FOR THE LOLS, WILL REMOVE
             }
 
             if (eventMessageOverlayVisible) {

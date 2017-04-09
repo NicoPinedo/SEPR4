@@ -20,6 +20,18 @@ import main.drtn.game.effects.PlayerEffect;
 import main.drtn.game.effects.PlotEffectSource;
 import main.drtn.game.enums.ResourceType;
 import main.drtn.game.screens.GameScreen;
+import main.drtn.game.effects.PlayerEffect;
+import main.drtn.game.effects.PlayerEffectSource;
+import main.drtn.game.effects.PlotEffect;
+import main.drtn.game.effects.PlotEffectSource;
+import main.drtn.game.entity.*;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.exceptions.InvalidResourceTypeException;
+import main.drtn.game.screens.GameScreen;
+import main.drtn.game.screens.MiniGameScreen;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.GameTimer;
+import main.drtn.game.util.TTFont;
 
 import java.util.*;
 
@@ -254,13 +266,14 @@ public class GameEngine {
                 break;
 
             case 5:
+                if(checkGameEnd()){
+                    System.out.println("Someone win");
+                    gameScreen.showPlayerWin(getWinner());
+                }
                 break;
         }
 
-        if(checkGameEnd()){
-            System.out.println("Someone win");
-            gameScreen.showPlayerWin(getWinner());
-        }
+
 
         gameScreen.updatePhaseLabel();
         market.refreshPlayers();

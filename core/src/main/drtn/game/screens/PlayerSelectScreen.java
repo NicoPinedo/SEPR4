@@ -18,6 +18,9 @@ import main.drtn.game.GameEngine;
 import main.drtn.game.util.Drawer;
 import main.drtn.game.util.TTFont;
 import main.drtn.game.GameEngine;
+import main.drtn.game.GameEngine;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.TTFont;
 
 /**
  * New Class for Assessment 3, allows user to slect the number of players
@@ -328,7 +331,7 @@ public class PlayerSelectScreen implements Screen {
 			drawer.toggleButton(removeAIPlayerButton, true, Color.WHITE);
 		}
 		
-		if(AIPlayerAmount + playerAmount < 9){
+		if(AIPlayerAmount + playerAmount < 4){
 			drawer.toggleButton(addPlayerButton, true, Color.WHITE);
 			drawer.toggleButton(addAIPlayerButton, true, Color.WHITE);
 		}
