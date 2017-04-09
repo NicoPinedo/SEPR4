@@ -327,9 +327,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 );
             }
 
-            if (engine.chancellor().getisActive() == Boolean.TRUE && engine.timer().seconds() <= 42){
+            if (engine.chancellor().getisActive()){
                 updateChancellor();
-                //engine.chancellor().move(); //TODO: FOR THE LOLS, WILL REMOVE
             }
 
             if (eventMessageOverlayVisible) {
@@ -1212,7 +1211,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     public void updateChancellor(){
+        if (engine.timer().seconds() <= 42) {
             drawer.drawChancellor(engine.chancellor().getCoordX(), engine.chancellor().getCoordY());
+        }
     }
 
     @Override

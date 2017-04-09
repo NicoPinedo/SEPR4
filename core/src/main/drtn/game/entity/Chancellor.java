@@ -40,6 +40,13 @@ public class Chancellor {
      */
     private Texture iconTexture;
 
+    /**
+     * Initialises chancellor for later use in the game
+     * Default location in bottom left tile (tile 12)
+     *
+     * @param Player The current player taking a turn
+     * @param tiles The array of tiles from the game
+     */
     public Chancellor(Player Player, Tile[] tiles) {
         this.currentPlayer = Player;
         this.tiles = tiles;
@@ -62,9 +69,7 @@ public class Chancellor {
         currentTile = tiles[tileNum];
 
         int tileWidth;
-        int tileCentre; //offset from edge to centre of tile
         tileWidth = 128;
-        tileCentre = 64;
 
         System.out.println("TILENUM == " + tileNum);
 
@@ -134,8 +139,14 @@ public class Chancellor {
                 setCoordY(0);
                 break;
         }
-        setCoordX(getCoordX() + tileCentre - 16);
-        setCoordY(getCoordY() + tileCentre - 22);
+
+       //The following gives a random offset to the chancellor, so that it may appear at any point on the tile
+        int offset;
+        offset = rand.nextInt(tileWidth - 32); //32 is width of chancellor image. Prevents it from displaying across the tile borders.
+        setCoordX(getCoordX() + offset);
+
+        offset = rand.nextInt(tileWidth - 44); //44 is height of chancellor image
+        setCoordY(getCoordY() + offset);
     }
 
     public void activate() {
