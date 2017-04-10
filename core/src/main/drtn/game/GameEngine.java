@@ -580,6 +580,7 @@ public class GameEngine {
     		college.assignPlayer(player);
     		player.assignCollege(college);
     	}
+
     	currentPlayerID = length - 1;
         market = new Market(game, this);
     }

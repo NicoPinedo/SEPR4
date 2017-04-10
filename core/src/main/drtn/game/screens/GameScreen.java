@@ -256,8 +256,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Construct roboticon upgrade overlay (and, again, hide it for the moment)
         constructTooExpensiveOverlay();
         constructEventMessageOverlay();
+
         //drawer.debug(gameStage);
         //Call this to draw temporary debug lines around all of the actors on the stage
+
+        constructMarketInterface();
 
         System.out.println("GameScreen.show");
         engine.nextPhase();
@@ -779,6 +782,67 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     	tooExpensiveOverlay.table().add(closePriceOverlayButton);
     }
 
+    private void constructMarketInterface() {
+        marketInterfaceTable.setMarketButtonFunction(ResourceType.ORE, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.updateCurrentPlayer(engine.market().buy(ResourceType.ORE, 1, engine.currentPlayer()));
+            }
+        });
+
+        marketInterfaceTable.setMarketButtonFunction(ResourceType.ENERGY, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.updateCurrentPlayer(engine.market().buy(ResourceType.ENERGY, 1, engine.currentPlayer()));
+            }
+        });
+
+        marketInterfaceTable.setMarketButtonFunction(ResourceType.FOOD, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.updateCurrentPlayer(engine.market().buy(ResourceType.FOOD, 1, engine.currentPlayer()));
+            }
+        });
+
+        marketInterfaceTable.setMarketButtonFunction(ResourceType.ROBOTICON, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.updateCurrentPlayer(engine.market().buy(ResourceType.ROBOTICON, 1, engine.currentPlayer()));
+            }
+        });
+
+        marketInterfaceTable.setMarketButtonFunction(ResourceType.ORE, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.updateCurrentPlayer(engine.market().sell(ResourceType.ORE, 1, engine.currentPlayer()));
+            }
+        });
+
+        marketInterfaceTable.setMarketButtonFunction(ResourceType.ENERGY, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.updateCurrentPlayer(engine.market().sell(ResourceType.ENERGY, 1, engine.currentPlayer()));
+            }
+        });
+
+        marketInterfaceTable.setMarketButtonFunction(ResourceType.FOOD, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.updateCurrentPlayer(engine.market().sell(ResourceType.FOOD, 1, engine.currentPlayer()));
+            }
+        });
+
+        marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, engine.market().getOreBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, engine.market().getOreSellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, engine.market().getEnergyBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, engine.market().getEnergySellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, engine.market().getFoodBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, engine.market().getFoodSellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, engine.market().getRoboticonBuyPrice());
+
+        closeMarketInterface();
+    }
+
     /**
      * Updates the label on the right-hand side of the in-game interface to visualise the identity of the selected tile
      *
@@ -990,6 +1054,62 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             drawer.toggleButton(foodUpgradeButton, false, Color.RED);
         }
         //Conditionally enable food upgrade button
+    }
+
+    private void openResourceMarketInterface() {
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getOreBuyPrice()) {
+            marketInterfaceTable.toggleButton(ResourceType.ORE, true, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ORE, true, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getEnergyBuyPrice()) {
+            marketInterfaceTable.toggleButton(ResourceType.ENERGY, true, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ENERGY, true, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getFoodBuyPrice()) {
+            marketInterfaceTable.toggleButton(ResourceType.FOOD, true, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.FOOD, true, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.ORE) > 0) {
+            marketInterfaceTable.toggleButton(ResourceType.ORE, false, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ORE, false, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.ENERGY) > 0) {
+            marketInterfaceTable.toggleButton(ResourceType.ENERGY, false, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ENERGY, false, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.FOOD) > 0) {
+            marketInterfaceTable.toggleButton(ResourceType.FOOD, false, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.FOOD, false, false, Color.RED);
+        }
+    }
+
+    public void openRoboticonMarketInterface() {
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getRoboticonBuyPrice()) {
+            marketInterfaceTable.toggleButton(ResourceType.ROBOTICON, true, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ROBOTICON, true, false, Color.RED);
+        }
+    }
+
+    public void closeMarketInterface() {
+        marketInterfaceTable.toggleButton(ResourceType.ORE, true, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.ORE, false, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.ENERGY, true, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.ENERGY, false, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.FOOD, true, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.FOOD, false, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.ROBOTICON, true, false, Color.GRAY);
     }
 
     @Override

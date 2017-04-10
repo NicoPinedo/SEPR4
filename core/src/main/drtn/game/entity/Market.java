@@ -132,7 +132,7 @@ public class Market extends Table {
      *
      * @return this.RoboticonBuyPrice is integer roboticon buy price value
      */
-    int getRoboticonBuyPrice() {
+    public int getRoboticonBuyPrice() {
         return this.RoboticonBuyPrice;
     }
 
@@ -321,7 +321,7 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
-    public Player buy(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
+    public Player buy(ResourceType Stock_Type, int Quantity, Player Player) {
         switch (Stock_Type) {
 
             case ORE:
@@ -335,11 +335,7 @@ public class Market extends Table {
                         Player.setResource(ResourceType.ORE, playersOre);
                         OreBuyPrice = calculateNewCost(OreStock, "buy");
                         OreSellPrice = calculateNewCost(OreStock, "sell");
-                    } else {
-                        throw new Exception("Insufficient money");
                     }
-                } else {
-                    throw new Exception("Insufficient resources");
                 }
                 break;
 
@@ -354,12 +350,7 @@ public class Market extends Table {
                         Player.setResource(ResourceType.FOOD, playersFood);
                         FoodBuyPrice = calculateNewCost(FoodStock, "buy");
                         FoodSellPrice = calculateNewCost(FoodStock, "sell");
-                    } else {
-                        throw new Exception("Insufficient money");
                     }
-
-                } else {
-                    throw new Exception("Insufficient resources");
                 }
                 break;
 
@@ -374,11 +365,7 @@ public class Market extends Table {
                         Player.setResource(ResourceType.ENERGY, playersEnergy);
                         EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
                         EnergySellPrice = calculateNewCost(EnergyStock, "sell");
-                    } else {
-                        throw new Exception("Insufficient money");
                     }
-                } else {
-                    throw new Exception("Insufficient resources");
                 }
                 break;
 
@@ -389,20 +376,12 @@ public class Market extends Table {
                         Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - RoboticonBuyPrice);
                         RoboticonBuyPrice += 5;
                         Player.increaseRoboticonInventory();
-                    } else {
-                        throw new Exception("Insufficient money");
                     }
-                } else {
-                    throw new Exception("No available Roboticons");
+                    break;
                 }
-                break;
-            default:
-
-                throw new Exception("Wrong Stock_Type passed");
         }
+
         return Player;
-
-
     }
 
 
@@ -420,7 +399,7 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
-    public Player sell(ResourceType Stock_Type, int Quantity, Player Player) throws Exception {
+    public Player sell(ResourceType Stock_Type, int Quantity, Player Player) {
         int playersMoney = Player.getResource(ResourceType.MONEY);
 
         switch (Stock_Type) {
@@ -435,9 +414,6 @@ public class Market extends Table {
 
                     OreBuyPrice = calculateNewCost(OreStock, "buy");
                     OreSellPrice = calculateNewCost(OreStock, "sell");
-                } else {
-                    throw new Exception("Insufficient resources");
-
                 }
                 break;
             case FOOD:
@@ -451,8 +427,6 @@ public class Market extends Table {
                     Player.setResource(ResourceType.FOOD, playersFood);
                     FoodBuyPrice = calculateNewCost(FoodStock, "buy");
                     FoodSellPrice = calculateNewCost(FoodStock, "sell");
-                } else {
-                    throw new Exception("Insufficient resources");
                 }
                 break;
             case ENERGY:
@@ -465,8 +439,6 @@ public class Market extends Table {
                     Player.setResource(ResourceType.ENERGY, playersEnergy);
                     EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
                     EnergySellPrice = calculateNewCost(EnergyStock, "sell");
-                } else {
-                    throw new Exception("Insufficient resources");
                 }
                 break;
             default:
@@ -527,9 +499,9 @@ public class Market extends Table {
      * @return costofresources int value of the resource's new cost
      * @throws Exception Thrown if there's a wrong operator used with the function
      */
-    private int calculateNewCost(int Stock, String oper) throws Exception {
+    private int calculateNewCost(int Stock, String oper) {
         double cost;
-        int costOfResources;
+        int costOfResources = 0;
         if (Stock == 0 && oper.equals("buy")) {
             costOfResources = 0;
         } else if (Stock == 0 && oper.equals("sell")) {
@@ -547,8 +519,6 @@ public class Market extends Table {
             } else {
                 costOfResources = costInt;
             }
-        } else {
-            throw new Exception("Wrong operator");
         }
         return costOfResources;
     }
