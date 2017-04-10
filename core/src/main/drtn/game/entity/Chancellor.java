@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import main.drtn.game.entity.Player;
 import main.drtn.game.entity.Tile;
+import main.drtn.game.enums.ResourceType;
 
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 /**
  * Created by Nico on 27/02/2017.
@@ -30,6 +32,18 @@ public class Chancellor {
      */
     private Integer[] location;
     /**
+     * The increase in score once the chancellor has been captured
+     */
+    private Integer winnings;
+    /**
+     * The period in which the chancellor will move to another location (in milliseconds)
+     */
+    private Integer movePeriod;
+    /**
+     * The timer within which the chancellor moves.
+     */
+    private Timer moveDelay;
+    /**
      * Boolean representing whether the chancellor is visible or not
      */
     private Boolean isActive;
@@ -46,17 +60,16 @@ public class Chancellor {
      * Initialises chancellor for later use in the game
      * Default location in bottom left tile (tile 12)
      *
-     * @param Player The current player taking a turn
      * @param tiles The array of tiles from the game
      */
-    public Chancellor(Player Player, Tile[] tiles) {
-        this.currentPlayer = Player;
+    public Chancellor(Tile[] tiles) {
         this.tiles = tiles;
-
+        this.winnings = 50;
+        this.movePeriod = 490;
+        this.moveDelay = new Timer();
         this.location = new Integer[2];
         this.location[0] = 256; //x coordinate
         this.location[1] = 0; //y coordinate
-
         this.isActive = Boolean.FALSE;
         this.iconTexture = new Texture("image/chancellor.png");
         this.icon = new Image(iconTexture);
@@ -65,7 +78,7 @@ public class Chancellor {
     public void move() {
         Random rand = new Random();
         int tileNum;
-        tileNum = rand.nextInt(16); //Chooses random tile value (0-15)
+        tileNum = rand.nextInt(15)+1; //Chooses random tile value (0-15)
         currentTile = tiles[tileNum];
 
         int tileWidth;
@@ -148,25 +161,29 @@ public class Chancellor {
 
     }
 
+    public void updatePlayer(Player p) {
+        currentPlayer = p;
+    }
+
+    public void captured() {
+        deactivate();
+        currentPlayer.varyResource(ResourceType.MONEY, winnings);
+    }
+
     public void activate() {
         this.isActive = Boolean.TRUE;
 
-        Timer moveDelay = new Timer();
         moveDelay.schedule(new TimerTask(){
             @Override
             public void run() {
                 move();
             }
-        }, 0,750);
+        }, 0, movePeriod);
     }
 
     public void deactivate() {
         this.isActive = Boolean.FALSE;
         this.currentTile = null;
-    }
-
-    public void captured() {
-
     }
 
     private void setCoordX(int x) { location[0] = x;}
@@ -176,6 +193,8 @@ public class Chancellor {
     public int getCoordX() {return location[0];}
 
     public int getCoordY() {return location[1];}
+
+    public Tile getTile() {return currentTile;}
 
     public boolean getisActive() {return isActive;}
 }

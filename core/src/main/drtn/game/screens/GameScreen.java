@@ -1214,6 +1214,15 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         if (engine.timer().seconds() <= 42) {
             drawer.drawChancellor(engine.chancellor().getCoordX(), engine.chancellor().getCoordY());
         }
+        if (engine.selectedTile() == engine.chancellor().getTile()){
+            engine.chancellor().captured();
+            updateInventoryLabels();
+        }
+        engine.selectTile(engine.tiles()[0]);
+        if (lastTileClickedFlash != null) {
+            lastTileClickedFlash.cancelAnimation();
+            lastTileClickedFlash = null;
+        }
     }
 
     @Override

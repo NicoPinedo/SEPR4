@@ -194,6 +194,8 @@ public class GameEngine {
         colleges[8] = new College(8, "Wentworth");
         // ----------------------------------------------------------------
 
+        this.chancellor = new Chancellor(tiles);
+
         phase = 0;
         currentPlayerID = 0;
         trades = new Array<Trade>();
@@ -460,7 +462,10 @@ public class GameEngine {
     /**
      * Begins "Catch the Chancellor" mini-game
      */
-    public void beginChancellorMinigame(){ chancellor.activate(); }
+    public void beginChancellorMinigame(){
+        chancellor.activate();
+        chancellor.updatePlayer(players[currentPlayerID]);
+    }
 
     public void stopChancellorMinigame(){ chancellor.deactivate(); }
 
@@ -664,7 +669,7 @@ public class GameEngine {
     	}
     	currentPlayerID = length - 1;
         market = new Market(game, this);
-        this.chancellor = new Chancellor(players[currentPlayerID], tiles);
+        this.chancellor = new Chancellor(tiles);
     }
 
     public void testTrade(){
