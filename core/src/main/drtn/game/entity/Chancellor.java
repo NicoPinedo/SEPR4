@@ -32,9 +32,9 @@ public class Chancellor {
      */
     private Integer[] location;
     /**
-     * The increase in score once the chancellor has been captured
+     * The increase in money once the chancellor has been captured
      */
-    private Integer winnings;
+    private Integer reward;
     /**
      * The period in which the chancellor will move to another location (in milliseconds)
      */
@@ -64,7 +64,7 @@ public class Chancellor {
      */
     public Chancellor(Tile[] tiles) {
         this.tiles = tiles;
-        this.winnings = 50;
+        this.reward = 50;
         this.movePeriod = 490;
         this.moveDelay = new Timer();
         this.location = new Integer[2];
@@ -78,12 +78,13 @@ public class Chancellor {
     public void move() {
         Random rand = new Random();
         int tileNum;
-        tileNum = rand.nextInt(15)+1; //Chooses random tile value (0-15)
+        tileNum = rand.nextInt(15)+1; //Chooses random tile value (1-15)
         currentTile = tiles[tileNum];
 
         int tileWidth;
         tileWidth = 128;
 
+        //Switch case to set a location of chancellor dependant on the currentTile
         switch(tileNum){
             case 0:
                 setCoordX(256);
@@ -151,7 +152,7 @@ public class Chancellor {
                 break;
         }
 
-       //The following gives a random offset to the chancellor, so that it may appear at any point on the tile
+       //The following gives a random offset to the chancellor, so that it may appear at a random point on the tile
         int offset;
         offset = rand.nextInt(tileWidth - 32); //32 is width of chancellor image. Prevents it from displaying across the tile borders.
         setCoordX(getCoordX() + offset);
@@ -161,18 +162,15 @@ public class Chancellor {
 
     }
 
-    public void updatePlayer(Player p) {
-        currentPlayer = p;
-    }
-
     public void captured() {
         deactivate();
-        currentPlayer.varyResource(ResourceType.MONEY, winnings);
+        currentPlayer.varyResource(ResourceType.MONEY, reward);
     }
 
     public void activate() {
         this.isActive = Boolean.TRUE;
 
+        //Begin task to continually move the chancellor
         moveDelay.schedule(new TimerTask(){
             @Override
             public void run() {
@@ -184,6 +182,10 @@ public class Chancellor {
     public void deactivate() {
         this.isActive = Boolean.FALSE;
         this.currentTile = null;
+    }
+
+    public void updatePlayer(Player p) {
+        currentPlayer = p;
     }
 
     private void setCoordX(int x) { location[0] = x;}

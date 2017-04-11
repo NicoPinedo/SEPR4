@@ -1211,13 +1211,15 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     public void updateChancellor(){
-        if (engine.timer().seconds() <= 42) {
+        if (engine.timer().seconds() <= 15) {
             drawer.drawChancellor(engine.chancellor().getCoordX(), engine.chancellor().getCoordY());
         }
+        //Has chancellor been captured?
         if (engine.selectedTile() == engine.chancellor().getTile()){
             engine.chancellor().captured();
             updateInventoryLabels();
         }
+        //deselect latest tile
         engine.selectTile(engine.tiles()[0]);
         if (lastTileClickedFlash != null) {
             lastTileClickedFlash.cancelAnimation();

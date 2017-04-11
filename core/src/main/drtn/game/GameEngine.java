@@ -251,11 +251,11 @@ public class GameEngine {
             case 3:
             	timer.setTime(0, 45);
                 timer.start();
-                this.beginChancellorMinigame();
+                this.beginChancellorMode();
                 break;
 
             case 4:
-                this.stopChancellorMinigame();
+                this.stopChancellorMode();
                 timer.setTime(0, 5);
                 timer.start();
                 produceResource();
@@ -462,12 +462,12 @@ public class GameEngine {
     /**
      * Begins "Catch the Chancellor" mini-game
      */
-    public void beginChancellorMinigame(){
+    public void beginChancellorMode(){
         chancellor.activate();
         chancellor.updatePlayer(players[currentPlayerID]);
     }
 
-    public void stopChancellorMinigame(){ chancellor.deactivate(); }
+    public void stopChancellorMode(){ chancellor.deactivate(); }
 
     /**
      * Return's the game's current play-state, which can either be [State.RUN] or [State.PAUSE]
