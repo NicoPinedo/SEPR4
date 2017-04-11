@@ -783,54 +783,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     private void constructMarketInterface() {
-        marketInterfaceTable.setMarketButtonFunction(ResourceType.ORE, true, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.updateCurrentPlayer(engine.market().buy(ResourceType.ORE, 1, engine.currentPlayer()));
-            }
-        });
-
-        marketInterfaceTable.setMarketButtonFunction(ResourceType.ENERGY, true, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.updateCurrentPlayer(engine.market().buy(ResourceType.ENERGY, 1, engine.currentPlayer()));
-            }
-        });
-
-        marketInterfaceTable.setMarketButtonFunction(ResourceType.FOOD, true, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.updateCurrentPlayer(engine.market().buy(ResourceType.FOOD, 1, engine.currentPlayer()));
-            }
-        });
-
-        marketInterfaceTable.setMarketButtonFunction(ResourceType.ROBOTICON, true, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.updateCurrentPlayer(engine.market().buy(ResourceType.ROBOTICON, 1, engine.currentPlayer()));
-            }
-        });
-
-        marketInterfaceTable.setMarketButtonFunction(ResourceType.ORE, false, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.updateCurrentPlayer(engine.market().sell(ResourceType.ORE, 1, engine.currentPlayer()));
-            }
-        });
-
-        marketInterfaceTable.setMarketButtonFunction(ResourceType.ENERGY, false, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.updateCurrentPlayer(engine.market().sell(ResourceType.ENERGY, 1, engine.currentPlayer()));
-            }
-        });
-
-        marketInterfaceTable.setMarketButtonFunction(ResourceType.FOOD, false, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.updateCurrentPlayer(engine.market().sell(ResourceType.FOOD, 1, engine.currentPlayer()));
-            }
-        });
+        engine.setMarketButtonFunctions();
 
         marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, engine.market().getOreBuyPrice());
         marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, engine.market().getOreSellPrice());
@@ -839,6 +792,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, engine.market().getFoodBuyPrice());
         marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, engine.market().getFoodSellPrice());
         marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, engine.market().getRoboticonBuyPrice());
+
+        marketInterfaceTable.setMarketStockText(ResourceType.ORE, engine.market().getOreStock());
+        marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, engine.market().getEnergyStock());
+        marketInterfaceTable.setMarketStockText(ResourceType.FOOD, engine.market().getFoodStock());
+        marketInterfaceTable.setMarketStockText(ResourceType.ROBOTICON, engine.market().getRoboticonStock());
 
         closeMarketInterface();
     }
@@ -1056,7 +1014,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Conditionally enable food upgrade button
     }
 
-    private void openResourceMarketInterface() {
+    public void openResourceMarketInterface() {
         if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getOreBuyPrice()) {
             marketInterfaceTable.toggleButton(ResourceType.ORE, true, true, Color.GREEN);
         } else {

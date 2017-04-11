@@ -509,6 +509,23 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    public void setMarketStockText(ResourceType resource, int quantity) {
+        switch (resource) {
+            case ORE:
+                oreStockLabel.setText(String.valueOf(quantity));
+                break;
+            case ENERGY:
+                energyStockLabel.setText(String.valueOf(quantity));
+                break;
+            case FOOD:
+                foodStockLabel.setText(String.valueOf(quantity));
+                break;
+            case ROBOTICON:
+                roboticonStockLabel.setText(String.valueOf(quantity));
+                break;
+        }
+    }
+
     private void setTradePrice(int tradePrice) {
         this.tradePrice = tradePrice;
         tradePriceLabel.setText(String.valueOf(tradePrice));

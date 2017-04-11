@@ -20,17 +20,7 @@ import drtn.game.enums.ResourceType;
 import java.util.Random;
 
 
-public class Market extends Table {
-    /**
-     * Holds game-state
-     */
-    private Game game;
-
-    /**
-     * Engine class that handles all of the game's logical processing
-     */
-    private GameEngine engine;
-
+public class Market {
     /**
      * Variable holding current Ore resource amount as an int, initialises at 0 as stated in the brief.
      */
@@ -88,24 +78,10 @@ public class Market extends Table {
 
 
     /**
-     * Constructs the market by calculating buying/selling costs and arranging the associated visual interface
-     * Imports the game's state (for direct renderer access) and the engine which controls it, before setting up
-     * the functions and visual features of its internal purchase/sale buttons and populating a drawable visual
-     * framework with them and some other stock/identification labels
-     *
-     * @param game   The game's state, which is used in this context to operate the game's renderer via the Drawer class
-     * @param engine The game's engine, which directly controls the availability and prices of market resources
+     * Constructs the market
      */
-    public Market(Game game, GameEngine engine) {
-        super();
-        //Run the constructor for the Table object that forms this market's visual interface
+    public Market() {
 
-        this.game = game;
-        //Import the game's current state
-
-        this.engine = engine;
-        //Link the market to the game's engine
-        //This is required to access phase information, as certain market sectors open and close based on it
     }
 
     /**
@@ -113,7 +89,7 @@ public class Market extends Table {
      *
      * @return int The number of Roboticons currently held in the market
      */
-    int getRoboticonStock() {
+    public int getRoboticonStock() {
         return this.RoboticonStock;
     }
 
@@ -321,53 +297,52 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
-    public Player buy(ResourceType Stock_Type, int Quantity, Player Player) {
+    public boolean buy(ResourceType Stock_Type, int Quantity, Player Player) {
         switch (Stock_Type) {
-
             case ORE:
                 if (Quantity <= OreStock) {
-                    int OrePrice = OreBuyPrice * Quantity;
-                    if (Player.getResource(ResourceType.MONEY) >= OrePrice) {
+                    if (Player.getResource(ResourceType.MONEY) >= OreBuyPrice * Quantity) {
                         OreStock -= Quantity;
-                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - OrePrice);
-                        int playersOre = Player.getResource(ResourceType.ORE);
-                        playersOre += Quantity;
-                        Player.setResource(ResourceType.ORE, playersOre);
+                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - (OreBuyPrice * Quantity));
+                        Player.setResource(ResourceType.ORE, Player.getResource(ResourceType.ORE) + Quantity);
                         OreBuyPrice = calculateNewCost(OreStock, "buy");
                         OreSellPrice = calculateNewCost(OreStock, "sell");
+
+                        return true;
                     }
                 }
-                break;
+
+                return false;
 
             case FOOD:
                 if (Quantity <= FoodStock) {
-                    int FoodPrice = FoodBuyPrice * Quantity;
-                    if (Player.getResource(ResourceType.MONEY) >= FoodPrice) {
+                    if (Player.getResource(ResourceType.MONEY) >= FoodBuyPrice * Quantity) {
                         FoodStock -= Quantity;
-                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - FoodPrice);
-                        int playersFood = Player.getResource(ResourceType.FOOD);
-                        playersFood += Quantity;
-                        Player.setResource(ResourceType.FOOD, playersFood);
+                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - (FoodBuyPrice * Quantity));
+                        Player.setResource(ResourceType.FOOD, Player.getResource(ResourceType.FOOD) + Quantity);
                         FoodBuyPrice = calculateNewCost(FoodStock, "buy");
                         FoodSellPrice = calculateNewCost(FoodStock, "sell");
+
+                        return true;
                     }
                 }
-                break;
+
+                return false;
 
             case ENERGY:
                 if (Quantity <= EnergyStock) {
-                    int EnergyPrice = EnergyBuyPrice * Quantity;
-                    if (Player.getResource(ResourceType.MONEY) >= EnergyPrice) {
+                    if (Player.getResource(ResourceType.MONEY) >= EnergyBuyPrice * Quantity) {
                         EnergyStock -= Quantity;
-                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - EnergyPrice);
-                        int playersEnergy = Player.getResource(ResourceType.ENERGY);
-                        playersEnergy += Quantity;
-                        Player.setResource(ResourceType.ENERGY, playersEnergy);
+                        Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - (EnergyBuyPrice * Quantity));
+                        Player.setResource(ResourceType.ENERGY, Player.getResource(ResourceType.ENERGY) + Quantity);
                         EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
                         EnergySellPrice = calculateNewCost(EnergyStock, "sell");
+
+                        return true;
                     }
                 }
-                break;
+
+                return false;
 
             case ROBOTICON:
                 if (RoboticonStock > 0) {
@@ -376,12 +351,15 @@ public class Market extends Table {
                         Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) - RoboticonBuyPrice);
                         RoboticonBuyPrice += 5;
                         Player.increaseRoboticonInventory();
+
+                        return true;
                     }
-                    break;
                 }
+
+                return false;
         }
 
-        return Player;
+        return false;
     }
 
 
@@ -399,54 +377,50 @@ public class Market extends Table {
      * @param Quantity   The amount of resources that Player wants to buy.
      * @param Player     A Player object.
      */
-    public Player sell(ResourceType Stock_Type, int Quantity, Player Player) {
-        int playersMoney = Player.getResource(ResourceType.MONEY);
-
+    public boolean sell(ResourceType Stock_Type, int Quantity, Player Player) {
         switch (Stock_Type) {
             case ORE:
-                int playersOre = Player.getResource(ResourceType.ORE);
-                if (playersOre >= Quantity) {
+                if (Player.getResource(ResourceType.ORE) >= Quantity) {
                     OreStock += Quantity;
-                    playersMoney += Quantity * OreSellPrice;
-                    Player.setResource(ResourceType.MONEY, playersMoney);
-                    playersOre -= Quantity;
-                    Player.setResource(ResourceType.ORE, playersOre);
+                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) + (Quantity * OreSellPrice));
+                    Player.setResource(ResourceType.ORE, Player.getResource(ResourceType.ORE) - Quantity);
 
                     OreBuyPrice = calculateNewCost(OreStock, "buy");
                     OreSellPrice = calculateNewCost(OreStock, "sell");
-                }
-                break;
-            case FOOD:
-                int playersFood = Player.getResource(ResourceType.FOOD);
-                if (playersFood >= Quantity) {
 
+                    return true;
+                }
+
+                return false;
+            case FOOD:
+                if (Player.getResource(ResourceType.FOOD) >= Quantity) {
                     FoodStock += Quantity;
-                    playersMoney += Quantity * FoodSellPrice;
-                    Player.setResource(ResourceType.MONEY, playersMoney);
-                    playersFood -= Quantity;
-                    Player.setResource(ResourceType.FOOD, playersFood);
+                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) + (Quantity * FoodSellPrice));
+                    Player.setResource(ResourceType.FOOD, Player.getResource(ResourceType.FOOD) - Quantity);
+
                     FoodBuyPrice = calculateNewCost(FoodStock, "buy");
                     FoodSellPrice = calculateNewCost(FoodStock, "sell");
+
+                    return true;
                 }
-                break;
+
+                return false;
             case ENERGY:
-                int playersEnergy = Player.getResource(ResourceType.ENERGY);
-                if (playersEnergy >= Quantity) {
+                if (Player.getResource(ResourceType.ENERGY) >= Quantity) {
                     EnergyStock += Quantity;
-                    playersMoney += Quantity * EnergySellPrice;
-                    Player.setResource(ResourceType.MONEY, playersMoney);
-                    playersEnergy -= Quantity;
-                    Player.setResource(ResourceType.ENERGY, playersEnergy);
+                    Player.setResource(ResourceType.MONEY, Player.getResource(ResourceType.MONEY) + (Quantity * EnergySellPrice));
+                    Player.setResource(ResourceType.ENERGY, Player.getResource(ResourceType.ENERGY) - Quantity);
+
                     EnergyBuyPrice = calculateNewCost(EnergyStock, "buy");
                     EnergySellPrice = calculateNewCost(EnergyStock, "sell");
+
+                    return true;
                 }
-                break;
-            default:
-                //Roboticon or Money passed, both invalid here
 
+                return false;
         }
-        return Player;
 
+        return false;
     }
 
 
