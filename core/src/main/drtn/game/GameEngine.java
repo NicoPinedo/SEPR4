@@ -672,6 +672,9 @@ public class GameEngine {
                     if (currentPlayer().getResource(ResourceType.MONEY) < market.getOreBuyPrice()) {
                         gameScreen.marketInterfaceTable.toggleButton(ResourceType.ORE, true, false, Color.RED);
                     }
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ORE);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
                 }
             }
         });
@@ -686,6 +689,9 @@ public class GameEngine {
                     if (currentPlayer().getResource(ResourceType.MONEY) < market.getEnergyBuyPrice()) {
                         gameScreen.marketInterfaceTable.toggleButton(ResourceType.ENERGY, true, false, Color.RED);
                     }
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ENERGY);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
                 }
             }
         });
@@ -700,6 +706,9 @@ public class GameEngine {
                     if (currentPlayer().getResource(ResourceType.MONEY) < market.getFoodBuyPrice()) {
                         gameScreen.marketInterfaceTable.toggleButton(ResourceType.FOOD, true, false, Color.RED);
                     }
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.FOOD);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
                 }
             }
         });
@@ -714,6 +723,9 @@ public class GameEngine {
                     if (currentPlayer().getResource(ResourceType.MONEY) < market.getRoboticonBuyPrice()) {
                         gameScreen.marketInterfaceTable.toggleButton(ResourceType.ROBOTICON, true, false, Color.RED);
                     }
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ROBOTICON);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
                 }
             }
         });
@@ -728,6 +740,9 @@ public class GameEngine {
                     if (currentPlayer().getResource(ResourceType.ORE) == 0) {
                         gameScreen.marketInterfaceTable.toggleButton(ResourceType.ORE, false, false, Color.RED);
                     }
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ORE);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
                 }
             }
         });
@@ -742,6 +757,9 @@ public class GameEngine {
                     if (currentPlayer().getResource(ResourceType.ENERGY) == 0) {
                         gameScreen.marketInterfaceTable.toggleButton(ResourceType.ENERGY, false, false, Color.RED);
                     }
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ENERGY);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
                 }
             }
         });
@@ -756,6 +774,9 @@ public class GameEngine {
                     if (currentPlayer().getResource(ResourceType.FOOD) == 0) {
                         gameScreen.marketInterfaceTable.toggleButton(ResourceType.FOOD, false, false, Color.RED);
                     }
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.FOOD);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
                 }
             }
         });
