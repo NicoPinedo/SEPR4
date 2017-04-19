@@ -94,6 +94,8 @@ public class Player {
                 return this.OreCount;
             case MONEY:
                 return this.money;
+            case ROBOTICON:
+                return this.inventoryRoboticons;
             default:
                 //Unable to reach this state as a ResourceType must be passed.
                 //TODO: Improve this - Kieran
