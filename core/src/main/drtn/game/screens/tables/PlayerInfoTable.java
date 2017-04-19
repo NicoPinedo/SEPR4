@@ -29,8 +29,8 @@ public class PlayerInfoTable extends Table {
 
     public PlayerInfoTable() {
         final int textSize = 16;
-        final int labelWidth = 130;
-        final int counterWidth = 30;
+        final int labelWidth = 80;
+        final int counterWidth = 40;
 
         TTFont regularFont = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), textSize);
         TTFont lightFont = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), textSize);
@@ -67,10 +67,10 @@ public class PlayerInfoTable extends Table {
         inventoryTable.add(prepareLabel("MONEY", regularFont.font())).width(labelWidth).left();
         inventoryTable.add(moneyCounterLabel).width(counterWidth).left();
         inventoryTable.row();
-        inventoryTable.add(prepareLabel("ROBOTICONS", regularFont.font())).width(labelWidth).left();
+        inventoryTable.add(prepareLabel("RBTICNS", regularFont.font())).width(labelWidth).left();
         inventoryTable.add(roboticonCounterLabel).width(counterWidth).left();
 
-        add(collegeTable).padRight(20).center();
+        add(collegeTable).padLeft(10).padRight(20).center();
         add(inventoryTable).center();
     }
 

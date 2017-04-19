@@ -104,14 +104,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      */
     private Table tileGrid;
     /**
-     * Label identifying the current phase number
-     */
-    private Label phaseLabel;
-    /**
-     * Label stating the getID of the currently-selected tile
-     */
-    private Label selectedTileLabel;
-    /**
      * Object defining QOL drawing functions for rectangles and on-screen tables
      * Used in this class to render tooltip regions
      */
@@ -153,18 +145,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * Button allowing players to escape from the upgrade overlay if they decide against upgrading roboticons
      */
     private TextButton closeUpgradeOverlayButton;
-    /**
-     * Icon representing the currently-active player's chosen college
-     */
-    private Image currentPlayerIcon;
-    /**
-     * Icon representing the player who owns the currently-selected tile
-     */
-    private Image selectedTileOwnerIcon;
-    /**
-     * Icon representing the roboticon occupying the currently-selected tile
-     */
-    private Image selectedTileRoboticonIcon;
     /**
      * Customised stage that shows up to offer roboticon upgrade choices
      */
@@ -257,7 +237,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         constructTooExpensiveOverlay();
         constructEventMessageOverlay();
 
-        //drawer.debug(gameStage);
+        drawer.debug(gameStage);
         //Call this to draw temporary debug lines around all of the actors on the stage
 
         constructMarketInterface();
@@ -306,8 +286,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
             if (drawRoboticonIcon) {
                 drawer.drawRoboticon(selectedTile.getRoboticonStored(),
-                        tableRight.getX() + selectedTileRoboticonIcon.getX(),
-                        selectedTileRoboticonIcon.getY()
+                        tableRight.getX() + engine.selectedTile().getRoboticonStored().getIcon().getX(),
+                        engine.selectedTile().getRoboticonStored().getIcon().getY()
                 );
             }
 
@@ -526,16 +506,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableLeft.add(phaseInfoTable).colspan(2).align(Align.center);
         //Add the timer to the table
 
-        Table phaseTable = new Table();
-        phaseLabel = new Label("", new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
-        phaseLabel.setAlignment(Align.center);
-        phaseTable.add(phaseLabel).width(120);
-        phaseTable.add().width(5);
-        phaseTable.add(endTurnButton);
-        drawer.addTableRow(tableLeft, phaseTable, 0, 0, 15, 0, 2);
-        //Prepare and add the "End Phase" button to the table
+        tableLeft.row();
+        tableLeft.add(endTurnButton).padTop(15).padBottom(15);
+        //Add the "End Phase" button to the table
 
-        drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(headerFontRegular.font(), Color.BLACK)), 0, 0, 10, 0, 2);
+        drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE)), 0, 0, 5, 0, 2);
         //Window-dressing: adds "CURRENT PLAYER" label
 
         playerInfoTable = new PlayerInfoTable();
@@ -551,7 +526,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         gameStage.addActor(tableLeft);
         //Add left-hand table to the stage
 
-        updatePhaseLabel();
+        phaseInfoTable.updateLabels(engine.phase());
         playerInfoTable.showPlayerInfo(engine.currentPlayer());
     }
 
@@ -606,6 +581,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         });
 
         tableRight.add(selectedTileInfoTable);
+        selectedTileInfoTable.debug();
 
         marketInterfaceTable = new MarketInterfaceTable();
         drawer.addTableRow(tableRight, marketInterfaceTable, 2);
@@ -802,71 +778,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     /**
-     * Updates the label on the right-hand side of the in-game interface to visualise the identity of the selected tile
-     *
-     * @param value The ID value of the tile to be described on the interface
-     */
-    private void updateSelectedTileLabel(int value) {
-        if (value < 1 || value > 16) {
-            selectedTileLabel.setText("NO TILE SELECTED");
-        } else {
-            selectedTileLabel.setText("TILE " + value);
-        }
-    }
-
-    /**
-     * Updates the label on the right-hand side of the in-game interface to visualise the identity of the selected tile
-     * Alternative method that takes an ID value from a provided tile rather than an ID value directly
-     *
-     * @param tile The tile to be described on the interface
-     */
-    public void updateSelectedTileLabel(Tile tile) {
-        selectedTileLabel.setText("TILE " + tile.getID());
-    }
-
-    /**
-     * Updates the label on the left-hand side of the in-game interface to visualise and describe the game's current
-     * phase
-     *
-     * @param description The phase description to be displayed by the same label
-     */
-    private void updatePhaseLabel(String description) {
-        phaseLabel.setText("PHASE " + engine.phase() + "\n" + description);
-    }
-
-    public void updatePhaseLabel () {
-        int phase = engine.phase();
-        String description;
-        switch (phase) {
-            case 1:
-                description = "ACQUISITION";
-                break;
-
-            case 2:
-                description = "BUY ROBOTICONS";
-                break;
-
-            case 3:
-                description = "PLACE ROBOTICONS";
-                break;
-
-            case 4:
-                description = "PRODUCTION";
-                break;
-
-            case 5:
-                description = "MARKET OPEN";
-                break;
-
-            default:
-                description = "UNKNOWN";
-                break;
-        }
-
-        updatePhaseLabel(description);
-    }
-
-    /**
      * Returns the button used to allow for players to prematurely end their turns
      * This method is required to allow for the GameEngine class to turn the button off during phase 1
      *
@@ -875,17 +786,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      */
     public TextButton endTurnButton() {
         return endTurnButton;
-    }
-
-    /**
-     * Returns the icon object used to visualise the logo of the current player's associated college
-     * The GameEngine class uses this method to update said logo when it changes the active player
-     *
-     *
-     * @return Image The image object visualising the current player's associated college
-     */
-    public Image currentPlayerIcon() {
-        return currentPlayerIcon;
     }
 
     /**
@@ -950,23 +850,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
             selectedTileInfoTable.toggleDeployRoboticonButton(false);
         }
-    }
-
-    /**
-     * Run this to deselect the currently selected tile
-     * Specifically resets the labels and icons that identify the selected tile and disables the buttons for
-     * manipulating said tile (as no tile can be deemed as being "selected" after this is run)
-     */
-    public void deselectTile() {
-        drawer.toggleButton(claimTileButton, false, Color.GRAY);
-        drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
-
-        deployRoboticonButton.setText("DEPLOY");
-
-        selectedTileOwnerIcon.setVisible(false);
-        selectedTileRoboticonIcon.setVisible(false);
-
-        updateSelectedTileLabel(0);
     }
 
     /**

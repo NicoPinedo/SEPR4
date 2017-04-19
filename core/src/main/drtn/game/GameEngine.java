@@ -237,7 +237,6 @@ public class GameEngine {
             gameScreen.showPlayerWin(getWinner());
         }
 
-        gameScreen.updatePhaseLabel();
         gameScreen.phaseInfoTable.updateLabels(phase);
 
         //If the upgrade overlay is open, close it when the next phase begins
