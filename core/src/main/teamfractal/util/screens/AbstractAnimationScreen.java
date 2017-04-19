@@ -1,9 +1,9 @@
-package teamfractal.util.screens;
+package main.teamfractal.util.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import teamfractal.util.animation.IAnimation;
+import main.teamfractal.util.animation.IAnimation;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package drtn.game.entity;
+package main.drtn.game.entity;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -9,13 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import drtn.game.GameEngine;
-import drtn.game.Trade;
-import drtn.game.enums.ResourceType;
-import drtn.game.util.Drawer;
-import drtn.game.util.TTFont;
-import drtn.game.GameEngine;
-import drtn.game.enums.ResourceType;
+import main.drtn.game.GameEngine;
+import main.drtn.game.Trade;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.TTFont;
+import main.drtn.game.GameEngine;
+import main.drtn.game.enums.ResourceType;
 
 import java.util.Random;
 

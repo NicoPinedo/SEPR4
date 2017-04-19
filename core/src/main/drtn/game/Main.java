@@ -1,7 +1,7 @@
-package drtn.game;
+package main.drtn.game;
 
 import com.badlogic.gdx.Game;
-import drtn.game.screens.SplashScreen;
+import main.drtn.game.screens.SplashScreen;
 
 
 public class Main extends Game {

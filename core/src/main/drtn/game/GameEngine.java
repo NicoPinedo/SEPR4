@@ -1,4 +1,4 @@
-package drtn.game;
+package main.drtn.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -6,18 +6,32 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import drtn.game.effects.PlayerEffect;
-import drtn.game.effects.PlayerEffectSource;
-import drtn.game.effects.PlotEffect;
-import drtn.game.effects.PlotEffectSource;
-import drtn.game.entity.*;
-import drtn.game.enums.ResourceType;
-import drtn.game.exceptions.InvalidResourceTypeException;
-import drtn.game.screens.GameScreen;
-import drtn.game.screens.MiniGameScreen;
-import drtn.game.util.Drawer;
-import drtn.game.util.GameTimer;
-import drtn.game.util.TTFont;
+import main.drtn.game.effects.PlayerEffectSource;
+import main.drtn.game.effects.PlotEffect;
+import main.drtn.game.entity.*;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.exceptions.InvalidResourceTypeException;
+import main.drtn.game.screens.GameScreen;
+import main.drtn.game.screens.MiniGameScreen;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.GameTimer;
+import main.drtn.game.util.TTFont;
+import main.drtn.game.effects.PlayerEffect;
+import main.drtn.game.effects.PlotEffectSource;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.screens.GameScreen;
+import main.drtn.game.effects.PlayerEffect;
+import main.drtn.game.effects.PlayerEffectSource;
+import main.drtn.game.effects.PlotEffect;
+import main.drtn.game.effects.PlotEffectSource;
+import main.drtn.game.entity.*;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.exceptions.InvalidResourceTypeException;
+import main.drtn.game.screens.GameScreen;
+import main.drtn.game.screens.MiniGameScreen;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.GameTimer;
+import main.drtn.game.util.TTFont;
 
 import java.util.*;
 
@@ -83,6 +97,10 @@ public class GameEngine {
      */
     private State state;
     /**
+     * Holds data for the "Catch the Chancellor" mini-game
+     */
+    private Chancellor chancellor;
+    /**
      * An integer signifying the ID of the next roboticon to be created
      *
      */
@@ -95,6 +113,8 @@ public class GameEngine {
     private PlotEffectSource plotEffectSource;
     private PlayerEffectSource playerEffectSource;
     private float effectChance;
+
+
 
     /**
      * Constructs the game's engine. Imports the game's state (for direct renderer access) and the data held by the
@@ -174,6 +194,8 @@ public class GameEngine {
         colleges[8] = new College(8, "Wentworth");
         // ----------------------------------------------------------------
 
+        this.chancellor = new Chancellor(tiles);
+
         phase = 0;
         currentPlayerID = 0;
         trades = new Array<Trade>();
@@ -190,9 +212,7 @@ public class GameEngine {
         return _instance;
     }
 
-    public void selectTile(Tile tile) {
-        selectedTile = tile;
-    }
+    public void selectTile(Tile tile) {selectedTile = tile;}
 
     /**
      * Advances the game's progress upon call
@@ -225,16 +245,17 @@ public class GameEngine {
             case 2:
                 timer.setTime(0, 30);
                 timer.start();
-
                 drawer.toggleButton(gameScreen.endTurnButton(), true, Color.WHITE);
                 break;
 
             case 3:
-            	timer.setTime(0, 30);
+            	timer.setTime(0, 45);
                 timer.start();
+                this.beginChancellorMode();
                 break;
 
             case 4:
+                this.stopChancellorMode();
                 timer.setTime(0, 5);
                 timer.start();
                 produceResource();
@@ -439,6 +460,16 @@ public class GameEngine {
     }
 
     /**
+     * Begins "Catch the Chancellor" mini-game
+     */
+    public void beginChancellorMode(){
+        chancellor.activate();
+        chancellor.updatePlayer(players[currentPlayerID]);
+    }
+
+    public void stopChancellorMode(){ chancellor.deactivate(); }
+
+    /**
      * Return's the game's current play-state, which can either be [State.RUN] or [State.PAUSE]
      * This is not to be confused with the game-state (which is directly linked to the renderer)
      *
@@ -448,6 +479,9 @@ public class GameEngine {
         return state;
     }
 
+    public Chancellor chancellor() {
+        return chancellor;
+    }
     /**
      * Return's the game's phase as a number between (or possibly one of) 1 and 5
      *
@@ -635,6 +669,7 @@ public class GameEngine {
     	}
     	currentPlayerID = length - 1;
         market = new Market(game, this);
+        this.chancellor = new Chancellor(tiles);
     }
 
     public void testTrade(){

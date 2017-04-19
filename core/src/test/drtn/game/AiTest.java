@@ -1,6 +1,6 @@
-package drtn.game;
-import drtn.game.entity.AiPlayer;
-import drtn.game.entity.Player;
+package main.drtn.game;
+import main.drtn.game.entity.AiPlayer;
+import main.drtn.game.entity.Player;
 import org.junit.Before;
 import org.junit.Test;
 
