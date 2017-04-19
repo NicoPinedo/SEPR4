@@ -380,7 +380,7 @@ public class Tile extends Button {
             float tileY = Gdx.graphics.getHeight() - getHeight() - getY();
 
             drawer.lineRectangle(tileBorderColor,
-                    (int)tileX, (int)tileY,
+                    (int)tileX + 1, (int)tileY + 1,
                     (int)(this.getWidth() - 1),
                     (int)(this.getHeight() - 1),
                     tileBorderThickness);

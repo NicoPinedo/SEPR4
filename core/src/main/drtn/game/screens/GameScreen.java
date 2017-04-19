@@ -580,8 +580,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        tableRight.add(selectedTileInfoTable);
-        selectedTileInfoTable.debug();
+        tableRight.add(selectedTileInfoTable).padBottom(20);
 
         marketInterfaceTable = new MarketInterfaceTable();
         drawer.addTableRow(tableRight, marketInterfaceTable, 2);
@@ -822,6 +821,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             addAnimation(lastTileClickedFlash);
         }
 
+        selectedTileInfoTable.hideTileInfo();
         selectedTileInfoTable.showTileInfo(tile);
 
         if (tile.isOwned()) {

@@ -61,8 +61,8 @@ public class SelectedTileInfoTable extends Table {
 
         add(selectedTileLabel).width(240).colspan(2).padBottom(10);
         row();
-        add(selectedTileOwnerIcon).size(60, 60).center();
-        add(selectedTileRoboticonIcon).size(60, 60).center();
+        add(selectedTileOwnerIcon).size(64, 64).center();
+        add(selectedTileRoboticonIcon).size(64, 64).center();
         row();
         add(new Label("COLLEGE", new Label.LabelStyle(smallFontLight.font(), Color.WHITE))).padBottom(10).center();
         add(new Label("ROBOTICON", new Label.LabelStyle(smallFontLight.font(), Color.WHITE))).padBottom(10).center();
@@ -105,7 +105,7 @@ public class SelectedTileInfoTable extends Table {
         if (tile.isOwned()) {
             selectedTileOwnerIcon.setVisible(true);
             selectedTileOwnerIcon.setDrawable(new TextureRegionDrawable(new TextureRegion(tile.getOwner().getCollege().getLogoTexture())));
-            selectedTileOwnerIcon.setSize(60, 60);
+            selectedTileOwnerIcon.setSize(64, 64);
 
             if (tile.hasRoboticon()) {
                 deployRoboticonButton.setText("UPGRADE");
@@ -125,5 +125,20 @@ public class SelectedTileInfoTable extends Table {
             selectedTileOwnerIcon.setVisible(false);
             selectedTileRoboticonIcon.setVisible(false);
         }
+    }
+
+    public void hideTileInfo() {
+        claimTileButton.setTouchable(Touchable.disabled);
+        claimTileButton.setColor(Color.GRAY);
+
+        deployRoboticonButton.setTouchable(Touchable.disabled);
+        deployRoboticonButton.setColor(Color.GRAY);
+
+        deployRoboticonButton.setText("DEPLOY");
+
+        selectedTileOwnerIcon.setVisible(false);
+        selectedTileRoboticonIcon.setVisible(false);
+
+        selectedTileLabel.setText("NO TILE SELECTED");
     }
 }

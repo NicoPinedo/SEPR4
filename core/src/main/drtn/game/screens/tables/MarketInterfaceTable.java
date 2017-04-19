@@ -101,7 +101,7 @@ public class MarketInterfaceTable extends Table {
         navigationTable = new Table();
         navigationTable.add(marketButton).width(100);
         navigationTable.add(auctionButton).width(100);
-        add(navigationTable).colspan(4);
+        add(navigationTable).colspan(4).padBottom(10);
         row();
 
         market = true;
@@ -118,7 +118,7 @@ public class MarketInterfaceTable extends Table {
         row();
 
         if (market) {
-            marketButton.getLabel().setColor(Color.GRAY);
+            marketButton.getLabel().setColor(Color.GREEN);
             marketButton.setTouchable(Touchable.disabled);
 
             auctionButton.getLabel().setColor(Color.WHITE);
@@ -129,7 +129,7 @@ public class MarketInterfaceTable extends Table {
             marketButton.getLabel().setColor(Color.WHITE);
             marketButton.setTouchable(Touchable.enabled);
 
-            auctionButton.getLabel().setColor(Color.GRAY);
+            auctionButton.getLabel().setColor(Color.GREEN);
             auctionButton.setTouchable(Touchable.disabled);
 
             showAuctionInterface();
@@ -138,7 +138,7 @@ public class MarketInterfaceTable extends Table {
 
     private void constructMarketElements() {
         marketButton = new TextButton("MARKET", regularButtonStyle);
-        marketButton.getLabel().setColor(Color.GRAY);
+        marketButton.getLabel().setColor(Color.GREEN);
         marketButton.setTouchable(Touchable.disabled);
         marketButton.addListener(new ChangeListener() {
             @Override
@@ -310,38 +310,38 @@ public class MarketInterfaceTable extends Table {
      * Once this method has finished executing, the market can be drawn to a stage like any other actor
      */
     private void showMarketInterface() {
-        add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(90);
-        add(new Label("Buy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(40);
-        add(new Label("Sell", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(20);
+        add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(120);
+        add(new Label("Buy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(75);
+        add(new Label("Sell", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(35);
         row();
-        add(new Label("Ore", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(new Label("Ore", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(buyOreButton).left();
         add(sellOreButton).left();
         row();
-        add(new Label("Energy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(new Label("Energy", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(buyEnergyButton).left();
         add(sellEnergyButton).left();
         row();
-        add(new Label("Food", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(new Label("Food", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(buyFoodButton).left();
         add(sellFoodButton).left();
         row();
-        add(new Label("Roboticons", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().top().padBottom(10);
+        add(new Label("Roboticons", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left().top().padBottom(10);
         add(buyRoboticonButton).left().top().padBottom(10);
         row();
         add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(new Label("Stock", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         row();
-        add(new Label("Ore", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(new Label("Ore", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(oreStockLabel).left();
         row();
-        add(new Label("Energy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(new Label("Energy", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(energyStockLabel).left();
         row();
-        add(new Label("Food", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(new Label("Food", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(foodStockLabel).left();
         row();
-        add(new Label("Roboticons", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(new Label("Roboticons", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(roboticonStockLabel).left();
 
         debug();
