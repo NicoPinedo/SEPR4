@@ -1,4 +1,4 @@
-package drtn.game.util;
+package main.drtn.game.util;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,8 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import drtn.game.entity.Roboticon;
-import drtn.game.entity.Roboticon;
+import main.drtn.game.entity.Roboticon;
+import main.drtn.game.entity.Chancellor;
 
 
 public class Drawer {
@@ -27,6 +27,7 @@ public class Drawer {
     private static SpriteBatch textDrawBatch;
     private static ShapeRenderer renderer;
     private static Sprite roboticonSprite;
+    private static Sprite chancellorSprite;
     private static TTFont defaultTTFont;
     private static BitmapFont defaultFont;
     private static BitmapFont font04b08;
@@ -38,6 +39,7 @@ public class Drawer {
     //new method for assessment 3
     static {
         roboticonSprite = new Sprite(new Texture("roboticon/roboticon.png"));
+        chancellorSprite = new Sprite(new Texture("image/chancellor.png")); //TODO Get chancellor image path
         defaultTTFont = new TTFont(Gdx.files.internal("font/earthorbiter.ttf"),
                 12, 1, Color.BLACK, false);
         defaultFont = defaultTTFont.font();
@@ -363,6 +365,12 @@ public class Drawer {
             font04b08.draw(batch, glyphLayout, x + roboCustOffsetX[i], y + roboCustOffsetY[i]);
 
         }
+        batch.end();
+    }
+
+    public void drawChancellor(float x, float y){
+        batch.begin();
+        batch.draw(chancellorSprite, x, y, 32, 44);
         batch.end();
     }
 }

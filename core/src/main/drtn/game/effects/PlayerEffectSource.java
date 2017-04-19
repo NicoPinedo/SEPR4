@@ -11,11 +11,11 @@
  * And a more concise report can be found in our Change3 document.
  **/
 
-package drtn.game.effects;
+package main.drtn.game.effects;
 
 import com.badlogic.gdx.utils.Array;
-import drtn.game.GameEngine;
-import drtn.game.GameEngine;
+import main.drtn.game.GameEngine;
+import main.drtn.game.GameEngine;
 
 
 public class PlayerEffectSource extends Array<PlayerEffect> {

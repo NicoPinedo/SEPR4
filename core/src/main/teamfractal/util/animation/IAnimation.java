@@ -24,7 +24,7 @@ public interface IAnimation {
     void cancelAnimation();
 	AnimationType getType();
 
-    public enum AnimationType {
+    enum AnimationType {
     	Tile,
 	    Overlay
     }

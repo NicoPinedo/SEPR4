@@ -1,4 +1,4 @@
-package drtn.game;
+package main.drtn.game;
 
 import com.badlogic.gdx.Gdx;
 import org.junit.Test;

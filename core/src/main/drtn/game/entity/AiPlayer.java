@@ -1,10 +1,10 @@
-package drtn.game.entity;
+package main.drtn.game.entity;
 
-import drtn.game.GameEngine;
-import drtn.game.Trade;
-import drtn.game.enums.ResourceType;
-import drtn.game.screens.GameScreen;
-import drtn.game.screens.GameScreen;
+import main.drtn.game.GameEngine;
+import main.drtn.game.Trade;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.screens.GameScreen;
+import main.drtn.game.screens.GameScreen;
 
 import java.util.Random;
 
