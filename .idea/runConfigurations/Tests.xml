@@ -3,6 +3,26 @@
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="jacoco">
       <pattern>
         <option name="PATTERN" value="drtn.*" />
+        <option name="ENABLED" value="false" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.effects.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.entity.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.enums.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.exceptions.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="drtn.game.util.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

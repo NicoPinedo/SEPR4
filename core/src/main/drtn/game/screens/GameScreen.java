@@ -1,4 +1,4 @@
-package drtn.game.screens;
+package main.drtn.game.screens;
 
 
 import com.badlogic.gdx.Game;
@@ -17,24 +17,32 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import drtn.game.GameEngine;
-import drtn.game.Trade;
-import drtn.game.entity.Tile;
-import drtn.game.enums.ResourceType;
-import drtn.game.screens.tables.MarketInterfaceTable;
-import drtn.game.screens.tables.PhaseInfoTable;
-import drtn.game.screens.tables.PlayerInfoTable;
-import drtn.game.screens.tables.SelectedTileInfoTable;
-import drtn.game.util.Drawer;
-import drtn.game.util.LabelledElement;
-import drtn.game.util.Overlay;
-import drtn.game.util.TTFont;
-import teamfractal.util.animation.AnimationPlayerWin;
-import teamfractal.util.animation.AnimationTileFlash;
-import teamfractal.util.animation.IAnimation;
-import teamfractal.util.screens.AbstractAnimationScreen;
-
-
+import com.badlogic.gdx.utils.Scaling;
+import main.drtn.game.GameEngine;
+import main.drtn.game.Trade;
+import main.drtn.game.entity.Chancellor;
+import main.drtn.game.entity.Tile;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.LabelledElement;
+import main.drtn.game.util.Overlay;
+import main.drtn.game.util.TTFont;
+import main.teamfractal.util.animation.AnimationPlayerWin;
+import main.teamfractal.util.animation.AnimationTileFlash;
+import main.teamfractal.util.animation.IAnimation;
+import main.teamfractal.util.screens.AbstractAnimationScreen;
+import main.drtn.game.GameEngine;
+import main.drtn.game.Trade;
+import main.drtn.game.entity.Tile;
+import main.drtn.game.enums.ResourceType;
+import main.drtn.game.util.Drawer;
+import main.drtn.game.util.LabelledElement;
+import main.drtn.game.util.Overlay;
+import main.drtn.game.util.TTFont;
+import main.teamfractal.util.animation.AnimationPlayerWin;
+import main.teamfractal.util.animation.AnimationTileFlash;
+import main.teamfractal.util.animation.IAnimation;
+import main.teamfractal.util.screens.AbstractAnimationScreen;
 
 public class GameScreen extends AbstractAnimationScreen implements Screen {
     private final static int tileXOffset = 256;
@@ -289,6 +297,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                         tableRight.getX() + engine.selectedTile().getRoboticonStored().getIcon().getX(),
                         engine.selectedTile().getRoboticonStored().getIcon().getY()
                 );
+            }
+
+            if (engine.chancellor().getisActive()){
+                updateChancellor();
             }
 
             if (eventMessageOverlayVisible) {
@@ -951,6 +963,22 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         marketInterfaceTable.toggleButton(ResourceType.FOOD, true, false, Color.GRAY);
         marketInterfaceTable.toggleButton(ResourceType.FOOD, false, false, Color.GRAY);
         marketInterfaceTable.toggleButton(ResourceType.ROBOTICON, true, false, Color.GRAY);
+      
+    public void updateChancellor(){
+        if (engine.timer().seconds() <= 15) {
+            drawer.drawChancellor(engine.chancellor().getCoordX(), engine.chancellor().getCoordY());
+        }
+        //Has chancellor been captured?
+        if (engine.selectedTile() == engine.chancellor().getTile()){
+            engine.chancellor().captured();
+            updateInventoryLabels();
+        }
+        //deselect latest tile
+        engine.selectTile(engine.tiles()[0]);
+        if (lastTileClickedFlash != null) {
+            lastTileClickedFlash.cancelAnimation();
+            lastTileClickedFlash = null;
+        }
     }
 
     @Override

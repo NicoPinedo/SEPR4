@@ -1,7 +1,7 @@
-package drtn.game;
+package main.drtn.game;
 
-import drtn.game.entity.Player;
-import drtn.game.enums.ResourceType;
+import main.drtn.game.entity.Player;
+import main.drtn.game.enums.ResourceType;
 import org.junit.Before;
 import org.junit.Test;
 

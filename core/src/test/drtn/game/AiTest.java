@@ -1,6 +1,6 @@
-package drtn.game;
-import drtn.game.entity.AiPlayer;
-import drtn.game.entity.Player;
+package main.drtn.game;
+import main.drtn.game.entity.AiPlayer;
+import main.drtn.game.entity.Player;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +20,7 @@ public class AiTest extends TesterFile {
     public void aiShouldIdentifyThem (){
         assertTrue("AI think they are human.", aiPlayer.isAi());
         assertFalse("Human think they are AI.", humanPlayer.isAi());
+
     }
 
     @Test

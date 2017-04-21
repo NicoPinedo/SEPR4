@@ -1,7 +1,7 @@
-package drtn.game.exceptions;
+package main.drtn.game.exceptions;
 
 /**
- * Created by Kieran on 24/02/2017.
+ * Exception intended to be thrown for statements like a case select when not every resource type in the enum is required
  */
 public class InvalidResourceTypeException extends Exception {
 
