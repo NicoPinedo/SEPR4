@@ -1,12 +1,12 @@
-package main.drtn.game;
+package drtn.game;
 
 import com.badlogic.gdx.Game;
-import main.drtn.game.Main;
-import main.drtn.game.entity.College;
-import main.drtn.game.entity.Player;
-import main.drtn.game.entity.Roboticon;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
+import drtn.game.Main;
+import drtn.game.entity.College;
+import drtn.game.entity.Player;
+import drtn.game.entity.Roboticon;
+import drtn.game.entity.Tile;
+import drtn.game.enums.ResourceType;
 import org.junit.Test;
 
 import java.util.ArrayList;

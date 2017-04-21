@@ -1,11 +1,11 @@
-package main.drtn.game;
+package drtn.game;
 
 import com.badlogic.gdx.Game;
-import main.drtn.game.GameEngine;
-import main.drtn.game.entity.Market;
-import main.drtn.game.entity.Player;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.screens.GameScreen;
+import drtn.game.GameEngine;
+import drtn.game.entity.Market;
+import drtn.game.entity.Player;
+import drtn.game.enums.ResourceType;
+import drtn.game.screens.GameScreen;
 import org.junit.Before;
 import org.junit.Test;
 

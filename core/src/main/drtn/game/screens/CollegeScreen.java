@@ -1,4 +1,4 @@
-package main.drtn.game.screens;
+package drtn.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import main.drtn.game.util.TTFont;
+import drtn.game.util.TTFont;
 
 /**
  * !!!!!!!!!!!!!!!!!!!!

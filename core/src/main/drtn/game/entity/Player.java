@@ -1,9 +1,9 @@
-package main.drtn.game.entity;
+package drtn.game.entity;
 
-import main.drtn.game.Trade;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.Trade;
-import main.drtn.game.enums.ResourceType;
+import drtn.game.Trade;
+import drtn.game.enums.ResourceType;
+import drtn.game.Trade;
+import drtn.game.enums.ResourceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class Player {
     /**
      * The college that the player is playing as.
      */
-    private main.drtn.game.entity.College College;
+    private drtn.game.entity.College College;
     /**
      * A list of the tiles that the player owns.
      */

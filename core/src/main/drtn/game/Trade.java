@@ -1,8 +1,8 @@
-package main.drtn.game;
+package drtn.game;
 
-import main.drtn.game.entity.Player;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.enums.ResourceType;
+import drtn.game.entity.Player;
+import drtn.game.enums.ResourceType;
+import drtn.game.enums.ResourceType;
 
 /**
  * Class to facilitate trades for assessment 3
