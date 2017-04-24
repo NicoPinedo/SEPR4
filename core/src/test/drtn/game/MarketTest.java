@@ -96,8 +96,7 @@ public class MarketTest extends TesterFile{
 
         //Food
         TestPlayer.setResource(ResourceType.FOOD, 10);
-
-        TestPlayer.setResource(ResourceType.MONEY, 100);
+        TestPlayer.setResource(ResourceType.MONEY, 150);
         testMarket.setFoodSellPrice(10);
         testMarket.setFoodBuyPrice(10);
         testMarket.setFoodStock(10);
@@ -107,7 +106,7 @@ public class MarketTest extends TesterFile{
         } catch (Exception e) {
             fail("Expected to pass");
         }
-        
+
         int TestFoodCount = 20;
         assertEquals(TestFoodCount, TestPlayer.getResource(ResourceType.FOOD));
         TestMoney = 0;

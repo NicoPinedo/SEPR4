@@ -2,8 +2,6 @@ package drtn.game.entity;
 
 import drtn.game.Trade;
 import drtn.game.enums.ResourceType;
-import drtn.game.Trade;
-import drtn.game.enums.ResourceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +121,7 @@ public class Player {
                     break;
                 case MONEY:
                     this.money = newCount;
+                    break;
                 default:
             }
         }
