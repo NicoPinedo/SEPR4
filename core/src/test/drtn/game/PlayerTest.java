@@ -25,7 +25,7 @@ public class PlayerTest extends TesterFile {
 
     private Game game = new Main();
     private Player TestPlayer = new Player(1);
-    private Tile TestTile = new Tile(game, 0,0,0,0, true, new Runnable() {
+    private Tile TestTile = new Tile(game, 0,0,0,0, null, new Runnable() {
         @Override
         public void run() {
 

@@ -1,12 +1,6 @@
 package drtn.game;
 
 import com.badlogic.gdx.Game;
-import drtn.game.Main;
-import drtn.game.entity.Player;
-import drtn.game.entity.Roboticon;
-import drtn.game.entity.Tile;
-import drtn.game.enums.ResourceType;
-
 import com.badlogic.gdx.graphics.Color;
 import drtn.game.entity.Player;
 import drtn.game.entity.Roboticon;
@@ -28,7 +22,7 @@ import static org.junit.Assert.*;
 public class TileTest extends TesterFile {
     private Game game = new Main();
     private Player TestPlayer = new Player(1);
-    private Tile TestTile = new Tile(game, 0, 5, 5, 5, true, new Runnable() {
+    private Tile TestTile = new Tile(game, 0, 5, 5, 5, null, new Runnable() {
         @Override
         public void run() {
 
