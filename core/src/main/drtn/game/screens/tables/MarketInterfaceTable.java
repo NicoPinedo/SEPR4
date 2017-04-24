@@ -208,6 +208,8 @@ public class MarketInterfaceTable extends Table {
                     playerListPosition = 0;
                 }
                 playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+
+                setTradePrice(0);
             }
         });
 
@@ -221,6 +223,8 @@ public class MarketInterfaceTable extends Table {
                     playerListPosition = otherPlayer.size() - 1;
                 }
                 playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+
+                setTradePrice(0);
             }
         });
     }
@@ -585,7 +589,7 @@ public class MarketInterfaceTable extends Table {
 
     public void setTradePrice(int tradePrice) {
         this.tradePrice = tradePrice;
-        tradePriceLabel.setText(String.valueOf(tradePrice));
+        tradePriceLabel.setText(String.valueOf(tradePrice) + "/" + otherPlayer.get(playerListPosition).getResource(ResourceType.MONEY));
     }
 
     public void setTradeAmount(ResourceType resource, int value) {
@@ -616,6 +620,8 @@ public class MarketInterfaceTable extends Table {
 
         playerListPosition = 0;
         playerLabel.setText("Player " + otherPlayer.get(0).getPlayerNumber());
+
+        setTradePrice(0);
     }
 
     public int tradeAmount(ResourceType resource)
@@ -638,5 +644,11 @@ public class MarketInterfaceTable extends Table {
 
     public int tradePrice() {
         return tradePrice;
+    }
+
+    public Player selectedPlayer() { return otherPlayer.get(playerListPosition); }
+
+    public void setAuctionConfirmationButtonText(String text) {
+        confirmSale.setText(text);
     }
 }

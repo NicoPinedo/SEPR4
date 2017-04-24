@@ -59,9 +59,9 @@ public class Trade {
 	 * @return true if trade is successful, false if it fails
 	 */
 	public boolean execute(){
-		if (sender.getResource(ResourceType.ENERGY) > energyAmount && sender.getResource(ResourceType.FOOD) > foodAmount
-				&& sender.getResource(ResourceType.ORE) > oreAmount) {
-			if (targetPlayer.getResource(ResourceType.MONEY) > getPrice()) {
+		if (sender.getResource(ResourceType.ENERGY) >= energyAmount && sender.getResource(ResourceType.FOOD) >= foodAmount
+				&& sender.getResource(ResourceType.ORE) >= oreAmount) {
+			if (targetPlayer.getResource(ResourceType.MONEY) >= getPrice()) {
 				targetPlayer.varyResource(ResourceType.ORE, this.oreAmount);
 				targetPlayer.varyResource(ResourceType.ENERGY, this.energyAmount);
 				targetPlayer.varyResource(ResourceType.FOOD, this.foodAmount);

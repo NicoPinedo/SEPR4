@@ -4,7 +4,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.*;
+
+import com.badlogic.gdx.utils.Timer;
 import drtn.game.effects.PlayerEffect;
 import drtn.game.effects.PlayerEffectSource;
 import drtn.game.effects.PlotEffect;
@@ -615,7 +617,9 @@ public class GameEngine {
     	}
 
     	currentPlayerID = length - 1;
+
         market = new Market();
+
         this.chancellor = new Chancellor(tiles);
     }
 
@@ -1096,16 +1100,43 @@ public class GameEngine {
                 refreshAuctionPriceButtonAvailability();
             }
         });
+
+        gameScreen.marketInterfaceTable.setAuctionConfirmationButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Trade trade = new Trade(gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE),
+                        gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY),
+                        gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD),
+                        gameScreen.marketInterfaceTable.tradePrice(), currentPlayer(),
+                        gameScreen.marketInterfaceTable.selectedPlayer());
+
+                if (trade.execute()) {
+                    gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.GREEN);
+                    gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Trade successful!");
+                    gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
+
+                    Timer timer = new Timer();
+                    timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            resetAuctionInterface();
+                            gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Send Offer to This Player");
+                        }
+                    }, 3);
+                    timer.start();
+                }
+            }
+        });
     }
 
     public void refreshAuctionPriceButtonAvailability() {
-        if (gameScreen.marketInterfaceTable.tradePrice() < currentPlayer().getResource(ResourceType.MONEY)) {
+        if (gameScreen.marketInterfaceTable.tradePrice() < gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, true, true, Color.GREEN);
 
-            if (gameScreen.marketInterfaceTable.tradePrice() + 10 <= currentPlayer().getResource(ResourceType.MONEY)) {
+            if (gameScreen.marketInterfaceTable.tradePrice() + 10 <= gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
                 gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, true, true, Color.GREEN);
 
-                if (gameScreen.marketInterfaceTable.tradePrice() + 100 <= currentPlayer().getResource(ResourceType.MONEY)) {
+                if (gameScreen.marketInterfaceTable.tradePrice() + 100 <= gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
                     gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, false, Color.RED);
