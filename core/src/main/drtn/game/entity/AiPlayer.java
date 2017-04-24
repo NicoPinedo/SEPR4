@@ -4,7 +4,6 @@ import drtn.game.GameEngine;
 import drtn.game.Trade;
 import drtn.game.enums.ResourceType;
 import drtn.game.screens.GameScreen;
-import drtn.game.screens.GameScreen;
 
 import java.util.Random;
 

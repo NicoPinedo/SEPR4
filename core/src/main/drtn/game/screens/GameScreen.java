@@ -956,19 +956,21 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     public void updateChancellor() {
+        //Phase Timer less than 16 seconds?
         if (phaseInfoTable.timer.seconds() <= 15) {
             drawer.drawChancellor(engine.chancellor().getCoordX(), engine.chancellor().getCoordY());
-        }
-        //Has chancellor been captured?
-        if (engine.selectedTile() == engine.chancellor().getTile()){
-            engine.chancellor().captured();
-            playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
-        }
-        //deselect latest tile
-        engine.selectTile(engine.tiles()[0]);
-        if (lastTileClickedFlash != null) {
-            lastTileClickedFlash.cancelAnimation();
-            lastTileClickedFlash = null;
+
+            //Has chancellor been captured?
+            if (engine.selectedTile() == engine.chancellor().getTile()) {
+                engine.chancellor().captured();
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
+            }
+            //Deselect latest tile
+            engine.selectTile(engine.tiles()[0]);
+            if (lastTileClickedFlash != null) {
+                lastTileClickedFlash.cancelAnimation();
+                lastTileClickedFlash = null;
+            }
         }
     }
 
