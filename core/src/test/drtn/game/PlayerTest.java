@@ -1,7 +1,6 @@
 package drtn.game;
 
 import com.badlogic.gdx.Game;
-import drtn.game.Main;
 import drtn.game.entity.College;
 import drtn.game.entity.Player;
 import drtn.game.entity.Roboticon;
