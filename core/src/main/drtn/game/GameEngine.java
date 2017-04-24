@@ -533,10 +533,7 @@ public class GameEngine {
      * @param resource The type of resource which the roboticon will gather more of {0: ore | 1: energy | 2: food}
      */
     public void upgradeRoboticon(int resource) {
-        if (selectedTile().getRoboticonStored().getLevel()[resource] == 0) {
-            gameScreen.showEventMessage("The roboticon on this tile has malfunctioned!");
-        }
-         else if (selectedTile().getRoboticonStored().getLevel()[resource] < selectedTile().getRoboticonStored().getMaxLevel()) {
+         if (selectedTile().getRoboticonStored().getLevel()[resource] < selectedTile().getRoboticonStored().getMaxLevel()) {
             switch (resource) {
                 case (0):
                     currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getOreUpgradeCost());
