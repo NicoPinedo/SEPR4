@@ -15,7 +15,6 @@ package drtn.game.effects;
 
 import drtn.game.entity.Player;
 import drtn.game.enums.ResourceType;
-import drtn.game.enums.ResourceType;
 
 
 public class PlayerEffect {

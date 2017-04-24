@@ -19,7 +19,7 @@ public class ChancellorTest {
     @Test
     public void testMoveChancellor(){
         for (int i = 0; i < 16;i++) {
-            tiles[i] = new Tile(game, i + 1, 5, 5, 5, false, new Runnable() {
+            tiles[i] = new Tile(game, i + 1, 5, 5, 5, null, new Runnable() {
                 @Override
                 public void run() {
 
