@@ -195,6 +195,7 @@ public class GameEngine {
     public void nextPhase() {
         gameScreen.phaseInfoTable.timer.stop();
         nextPlayer();
+        resetAuctionInterface();
         System.out.println("Player " + currentPlayerID + " | Phase " + phase);
 
         switch (phase) {
@@ -700,6 +701,8 @@ public class GameEngine {
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ORE);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
                 }
             }
         });
@@ -716,6 +719,8 @@ public class GameEngine {
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ENERGY);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
                 }
             }
         });
@@ -732,6 +737,8 @@ public class GameEngine {
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.FOOD);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
                 }
             }
         });
@@ -765,6 +772,8 @@ public class GameEngine {
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ORE);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
                 }
             }
         });
@@ -781,6 +790,8 @@ public class GameEngine {
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ENERGY);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
                 }
             }
         });
@@ -797,6 +808,8 @@ public class GameEngine {
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.FOOD);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
                 }
             }
         });
@@ -925,13 +938,165 @@ public class GameEngine {
         }
         gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, false, Color.RED);
 
-        if (currentPlayer().getResource(ResourceType.MONEY) > 0) {
+        refreshAuctionPriceButtonAvailability();
+
+        gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
+    }
+
+    public void setAuctionButtonFunctions() {
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ORE, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) + 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) < currentPlayer().getResource(ResourceType.ORE)) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, true, Color.GREEN);
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ENERGY, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) + 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) < currentPlayer().getResource(ResourceType.ENERGY)) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, true, Color.GREEN);
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.FOOD, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.FOOD, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) + 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) < currentPlayer().getResource(ResourceType.FOOD)) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, true, Color.GREEN);
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ORE, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) - 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) > 0) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ENERGY, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) - 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) > 0) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.FOOD, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.FOOD, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) - 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) > 0) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(1, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 1);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(2, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 10);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(3, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 100);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(1, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 1);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(2, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 10);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(3, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 100);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+    }
+
+    public void refreshAuctionPriceButtonAvailability() {
+        if (gameScreen.marketInterfaceTable.tradePrice() < currentPlayer().getResource(ResourceType.MONEY)) {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, true, true, Color.GREEN);
 
-            if (currentPlayer().getResource(ResourceType.MONEY) >= 10) {
+            if (gameScreen.marketInterfaceTable.tradePrice() + 10 <= currentPlayer().getResource(ResourceType.MONEY)) {
                 gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, true, true, Color.GREEN);
 
-                if (currentPlayer().getResource(ResourceType.MONEY) >= 100) {
+                if (gameScreen.marketInterfaceTable.tradePrice() + 100 <= currentPlayer().getResource(ResourceType.MONEY)) {
                     gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, false, Color.RED);
@@ -945,29 +1110,36 @@ public class GameEngine {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, true, false, Color.RED);
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, false, Color.RED);
         }
-        gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, false, false, Color.RED);
-        gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, false, false, Color.RED);
-        gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
 
-        gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
-    }
+        if (gameScreen.marketInterfaceTable.tradePrice() > 0) {
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, false, true, Color.GREEN);
 
-    public void refreshAuctionButtonAvailability() {
+            if (gameScreen.marketInterfaceTable.tradePrice() - 10 >= 0) {
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, false, true, Color.GREEN);
+
+                if (gameScreen.marketInterfaceTable.tradePrice() - 100 >= 0) {
+                    gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
+                }
+            } else {
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, false, false, Color.RED);
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
+            }
+        } else {
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, false, false, Color.RED);
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, false, false, Color.RED);
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
+        }
+
         if ((gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) > 0
                 || gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) > 0
                 || gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) > 0)
-                && gameScreen.marketInterfaceTable.tradePrice() > 0) {
+            && gameScreen.marketInterfaceTable.tradePrice() > 0) {
             gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
         }
-    }
-
-    public void setAuctionConfirmationButtonFunction() {
-        gameScreen.marketInterfaceTable.setAuctionConfirmationButtonFunction(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //AUCTION CODE HERE
-            }
-        });
     }
 
     /**

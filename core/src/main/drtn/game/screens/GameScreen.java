@@ -770,6 +770,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     private void constructMarketInterface() {
         engine.setMarketButtonFunctions();
+        engine.setAuctionButtonFunctions();
 
         marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, engine.market().getOreBuyPrice());
         marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, engine.market().getOreSellPrice());
@@ -783,6 +784,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, engine.market().getEnergyStock());
         marketInterfaceTable.setMarketStockText(ResourceType.FOOD, engine.market().getFoodStock());
         marketInterfaceTable.setMarketStockText(ResourceType.ROBOTICON, engine.market().getRoboticonStock());
+
+        engine.resetAuctionInterface();
 
         engine.closeMarketInterface();
     }

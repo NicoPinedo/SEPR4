@@ -182,100 +182,19 @@ public class MarketInterfaceTable extends Table {
         playerLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
 
         playerBuyOre = new TextButton("+", lightButtonStyle);
-        playerBuyOre.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.ORE, oreTradeAmount + 1);
-            }
-        });
-
         playerBuyEnergy = new TextButton("+", lightButtonStyle);
-        playerBuyEnergy.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.ENERGY, energyTradeAmount + 1);
-            }
-        });
-
         playerBuyFood = new TextButton("+", lightButtonStyle);
-        playerBuyFood.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.FOOD, foodTradeAmount + 1);
-            }
-        });
-
         playerSellOre = new TextButton("-", lightButtonStyle);
-        playerSellOre.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.ORE, oreTradeAmount - 1);
-            }
-        });
-
         playerSellEnergy = new TextButton("-", lightButtonStyle);
-        playerSellEnergy.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.ENERGY, energyTradeAmount - 1);
-            }
-        });
-
         playerSellFood = new TextButton("-", lightButtonStyle);
-        playerSellFood.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.FOOD, foodTradeAmount - 1);
-            }
-        });
 
         pricePlus1 = new TextButton("+ 1", lightButtonStyle);
-        pricePlus1.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice + 1);
-            }
-        });
-
         pricePlus10 = new TextButton("+ 10", lightButtonStyle);
-        pricePlus10.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice + 10);
-            }
-        });
-
         pricePlus100 = new TextButton("+ 100", lightButtonStyle);
-        pricePlus100.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice + 100);
-            }
-        });
 
         priceMinus1 = new TextButton("- 1", lightButtonStyle);
-        priceMinus1.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice - 1);
-            }
-        });
-
         priceMinus10 = new TextButton("- 10", lightButtonStyle);
-        priceMinus10.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice - 10);
-            }
-        });
-
         priceMinus100 = new TextButton("- 100", lightButtonStyle);
-        priceMinus100.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice - 100);
-            }
-        });
 
         confirmSale = new TextButton("Send Offer to This Player", regularButtonStyle);
 
@@ -440,6 +359,62 @@ public class MarketInterfaceTable extends Table {
                     break;
                 case FOOD:
                     sellFoodButton.addListener(event);
+                    break;
+            }
+        }
+    }
+
+    public void setAuctionQuantityButtonFunction(ResourceType resource, boolean add, ChangeListener event) {
+        if (add) {
+            switch (resource) {
+                case ORE:
+                    playerBuyOre.addListener(event);
+                    break;
+                case ENERGY:
+                    playerBuyEnergy.addListener(event);
+                    break;
+                case FOOD:
+                    playerBuyFood.addListener(event);
+                    break;
+            }
+        } else {
+                switch (resource) {
+                    case ORE:
+                        playerSellOre.addListener(event);
+                        break;
+                    case ENERGY:
+                        playerSellEnergy.addListener(event);
+                        break;
+                    case FOOD:
+                        playerSellFood.addListener(event);
+                        break;
+                }
+            }
+        }
+
+    public void setAuctionPriceButtonFunction(int figures, boolean add, ChangeListener event) {
+        if (add) {
+            switch (figures) {
+                case 1:
+                    pricePlus1.addListener(event);
+                    break;
+                case 2:
+                    pricePlus10.addListener(event);
+                    break;
+                case 3:
+                    pricePlus100.addListener(event);
+                    break;
+            }
+        } else {
+            switch (figures) {
+                case 1:
+                    priceMinus1.addListener(event);
+                    break;
+                case 2:
+                    priceMinus10.addListener(event);
+                    break;
+                case 3:
+                    priceMinus100.addListener(event);
                     break;
             }
         }
