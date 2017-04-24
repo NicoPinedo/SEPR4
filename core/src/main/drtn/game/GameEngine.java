@@ -212,7 +212,7 @@ public class GameEngine {
 
                 gameScreen.openRoboticonMarketInterface();
 
-                drawer.toggleButton(gameScreen.endTurnButton(), true, Color.WHITE);
+                drawer.toggleButton(gameScreen.endTurnButton(), true, Color.BLACK);
                 break;
 
             case 3:

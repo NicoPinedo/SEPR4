@@ -258,6 +258,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //First instruction sets background colour
 
         if (engine.state() == GameEngine.State.RUN) {
+            drawRectangles();
+            //Draw window-dressing
+
             gameStage.act(delta);
             gameStage.draw();
             //Draw the stage onto the screen
@@ -351,6 +354,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Dispose of the stage
     }
 
+    public void drawRectangles() {
+        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 45, 165, 165, 37, 1);
+    }
+
     /**
      * Sets up the buttons to be placed onto the interface later by defining their visual representations and their
      * on-click functions together
@@ -370,7 +377,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Turn off the "END TURN" button right away to force players into selecting tiles
 
         //Button which can be clicked on to pause the game
-        pauseButton = new TextButton("Pause Game", largeButtonStyle);
+        pauseButton = new TextButton("II | Pause Game", largeButtonStyle);
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -520,9 +527,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableLeft.row();
         tableLeft.add(playerInfoTable).padTop(5);
 
-        drawer.addTableRow(tableLeft, miniGameButton, 105-40, 0, 0, 0, 2);
-
-        drawer.addTableRow(tableLeft, pauseButton, 0, 0, 0, 0, 2);
+        drawer.addTableRow(tableLeft, pauseButton, 108, 0, 0, 0, 2);
         //Prepare and add the pause button to the bottom of the table
 
         gameStage.addActor(tableLeft);
@@ -585,8 +590,12 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableRight.add(selectedTileInfoTable).padBottom(20);
 
         marketInterfaceTable = new MarketInterfaceTable();
-        drawer.addTableRow(tableRight, marketInterfaceTable, 2);
+        marketInterfaceTable.align(Align.top);
+        tableRight.row();
+        tableRight.add(marketInterfaceTable).colspan(2).height(299);
         //Establish market and add market interface to right-hand table
+
+        drawer.addTableRow(tableRight, miniGameButton);
 
         gameStage.addActor(tableRight);
         //Add right-hand table to the stage

@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import drtn.game.entity.Player;
 import drtn.game.enums.ResourceType;
 import drtn.game.util.TTFont;
@@ -62,9 +63,9 @@ public class MarketInterfaceTable extends Table {
     private Label energyStockLabel;
     private Label roboticonStockLabel;
 
-    private Label oreTradeLabel;
-    private Label energyTradeLabel;
-    private Label foodTradeLabel;
+    private Label oreTradeAmountLabel;
+    private Label energyTradeAmountLabel;
+    private Label foodTradeAmountLabel;
     private Label tradePriceLabel;
     private Label playerLabel;
 
@@ -114,7 +115,7 @@ public class MarketInterfaceTable extends Table {
 
         clearChildren();
 
-        add(navigationTable).colspan(4);
+        add(navigationTable).colspan(4).padBottom(10);
         row();
 
         if (market) {
@@ -172,9 +173,9 @@ public class MarketInterfaceTable extends Table {
     }
 
     private void constructAuctionElements() {
-        oreTradeLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
-        energyTradeLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
-        foodTradeLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
+        oreTradeAmountLabel = new Label("0", new Label.LabelStyle(lightFont.font(), Color.WHITE));
+        energyTradeAmountLabel = new Label("0", new Label.LabelStyle(lightFont.font(), Color.WHITE));
+        foodTradeAmountLabel = new Label("0", new Label.LabelStyle(lightFont.font(), Color.WHITE));
 
         tradePriceLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
 
@@ -276,7 +277,7 @@ public class MarketInterfaceTable extends Table {
             }
         });
 
-        confirmSale = new TextButton("Confirm", lightButtonStyle);
+        confirmSale = new TextButton("Send Offer to This Player", regularButtonStyle);
 
         nextPlayerButton = new TextButton(">", lightButtonStyle);
         nextPlayerButton.addListener(new ChangeListener() {
@@ -352,57 +353,65 @@ public class MarketInterfaceTable extends Table {
 
         setTradePrice(0);
 
-        add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(90);
-        add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(30);
+        add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(40);
+        add(new Label("#", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
+        add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
         add(new Label("Less", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
         //Visual guff
 
         row();
         oreTradeAmount = 0;
-        add(oreTradeLabel).left();
-        add(playerBuyOre).left().padLeft(10);
-        add(playerSellOre).left().padLeft(10);
+        add(new Label("Ore", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(oreTradeAmountLabel).left();
+        add(playerBuyOre).left();
+        add(playerSellOre).left();
 
         row();
         energyTradeAmount = 0;
-        add(energyTradeLabel).left();
-        add(playerBuyEnergy).left().padLeft(10);
-        add(playerSellEnergy).left().padLeft(10);
+        add(new Label("Energy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(energyTradeAmountLabel).left();
+        add(playerBuyEnergy).left();
+        add(playerSellEnergy).left();
 
         row();
-        foodTradeAmount = 0;
-        add(foodTradeLabel).left().padBottom(15);
-        add(playerBuyFood).left().padLeft(10).padBottom(15);
-        add(playerSellFood).left().padLeft(10).padBottom(15);
+        add(new Label("Food", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(foodTradeAmountLabel).left();
+        add(playerBuyFood).left();
+        add(playerSellFood).left();
 
         row();
         tradePrice = 0;
-        add(new Label("Price:", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
+        add(new Label("Price", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().colspan(2).padTop(15);
+        add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20).padTop(15);
+        add(new Label("Less", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20).padTop(15);
 
         row();
 
-        add();
+        add().colspan(2);
         add(pricePlus1).left();
         add(priceMinus1).left();
 
         row();
 
-        add(tradePriceLabel);
+        add(tradePriceLabel).colspan(2);
         add(pricePlus10).left();
         add(priceMinus10).left();
 
         row();
 
-        add();
+        add().colspan(2);
         add(pricePlus100).left();
         add(priceMinus100).left();
 
         row();
-        add(prevPlayerButton);
-        add(playerLabel);
-        add(nextPlayerButton);
+        Table tradeTargetSelectionTable = new Table();
+        tradeTargetSelectionTable.add(prevPlayerButton);
+        playerLabel.setAlignment(Align.center);
+        tradeTargetSelectionTable.add(playerLabel).width(100);
+        tradeTargetSelectionTable.add(nextPlayerButton);
+        add(tradeTargetSelectionTable).colspan(4).padTop(15);
         row();
-        add(confirmSale).left();
+        add(confirmSale).colspan(4);
     }
 
     public void setMarketButtonFunction(ResourceType resource, boolean buy, ChangeListener event) {
@@ -535,15 +544,15 @@ public class MarketInterfaceTable extends Table {
         switch (resource) {
             case ORE:
                 oreTradeAmount = value;
-                oreTradeLabel.setText("Ore: " + oreTradeAmount);
+                oreTradeAmountLabel.setText(String.valueOf(oreTradeAmount));
                 break;
             case ENERGY:
                 energyTradeAmount = value;
-                energyTradeLabel.setText("Energy: " + energyTradeAmount);
+                energyTradeAmountLabel.setText(String.valueOf(energyTradeAmount));
                 break;
             case FOOD:
                 foodTradeAmount = value;
-                foodTradeLabel.setText("Food: " + foodTradeAmount);
+                foodTradeAmountLabel.setText(String.valueOf(foodTradeAmount));
                 break;
         }
     }
