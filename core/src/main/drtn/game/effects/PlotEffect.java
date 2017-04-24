@@ -11,15 +11,15 @@
  * And a more concise report can be found in our Change3 document.
  **/
 
-package main.drtn.game.effects;
+package drtn.game.effects;
 
 import com.badlogic.gdx.utils.Array;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.exceptions.InvalidResourceTypeException;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.exceptions.InvalidResourceTypeException;
+import drtn.game.entity.Tile;
+import drtn.game.enums.ResourceType;
+import drtn.game.exceptions.InvalidResourceTypeException;
+import drtn.game.entity.Tile;
+import drtn.game.enums.ResourceType;
+import drtn.game.exceptions.InvalidResourceTypeException;
 
 
 public class PlotEffect extends Array<Float[]> {

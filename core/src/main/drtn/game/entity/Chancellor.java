@@ -1,10 +1,10 @@
-package main.drtn.game.entity;
+package drtn.game.entity;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import main.drtn.game.entity.Player;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
+import drtn.game.entity.Player;
+import drtn.game.entity.Tile;
+import drtn.game.enums.ResourceType;
 
 import java.util.Random;
 import java.util.Timer;

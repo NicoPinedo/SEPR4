@@ -1,4 +1,4 @@
-package main.drtn.game.screens;
+package drtn.game.screens;
 
 
 import com.badlogic.gdx.Game;
@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -17,55 +16,63 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
-import main.drtn.game.GameEngine;
-import main.drtn.game.Trade;
-import main.drtn.game.entity.Chancellor;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.util.Drawer;
-import main.drtn.game.util.LabelledElement;
-import main.drtn.game.util.Overlay;
-import main.drtn.game.util.TTFont;
-import main.teamfractal.util.animation.AnimationPlayerWin;
-import main.teamfractal.util.animation.AnimationTileFlash;
-import main.teamfractal.util.animation.IAnimation;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
-import main.drtn.game.GameEngine;
-import main.drtn.game.Trade;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.util.Drawer;
-import main.drtn.game.util.LabelledElement;
-import main.drtn.game.util.Overlay;
-import main.drtn.game.util.TTFont;
-import main.teamfractal.util.animation.AnimationPlayerWin;
-import main.teamfractal.util.animation.AnimationTileFlash;
-import main.teamfractal.util.animation.IAnimation;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
+import drtn.game.GameEngine;
+import drtn.game.Trade;
+import drtn.game.entity.Tile;
+import drtn.game.enums.ResourceType;
+import drtn.game.screens.tables.MarketInterfaceTable;
+import drtn.game.screens.tables.PhaseInfoTable;
+import drtn.game.screens.tables.PlayerInfoTable;
+import drtn.game.screens.tables.SelectedTileInfoTable;
+import drtn.game.util.Drawer;
+import drtn.game.util.LabelledElement;
+import drtn.game.util.Overlay;
+import drtn.game.util.TTFont;
+import teamfractal.util.animation.AnimationPlayerWin;
+import teamfractal.util.animation.AnimationTileFlash;
+import teamfractal.util.animation.IAnimation;
+import teamfractal.util.screens.AbstractAnimationScreen;
 
 public class GameScreen extends AbstractAnimationScreen implements Screen {
     private final static int tileXOffset = 256;
-    /**
-     * Font which will be adopted by the game-screen's main interface
-     */
-    private static TTFont gameFont;
+
     /**
      * Establish visual parameters for in-game buttons
      */
-    private static TextButton.TextButtonStyle gameButtonStyle;
+    private static TextButton.TextButtonStyle largeButtonStyle;
+
+    private static TextButton.TextButtonStyle smallButtonStyle;
+
+    private static TTFont headerFontRegular;
+    private static TTFont headerFontLight;
+    private static TTFont smallFontRegular;
+    private static TTFont smallFontLight;
 
     static {
-        gameFont = new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 36);
+        headerFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 24);
+        headerFontLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 24);
 
-        gameButtonStyle = new TextButton.TextButtonStyle();
-        gameButtonStyle.font = gameFont.font();
-        gameButtonStyle.fontColor = Color.WHITE;
-        gameButtonStyle.pressedOffsetX = 1;
-        gameButtonStyle.pressedOffsetY = -1;
+        smallFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 16);
+        smallFontLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 16);
+
+        largeButtonStyle = new TextButton.TextButtonStyle();
+        largeButtonStyle.font = headerFontRegular.font();
+        largeButtonStyle.fontColor = Color.WHITE;
+        largeButtonStyle.pressedOffsetX = 1;
+        largeButtonStyle.pressedOffsetY = -1;
+
+        smallButtonStyle = new TextButton.TextButtonStyle();
+        smallButtonStyle.font = smallFontRegular.font();
+        smallButtonStyle.fontColor = Color.WHITE;
+        smallButtonStyle.pressedOffsetX = 1;
+        smallButtonStyle.pressedOffsetY = -1;
     }
+
+    public PlayerInfoTable playerInfoTable;
+    public PhaseInfoTable phaseInfoTable;
+    public SelectedTileInfoTable selectedTileInfoTable;
+    public MarketInterfaceTable marketInterfaceTable;
 
     private boolean shown = false;
     private IAnimation lastTileClickedFlash;
@@ -94,34 +101,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * Establishes the grid of tiles to be laid over the map
      */
     private Table tileGrid;
-    /**
-     * Label identifying the current phase number
-     */
-    private Label phaseLabel;
-    /**
-     * Label counter providing a visual representation of the current player's food stocks
-     */
-    private Label foodCounter;
-    /**
-     * Label counter providing a visual representation of the current player's energy stocks
-     */
-    private Label energyCounter;
-    /**
-     * Label counter providing a visual representation of the current player's ore stocks
-     */
-    private Label oreCounter;
-    /**
-     * Label counter providing a visual representation of the current player's roboticon stocks
-     */
-    private Label roboticonCounter;
-    /**
-     * Label counter providing a visual representation of the current player's money
-     */
-    private Label moneyCounter;
-    /**
-     * Label stating the getID of the currently-selected tile
-     */
-    private Label selectedTileLabel;
     /**
      * Object defining QOL drawing functions for rectangles and on-screen tables
      * Used in this class to render tooltip regions
@@ -165,18 +144,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      */
     private TextButton closeUpgradeOverlayButton;
     /**
-     * Icon representing the currently-active player's chosen college
-     */
-    private Image currentPlayerIcon;
-    /**
-     * Icon representing the player who owns the currently-selected tile
-     */
-    private Image selectedTileOwnerIcon;
-    /**
-     * Icon representing the roboticon occupying the currently-selected tile
-     */
-    private Image selectedTileRoboticonIcon;
-    /**
      * Customised stage that shows up to offer roboticon upgrade choices
      */
     private Overlay upgradeOverlay;
@@ -214,9 +181,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         this.game = game;
         //Import current game-state to access the game's renderer
 
-
-        //Start game engine up
-
         batch = new SpriteBatch();
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
@@ -227,12 +191,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         this(game, true);
     }
 
-    static TextButton.TextButtonStyle getGameButtonStyle() {
-        return gameButtonStyle;
-    }
-
-    static TTFont getGameFont() {
-        return gameFont;
+    static TextButton.TextButtonStyle getLargeButtonStyle() {
+        return largeButtonStyle;
     }
 
     /**
@@ -246,9 +206,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(gameStage);
-        if (shown) return ;
+        if (shown) return;
 
         shown = true;
+
         drawer = new Drawer(game);
         //Import QOL drawing functions
 
@@ -273,8 +234,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Construct roboticon upgrade overlay (and, again, hide it for the moment)
         constructTooExpensiveOverlay();
         constructEventMessageOverlay();
-        //drawer.debug(gameStage);
+
+        drawer.debug(gameStage);
         //Call this to draw temporary debug lines around all of the actors on the stage
+
+        constructMarketInterface();
 
         System.out.println("GameScreen.show");
         engine.nextPhase();
@@ -294,8 +258,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //First instruction sets background colour
 
         if (engine.state() == GameEngine.State.RUN) {
-            drawRectangles();
-
             gameStage.act(delta);
             gameStage.draw();
             //Draw the stage onto the screen
@@ -322,8 +284,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
             if (drawRoboticonIcon) {
                 drawer.drawRoboticon(selectedTile.getRoboticonStored(),
-                        tableRight.getX() + selectedTileRoboticonIcon.getX(),
-                        selectedTileRoboticonIcon.getY()
+                        tableRight.getX() + engine.selectedTile().getRoboticonStored().getIcon().getX(),
+                        engine.selectedTile().getRoboticonStored().getIcon().getY()
                 );
             }
 
@@ -397,7 +359,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private void constructButtons() {
         //Button that, when clicked, ends the current turn for the current player prematurely
 
-        endTurnButton = new TextButton("NEXT PHASE", gameButtonStyle);
+        endTurnButton = new TextButton("NEXT PHASE", largeButtonStyle);
         endTurnButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -408,8 +370,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Turn off the "END TURN" button right away to force players into selecting tiles
 
         //Button which can be clicked on to pause the game
-
-        pauseButton = new TextButton("Pause Game", gameButtonStyle);
+        pauseButton = new TextButton("Pause Game", largeButtonStyle);
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -417,9 +378,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-
         //Button which can be clicked on to go to the mini game
-        miniGameButton = new TextButton("Mini Game ($20)", gameButtonStyle);
+        miniGameButton = new TextButton("Mini Game ($20)", largeButtonStyle);
         miniGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -432,70 +392,26 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        gameFont.setSize(30);
-        gameButtonStyle.font = gameFont.font();
-
-        //Button which allows players to claim selected tiles
-
-        claimTileButton = new TextButton("CLAIM", gameButtonStyle);
-        claimTileButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.claimTile();
-
-                selectTile(engine.selectedTile(), false);
-                //Refresh tile information and tile management UI
-            }
-        });
-
-        //Button which allows players to deploy Roboticons onto selected tiles
-        deployRoboticonButton = new TextButton("DEPLOY", gameButtonStyle);
-        deployRoboticonButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (!engine.selectedTile().hasRoboticon()) {
-                    engine.deployRoboticon();
-
-                    selectTile(engine.selectedTile(), false);
-                    //Re-select the current tile to update the UI
-                } else {
-                    updateUpgradeOptions();
-                    //Refresh the upgrade options shown on the roboticon upgrade overlay
-
-                    upgradeOverlayVisible = true;
-                    //Set the renderer to show the upgrade overlay if this button is clicked after a tile with a
-                    //roboticon was clicked on
-
-                    Gdx.input.setInputProcessor(upgradeOverlay);
-                    //Direct user inputs towards the roboticon upgrade overlay
-                }
-            }
-        });
-
-        gameFont.setSize(24);
-        gameButtonStyle.font = gameFont.font();
-
         //Button allowing players to upgrade roboticons' food-production capabilities
-
-        foodUpgradeButton = new TextButton("PRICE", gameButtonStyle);
+        foodUpgradeButton = new TextButton("PRICE", smallButtonStyle);
         foodUpgradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(2);
 
-                updateInventoryLabels();
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.FOOD);
                 updateUpgradeOptions();
             }
         });
 
         //Button allowing players to upgrade roboticons' ore-production capabilities
-        oreUpgradeButton = new TextButton("PRICE", gameButtonStyle);
+        oreUpgradeButton = new TextButton("PRICE", smallButtonStyle);
         oreUpgradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(0);
 
-                updateInventoryLabels();
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.ORE);
                 updateUpgradeOptions();
             }
         });
@@ -503,20 +419,20 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         /*
          * Button allowing players to upgrade roboticons' energy-production capabilities
          */
-        energyUpgradeButton = new TextButton("PRICE", gameButtonStyle);
+        energyUpgradeButton = new TextButton("PRICE", smallButtonStyle);
         energyUpgradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(1);
 
-                updateInventoryLabels();
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.ENERGY);
                 updateUpgradeOptions();
             }
         });
 
         //Button allowing players to escape from the upgrade overlay if they decide against upgrading roboticons
 
-        closeUpgradeOverlayButton = new TextButton("CLOSE", gameButtonStyle);
+        closeUpgradeOverlayButton = new TextButton("CLOSE", smallButtonStyle);
         closeUpgradeOverlayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -524,7 +440,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        confirmTradeButton = new TextButton("Confirm", gameButtonStyle);
+        confirmTradeButton = new TextButton("Confirm", smallButtonStyle);
         confirmTradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -533,14 +449,14 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             	   openTooExpensiveOverlay();
                }
                else{
-            	   updateInventoryLabels();
+                   playerInfoTable.showPlayerInventory(engine.currentPlayer());
             	   engine.testTrade();
                }
 
             }
         });
 
-        cancelTradeButton = new TextButton("Cancel", gameButtonStyle);
+        cancelTradeButton = new TextButton("Cancel", smallButtonStyle);
         cancelTradeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -549,7 +465,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
-        closePriceOverlayButton = new TextButton("close", gameButtonStyle);
+        closePriceOverlayButton = new TextButton("close", smallButtonStyle);
         closePriceOverlayButton.addListener(new ChangeListener(){
         	@Override
         	public void changed(ChangeEvent event, Actor actor) {
@@ -557,7 +473,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         	}
         });
 
-        closeEventMessageButton = new TextButton("CLOSE MESSAGE", gameButtonStyle);
+        closeEventMessageButton = new TextButton("CLOSE MESSAGE", smallButtonStyle);
         closeEventMessageButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -586,60 +502,25 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableLeft.center().top();
         //Shift the table towards the top of the screen
 
-        tableLeft.add(engine.timer()).colspan(2);
+        phaseInfoTable = new PhaseInfoTable();
+        phaseInfoTable.timer.setTerminalMethod(() -> engine.nextPhase());
+        phaseInfoTable.updateLabels(engine.phase());
+        tableLeft.add(phaseInfoTable).colspan(2).align(Align.center);
         //Add the timer to the table
 
-        gameFont.setSize(22);
-        Table phaseTable = new Table();
-        phaseLabel = new Label("", new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        phaseLabel.setAlignment(Align.center);
-        phaseTable.add(phaseLabel).width(120);
-        phaseTable.add().width(5);
-        phaseTable.add(endTurnButton);
-        drawer.addTableRow(tableLeft, phaseTable, 0, 0, 15, 0, 2);
-        //Prepare and add the "End Phase" button to the table
+        tableLeft.row();
+        tableLeft.add(endTurnButton).padTop(15).padBottom(15);
+        //Add the "End Phase" button to the table
 
-        gameFont.setSize(36);
-        drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(gameFont.font(), Color.BLACK)), 0, 0, 10, 0, 2);
+        drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE)), 0, 0, 5, 0, 2);
         //Window-dressing: adds "CURRENT PLAYER" label
 
-
-
-        gameFont.setSize(24);
-        Table collegeInfo = new Table();
-        currentPlayerIcon = new Image();
-        currentPlayerLabel = new Label("", new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        drawer.addTableRow(collegeInfo, currentPlayerIcon, 64, 64);
-        drawer.addTableRow(collegeInfo, new Label("COLLEGE", new Label.LabelStyle(gameFont.font(), Color.WHITE)));
-        drawer.addTableRow(collegeInfo, currentPlayerLabel);
-        drawer.addTableRow(tableLeft, collegeInfo, 5, 0, 0, 0);
-        //Prepare icon region to show the icon of the college which is currently active
-
-
-
-        Table resourceCounters = new Table();
-        foodCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.FOOD), new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        foodCounter.setAlignment(Align.right);
-        energyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ENERGY), new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        energyCounter.setAlignment(Align.right);
-        oreCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.ORE), new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        oreCounter.setAlignment(Align.right);
-        roboticonCounter = new Label("" + engine.currentPlayer().getRoboticonInventory(), new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        roboticonCounter.setAlignment(Align.right);
-        moneyCounter = new Label("" + engine.currentPlayer().getResource(ResourceType.MONEY), new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        moneyCounter.setAlignment(Align.right);
-
-        drawer.addTableRow(resourceCounters, new LabelledElement("Food", gameFont, Color.WHITE, foodCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Energy", gameFont, Color.WHITE, energyCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Ore", gameFont, Color.WHITE, oreCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Roboticons", gameFont, Color.WHITE, roboticonCounter, 100, 40));
-        drawer.addTableRow(resourceCounters, new LabelledElement("Money", gameFont, Color.WHITE, moneyCounter, 100, 40));
-        tableLeft.add(resourceCounters).size(150, 120).align(Align.right);
-        //Add resource-counters to the table
-        //These will show the current resource stocks for the current player
+        playerInfoTable = new PlayerInfoTable();
+        playerInfoTable.showPlayerInfo(engine.currentPlayer());
+        tableLeft.row();
+        tableLeft.add(playerInfoTable).padTop(5);
 
         drawer.addTableRow(tableLeft, miniGameButton, 105-40, 0, 0, 0, 2);
-
 
         drawer.addTableRow(tableLeft, pauseButton, 0, 0, 0, 0, 2);
         //Prepare and add the pause button to the bottom of the table
@@ -647,9 +528,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         gameStage.addActor(tableLeft);
         //Add left-hand table to the stage
 
-
-        updatePhaseLabel();
-        updatePlayerName();
+        phaseInfoTable.updateLabels(engine.phase());
+        playerInfoTable.showPlayerInfo(engine.currentPlayer());
     }
 
     /**
@@ -670,44 +550,42 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableRight.center().top();
         //Shift the table towards the top of the screen
 
-        gameFont.setSize(40);
-        selectedTileLabel = new Label("NO TILE SELECTED", new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        selectedTileLabel.setAlignment(Align.center);
-        drawer.addTableRow(tableRight, selectedTileLabel, 240, 43, 0, 0, 10, 0, 2);
-        //Set up and deploy label to identify tiles when they're clicked on
+        selectedTileInfoTable = new SelectedTileInfoTable();
+        selectedTileInfoTable.setClaimTileButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                engine.claimTile();
 
-        selectedTileOwnerIcon = new Image();
-        selectedTileOwnerIcon.setVisible(false);
-        selectedTileOwnerIcon.setScaling(Scaling.fit);
-        selectedTileOwnerIcon.setAlign(Align.center);
-        selectedTileRoboticonIcon = new Image();
-        selectedTileRoboticonIcon.setVisible(false);
-        selectedTileRoboticonIcon.setScaling(Scaling.fit);
-        selectedTileRoboticonIcon.setAlign(Align.center);
-        tableRight.row();
-        tableRight.add(selectedTileOwnerIcon).size(64, 64).center();
-        tableRight.add(selectedTileRoboticonIcon).size(64, 64).center();
-        //Instantiate and deploy icons to represent tiles' owners and Roboticons
+                selectTile(engine.selectedTile(), false);
+                //Refresh tile information and tile management UI
+            }
+        });
+        selectedTileInfoTable.setDeployRoboticonButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (!engine.selectedTile().hasRoboticon()) {
+                    engine.deployRoboticon();
 
-        gameFont.setSize(20);
-        Label collegeFootLabel = new Label("COLLEGE", new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        Label roboticonFootLabel = new Label("ROBOTICON", new Label.LabelStyle(gameFont.font(), Color.WHITE));
-        collegeFootLabel.setAlignment(Align.center);
-        roboticonFootLabel.setAlignment(Align.center);
-        tableRight.row();
-        tableRight.add(collegeFootLabel).padBottom(10).width(120);
-        tableRight.add(roboticonFootLabel).padBottom(10).width(120);
-        //Even more window-dressing
+                    selectTile(engine.selectedTile(), false);
+                    //Re-select the current tile to update the UI
+                } else {
+                    updateUpgradeOptions();
+                    //Refresh the upgrade options shown on the roboticon upgrade overlay
 
-        drawer.toggleButton(claimTileButton, false, Color.GRAY);
-        drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
-        //Disable the claim and deploy button until a tile is selected under the appropriate conditions
+                    upgradeOverlayVisible = true;
+                    //Set the renderer to show the upgrade overlay if this button is clicked after a tile with a
+                    //roboticon was clicked on
 
-        drawer.addTableRow(tableRight, claimTileButton, 0, 0, 15, 0);
-        tableRight.add(deployRoboticonButton).padBottom(15);
-        //Add tile claim/deploy buttons to interface
+                    Gdx.input.setInputProcessor(upgradeOverlay);
+                    //Direct user inputs towards the roboticon upgrade overlay
+                }
+            }
+        });
 
-        drawer.addTableRow(tableRight, engine.market(), 2);
+        tableRight.add(selectedTileInfoTable).padBottom(20);
+
+        marketInterfaceTable = new MarketInterfaceTable();
+        drawer.addTableRow(tableRight, marketInterfaceTable, 2);
         //Establish market and add market interface to right-hand table
 
         gameStage.addActor(tableRight);
@@ -792,23 +670,21 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * This will allow them to upgrade its food, energy or ore production stats
      */
     private void constructUpgradeOverlay() {
-        upgradeOverlay = new Overlay(this.game, Color.GRAY, Color.WHITE, 250, 200, 3);
+        upgradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 200, 3);
         //Establish the upgrade overlay
 
         upgradeOverlayVisible = false;
         //Stop the GameScreen's renderer from rendering the overlay right away
 
-        gameFont.setSize(36);
-        upgradeOverlay.table().add(new Label("UPGRADE ROBOTICON", new Label.LabelStyle(gameFont.font(), Color.WHITE))).padBottom(20);
+        upgradeOverlay.table().add(new Label("UPGRADE ROBOTICON", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
         //Visual guff
 
-        gameFont.setSize(24);
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("FOOD", gameFont, Color.WHITE, foodUpgradeButton, 175, 0)).left();
+        upgradeOverlay.table().add(new LabelledElement("FOOD", smallFontRegular, Color.WHITE, foodUpgradeButton, 175, 0)).left();
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("ENERGY", gameFont, Color.WHITE, energyUpgradeButton, 175, 0)).left();
+        upgradeOverlay.table().add(new LabelledElement("ENERGY", smallFontRegular, Color.WHITE, energyUpgradeButton, 175, 0)).left();
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("ORE", gameFont, Color.WHITE, oreUpgradeButton, 175, 0)).left().padBottom(20);
+        upgradeOverlay.table().add(new LabelledElement("ORE", smallFontRegular, Color.WHITE, oreUpgradeButton, 175, 0)).left().padBottom(20);
         //Add buttons for upgrading roboticons to the overlay
         //Like in the market, each button's label is the monetary price of the upgrade that it performs
 
@@ -822,16 +698,12 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     //new for assessment 3
     private void constructEventMessageOverlay() {
-        eventMessageOverlay = new Overlay(this.game, Color.GRAY, Color.WHITE, 900, 200, 3);
-        eventMessage = new Label("", new Label.LabelStyle(gameFont.font(), Color.WHITE));
+        eventMessageOverlay = new Overlay(Color.GRAY, Color.WHITE, 900, 200, 3);
+        eventMessage = new Label("", new Label.LabelStyle(smallFontLight.font(), Color.WHITE));
 
         eventMessageOverlayVisible = false;
 
-        gameFont.setSize(26);
-
-        eventMessageOverlay.table().add(new Label("RANDOM EVENT!", new Label.LabelStyle(gameFont.font(), Color.WHITE)));
-
-        gameFont.setSize(20);
+        eventMessageOverlay.table().add(new Label("RANDOM EVENT!", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE)));
         eventMessageOverlay.table().row();
         eventMessageOverlay.table().add(eventMessage);
 
@@ -858,22 +730,20 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     //new for assessment 3
     private void constructTradeOverlay(Trade trade){
-    	tradeOverlay = new Overlay(this.game, Color.GRAY, Color.WHITE, 250, 300, 3);
+    	tradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 300, 3);
     	tradeOverlayVisible = false;
-    	gameFont.setSize(36);
-        tradeOverlay.table().add(new Label("INCOMING TRADE", new Label.LabelStyle(gameFont.font(), Color.WHITE))).padBottom(20);
+        tradeOverlay.table().add(new Label("INCOMING TRADE", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
 
-        gameFont.setSize(24);
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("From: Player " + trade.getSender().getPlayerNumber(), new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("From: Player " + trade.getSender().getPlayerNumber(), new Label.LabelStyle(smallFontLight.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("ORE: " + trade.oreAmount, new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("ORE: " + trade.oreAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("ENERGY: " + trade.energyAmount, new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("ENERGY: " + trade.energyAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("FOOD " + trade.foodAmount, new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("FOOD " + trade.foodAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("PRICE: " + trade.getPrice(), new Label.LabelStyle(gameFont.font(), Color.WHITE))).left();
+        tradeOverlay.table().add(new Label("PRICE: " + trade.getPrice(), new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
         tradeOverlay.table().row();
         tradeOverlay.table().add(confirmTradeButton);
         tradeOverlay.table().add(cancelTradeButton);
@@ -881,145 +751,31 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     //new for assessment 3
     private void constructTooExpensiveOverlay(){
-    	tooExpensiveOverlay = new Overlay(this.game, Color.GRAY, Color.WHITE, 250, 300, 3);
+    	tooExpensiveOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 300, 3);
     	tooExpensiveOverlayVisible = false;
-    	gameFont.setSize(36);
-    	tooExpensiveOverlay.table().add(new Label("NOT ENOUGH MONEY!", new Label.LabelStyle(gameFont.font(), Color.WHITE))).padBottom(20);
+
+    	tooExpensiveOverlay.table().add(new Label("NOT ENOUGH MONEY!", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
     	tooExpensiveOverlay.table().row();
-    	gameFont.setSize(24);
     	tooExpensiveOverlay.table().add(closePriceOverlayButton);
-
-
     }
 
-    /**
-     * Draw auxiliary rectangles to provide window-dressing for the interface
-     */
-    private void drawRectangles() {
-        drawer.lineRectangle(Color.WHITE, (int) map.getX(), (int) map.getY(), (int) map.getWidth() + 1, (int) map.getHeight(), 1);
-        //Draw border around the map
+    private void constructMarketInterface() {
+        engine.setMarketButtonFunctions();
 
-        drawer.filledRectangle(Color.WHITE, 0, (int) engine.timer().getHeight(), 256, 1);
-        drawer.filledRectangle(Color.WHITE, 0, (int) (engine.timer().getHeight() + phaseLabel.getHeight()), 256, 1);
-        drawer.borderedRectangle(Color.GRAY, Color.WHITE, 19, (int) (engine.timer().getHeight() + phaseLabel.getHeight()) + 15, 219, 40, 1);
-        //drawer.lineRectangle(Color.WHITE, ((int) (Gdx.graphics.getWidth() * 0.125)) - 110, 240, 66, 66);
-        drawer.filledRectangle(Color.WHITE, 0, Gdx.graphics.getHeight() - 46, 256, 1);
-        //Draw lines and rectangles in left-hand table
+        marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, engine.market().getOreBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, engine.market().getOreSellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, engine.market().getEnergyBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, engine.market().getEnergySellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, engine.market().getFoodBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, engine.market().getFoodSellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, engine.market().getRoboticonBuyPrice());
 
-        drawer.lineRectangle(Color.WHITE, ((int) (Gdx.graphics.getWidth() * 0.875)) - 93, 52, 66, 66, 1);
-        drawer.lineRectangle(Color.WHITE, ((int) (Gdx.graphics.getWidth() * 0.875)) + 27, 52, 66, 66, 1);
-        drawer.filledRectangle(Color.WHITE, Gdx.graphics.getWidth() - 256, 190, 256, 1);
-        //Draw lines in right-hand table
-    }
+        marketInterfaceTable.setMarketStockText(ResourceType.ORE, engine.market().getOreStock());
+        marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, engine.market().getEnergyStock());
+        marketInterfaceTable.setMarketStockText(ResourceType.FOOD, engine.market().getFoodStock());
+        marketInterfaceTable.setMarketStockText(ResourceType.ROBOTICON, engine.market().getRoboticonStock());
 
-    /**
-     * Sets the value represented by the food-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game food counter
-     */
-    private void setFoodCounterValue(int value) {
-        foodCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Sets the value represented by the energy-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game energy counter
-     */
-    private void setEnergyCounterValue(int value) {
-        energyCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Sets the value represented by the ore-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game ore counter
-     */
-    private void setOreCounterValue(int value) {
-        oreCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Sets the value represented by the Roboticon-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game Roboticon counter
-     */
-    private void setRoboticonCounterValue(int value) {
-        roboticonCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Sets the value represented by the money-counter rendered within the main in-game interface
-     *
-     * @param value The new value to be visualised by the in-game money counter
-     */
-    private void setMoneyCounterValue(int value) {
-        moneyCounter.setText(String.valueOf(value));
-    }
-
-    /**
-     * Updates the label on the right-hand side of the in-game interface to visualise the identity of the selected tile
-     *
-     * @param value The ID value of the tile to be described on the interface
-     */
-    private void updateSelectedTileLabel(int value) {
-        if (value < 1 || value > 16) {
-            selectedTileLabel.setText("NO TILE SELECTED");
-        } else {
-            selectedTileLabel.setText("TILE " + value);
-        }
-    }
-
-    /**
-     * Updates the label on the right-hand side of the in-game interface to visualise the identity of the selected tile
-     * Alternative method that takes an ID value from a provided tile rather than an ID value directly
-     *
-     * @param tile The tile to be described on the interface
-     */
-    public void updateSelectedTileLabel(Tile tile) {
-        selectedTileLabel.setText("TILE " + tile.getID());
-    }
-
-    /**
-     * Updates the label on the left-hand side of the in-game interface to visualise and describe the game's current
-     * phase
-     *
-     * @param description The phase description to be displayed by the same label
-     */
-    private void updatePhaseLabel(String description) {
-        phaseLabel.setText("PHASE " + engine.phase() + "\n" + description);
-    }
-
-    public void updatePhaseLabel () {
-        int phase = engine.phase();
-        String description;
-        switch (phase) {
-            case 1:
-                description = "ACQUISITION";
-                break;
-
-            case 2:
-                description = "BUY ROBOTICONS";
-                break;
-
-            case 3:
-                description = "PLACE ROBOTICONS";
-                break;
-
-            case 4:
-                description = "PRODUCTION";
-                break;
-
-            case 5:
-                description = "MARKET OPEN";
-                break;
-
-            default:
-                description = "UNKNOWN";
-                break;
-        }
-
-        updatePhaseLabel(description);
+        closeMarketInterface();
     }
 
     /**
@@ -1031,17 +787,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      */
     public TextButton endTurnButton() {
         return endTurnButton;
-    }
-
-    /**
-     * Returns the icon object used to visualise the logo of the current player's associated college
-     * The GameEngine class uses this method to update said logo when it changes the active player
-     *
-     *
-     * @return Image The image object visualising the current player's associated college
-     */
-    public Image currentPlayerIcon() {
-        return currentPlayerIcon;
     }
 
     /**
@@ -1078,78 +823,35 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             addAnimation(lastTileClickedFlash);
         }
 
-        selectedTileLabel.setText("TILE " + tile.getID());
+        selectedTileInfoTable.hideTileInfo();
+        selectedTileInfoTable.showTileInfo(tile);
 
-        drawRoboticonIcon = false;
         if (tile.isOwned()) {
-            selectedTileOwnerIcon.setVisible(true);
-            selectedTileOwnerIcon.setDrawable(new TextureRegionDrawable(new TextureRegion(tile.getOwner().getCollege().getLogoTexture())));
-            selectedTileOwnerIcon.setSize(64, 64);
-            //Update tile owner college icon
-
-            drawer.toggleButton(claimTileButton, false, Color.GRAY);
+            selectedTileInfoTable.toggleClaimTileButton(false);
             //Disable the button for claiming the tile if it's already been claimed
 
             if (tile.hasRoboticon()) {
-                deployRoboticonButton.setText("UPGRADE");
-
-                drawRoboticonIcon = true;
-                // selectedTileRoboticonIcon.setVisible(true);
-                selectedTileRoboticonIcon.setDrawable(new TextureRegionDrawable(new TextureRegion(tile.getRoboticonStored().getIconTexture())));
-                selectedTileOwnerIcon.setSize(64, 64);
-
                 if (engine.phase() == 3 && tile.getOwner() == engine.currentPlayer()) {
-                    drawer.toggleButton(deployRoboticonButton, true, Color.WHITE);
+                    selectedTileInfoTable.toggleDeployRoboticonButton(true);
                 } else {
-                    drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
+                    selectedTileInfoTable.toggleDeployRoboticonButton(false);
                 }
-                //If the tile already has a Roboticon, offer an upgrade button if the Roboticon upgrade conditions are met
-                //Also show an icon representing the Roboticon inhabiting the tile
-                //This will only happen if the game is in phase 3
             } else {
-                deployRoboticonButton.setText("DEPLOY");
-
-                selectedTileRoboticonIcon.setVisible(false);
-
                 if (engine.phase() == 3 && tile.getOwner() == engine.currentPlayer() && engine.currentPlayer().getRoboticonInventory() > 0) {
-                    drawer.toggleButton(deployRoboticonButton, true, Color.WHITE);
+                    selectedTileInfoTable.toggleDeployRoboticonButton(true);
                 } else {
-                    drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
+                    selectedTileInfoTable.toggleDeployRoboticonButton(false);
                 }
-                //If the tile doesn't have a Robotion, offer a deployment button if the current player owns at least 1 Roboticon
-                //This will only happen if the game is in phase 3
             }
         } else {
-            // tile.getX()
-
-            selectedTileOwnerIcon.setVisible(false);
-            selectedTileRoboticonIcon.setVisible(false);
-
             if (engine.phase() == 1) {
-                drawer.toggleButton(claimTileButton, true, Color.WHITE);
+                selectedTileInfoTable.toggleClaimTileButton(true);
+            } else {
+                selectedTileInfoTable.toggleClaimTileButton(false);
             }
 
-            deployRoboticonButton.setText("DEPLOY");
-            drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
+            selectedTileInfoTable.toggleDeployRoboticonButton(false);
         }
-        //If the tile isn't yet owned by anyone, allow the current player to claim it if the game is in phase 1
-    }
-
-    /**
-     * Run this to deselect the currently selected tile
-     * Specifically resets the labels and icons that identify the selected tile and disables the buttons for
-     * manipulating said tile (as no tile can be deemed as being "selected" after this is run)
-     */
-    public void deselectTile() {
-        drawer.toggleButton(claimTileButton, false, Color.GRAY);
-        drawer.toggleButton(deployRoboticonButton, false, Color.GRAY);
-
-        deployRoboticonButton.setText("DEPLOY");
-
-        selectedTileOwnerIcon.setVisible(false);
-        selectedTileRoboticonIcon.setVisible(false);
-
-        updateSelectedTileLabel(0);
     }
 
     /**
@@ -1160,23 +862,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         upgradeOverlayVisible = false;
         
         //Hide the upgrade overlay again
-
         Gdx.input.setInputProcessor(gameStage);
         //Direct user inputs back towards the main stage
         
         engine.testTrade();
-    }
-
-    /**
-     * Updates the on-screen counters for food, energy, ore, money and Roboticons
-     * This is typically called when the active player switches or when a market transaction is made
-     */
-    public void updateInventoryLabels(){
-        setFoodCounterValue(engine.currentPlayer().getResource(ResourceType.FOOD));
-        setEnergyCounterValue(engine.currentPlayer().getResource(ResourceType.ENERGY));
-        setOreCounterValue(engine.currentPlayer().getResource(ResourceType.ORE));
-        setMoneyCounterValue(engine.currentPlayer().getResource(ResourceType.MONEY));
-        setRoboticonCounterValue(engine.currentPlayer().getRoboticonInventory());
     }
 
     /**
@@ -1210,14 +899,70 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Conditionally enable food upgrade button
     }
 
-    public void updateChancellor(){
-        if (engine.timer().seconds() <= 15) {
+    public void openResourceMarketInterface() {
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getOreBuyPrice()) {
+            marketInterfaceTable.toggleButton(ResourceType.ORE, true, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ORE, true, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getEnergyBuyPrice()) {
+            marketInterfaceTable.toggleButton(ResourceType.ENERGY, true, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ENERGY, true, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getFoodBuyPrice()) {
+            marketInterfaceTable.toggleButton(ResourceType.FOOD, true, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.FOOD, true, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.ORE) > 0) {
+            marketInterfaceTable.toggleButton(ResourceType.ORE, false, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ORE, false, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.ENERGY) > 0) {
+            marketInterfaceTable.toggleButton(ResourceType.ENERGY, false, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ENERGY, false, false, Color.RED);
+        }
+
+        if (engine.currentPlayer().getResource(ResourceType.FOOD) > 0) {
+            marketInterfaceTable.toggleButton(ResourceType.FOOD, false, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.FOOD, false, false, Color.RED);
+        }
+    }
+
+    public void openRoboticonMarketInterface() {
+        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getRoboticonBuyPrice()) {
+            marketInterfaceTable.toggleButton(ResourceType.ROBOTICON, true, true, Color.GREEN);
+        } else {
+            marketInterfaceTable.toggleButton(ResourceType.ROBOTICON, true, false, Color.RED);
+        }
+    }
+
+    public void closeMarketInterface() {
+        marketInterfaceTable.toggleButton(ResourceType.ORE, true, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.ORE, false, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.ENERGY, true, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.ENERGY, false, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.FOOD, true, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.FOOD, false, false, Color.GRAY);
+        marketInterfaceTable.toggleButton(ResourceType.ROBOTICON, true, false, Color.GRAY);
+    }
+
+    public void updateChancellor() {
+        if (phaseInfoTable.timer.seconds() <= 15) {
             drawer.drawChancellor(engine.chancellor().getCoordX(), engine.chancellor().getCoordY());
         }
         //Has chancellor been captured?
         if (engine.selectedTile() == engine.chancellor().getTile()){
             engine.chancellor().captured();
-            updateInventoryLabels();
+            playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
         }
         //deselect latest tile
         engine.selectTile(engine.tiles()[0]);
@@ -1244,11 +989,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     public void showPlayerWin(int playerId){
         playerWin = new AnimationPlayerWin(playerId + 1);
         addAnimation(playerWin);
-    }
-
-    public void updatePlayerName() {
-        currentPlayerLabel.setText("Player " + engine.currentPlayer().getPlayerNumber());
-        currentPlayerIcon.setDrawable(engine.currentPlayer().getCollege().getLogo().getDrawable());
     }
 
     private void openTradeOverlay() {

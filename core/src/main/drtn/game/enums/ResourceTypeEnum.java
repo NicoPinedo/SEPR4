@@ -1,4 +1,4 @@
-package main.drtn.game.enums;
+package drtn.game.enums;
 
 /**
  * Created by Kieran on 24/02/2017.
