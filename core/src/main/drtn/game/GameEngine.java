@@ -956,6 +956,8 @@ public class GameEngine {
                 }
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
             }
         });
 
@@ -971,6 +973,8 @@ public class GameEngine {
                 }
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
             }
         });
 
@@ -986,6 +990,8 @@ public class GameEngine {
                 }
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
             }
         });
 
@@ -1001,6 +1007,8 @@ public class GameEngine {
                 }
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
             }
         });
 
@@ -1016,6 +1024,8 @@ public class GameEngine {
                 }
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
             }
         });
 
@@ -1031,6 +1041,8 @@ public class GameEngine {
                 }
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
             }
         });
 
@@ -1132,10 +1144,14 @@ public class GameEngine {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
         }
 
+        refreshAuctionConfirmationButtonAvailability();
+    }
+
+    public void refreshAuctionConfirmationButtonAvailability() {
         if ((gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) > 0
                 || gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) > 0
                 || gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) > 0)
-            && gameScreen.marketInterfaceTable.tradePrice() > 0) {
+                && gameScreen.marketInterfaceTable.tradePrice() > 0) {
             gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(true, Color.GREEN);
         } else {
             gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
