@@ -125,7 +125,7 @@ public class GameEngine {
             final int fi = i;
             final GameScreen gs = gameScreen;
 
-            tiles[i] = new Tile(this.game, i + 1, 5, 5, 5, false, new Runnable() {
+            tiles[i] = new Tile(this.game, i + 1, 5, 5, 5, null, new Runnable() {
                 @Override
                 public void run() {
                     gs.selectTile(tiles[fi], true);

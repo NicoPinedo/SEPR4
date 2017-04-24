@@ -70,7 +70,7 @@ public class Tile extends Button {
     /**
      * A modifier influencing how much ore is produced.
      */
-    private boolean landmark;
+    private String surfaceGraphic;
     /**
      * The player that owns the tile, if it has one.
      */
@@ -112,10 +112,10 @@ public class Tile extends Button {
      * @param EnergyCount The multiplier for the production of energy
      * @param OreCount    The multiplier for the production of ore
      * @param FoodCount The multiplier for the production of food
-     * @param landmark    A boolean to signify if the tile is to be a landmark or not
+     * @param surfaceGraphic  A string to signify what the graphics of the tile are.
      * @param runnable    An object encapsulating a method that can be executed when the tile is clicked on
      */
-    public Tile(Game game, int ID, int EnergyCount, int OreCount, int FoodCount, boolean landmark, final Runnable runnable) {
+    public Tile(Game game, int ID, int EnergyCount, int OreCount, int FoodCount, String surfaceGraphic, final Runnable runnable) {
         super(new ButtonStyle());
         //Execute the constructor for the class' parent Button class using default visual parameters
 
@@ -151,8 +151,38 @@ public class Tile extends Button {
         this.OreCount = OreCount;
         //Import and save the tile's determined resource yields
 
-        this.landmark = landmark;
-        //Import and save the tile's landmark status
+        //Switch case determines tile graphic types, if not their graphic type is null
+        double newCount;
+        double multiplier = 1.5;
+        switch(ID){
+            case 2:
+            case 3:
+            case 9:
+            case 14:
+                surfaceGraphic = "Ore";
+                newCount = OreCount*multiplier;
+                this.OreCount = (int) newCount;
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 11:
+                surfaceGraphic = "Energy";
+                newCount = EnergyCount*multiplier;
+                this.EnergyCount = (int) newCount;
+                break;
+            case 4:
+            case 10:
+            case 12:
+            case 13:
+            case 15:
+                surfaceGraphic = "Food";
+                newCount = FoodCount*multiplier;
+                this.FoodCount = (int) newCount;
+                break;
+        }
+        this.surfaceGraphic = surfaceGraphic;
+        //Import and save the tile's graphic type
 
         this.runnable = runnable;
         this.owner = null;
@@ -219,7 +249,6 @@ public class Tile extends Button {
         if (roboticonStored != null && owner != null) {
 
             if ((owner.getResource(ResourceType.ENERGY) >= 3) && (owner.getResource(ResourceType.FOOD) >= 2)) {
-                //TODO: why are these negative? - Kieran
                 owner.varyResource(ResourceType.ENERGY, -3);
                 owner.varyResource(ResourceType.FOOD, -2);
 
