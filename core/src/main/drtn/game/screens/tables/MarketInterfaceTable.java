@@ -480,7 +480,7 @@ public class MarketInterfaceTable extends Table {
         setMarketButtonText(resource, buy, String.valueOf(price));
     }
 
-    public void toggleButton(ResourceType resource, boolean buy, boolean enabled, Color color) {
+    public void toggleMarketButton(ResourceType resource, boolean buy, boolean enabled, Color color) {
         if (buy) {
             switch (resource) {
                 case ORE:
@@ -518,6 +518,79 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    public void toggleAuctionQuantityButton(ResourceType resource, boolean add, boolean enabled, Color color) {
+        if (add) {
+            switch (resource) {
+                case ORE:
+                    playerBuyOre.getLabel().setColor(color);
+                    playerBuyOre.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case ENERGY:
+                    playerBuyEnergy.getLabel().setColor(color);
+                    playerBuyEnergy.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case FOOD:
+                    playerBuyFood.getLabel().setColor(color);
+                    playerBuyFood.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+            }
+        } else {
+            switch (resource) {
+                case ORE:
+                    playerSellOre.getLabel().setColor(color);
+                    playerSellOre.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case ENERGY:
+                    playerSellEnergy.getLabel().setColor(color);
+                    playerSellEnergy.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case FOOD:
+                    playerSellFood.getLabel().setColor(color);
+                    playerSellFood.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+            }
+        }
+    }
+
+    public void toggleAuctionPriceButton(int figures, boolean add, boolean enabled, Color color) {
+        if (add) {
+            switch (figures) {
+                case 1:
+                    pricePlus1.getLabel().setColor(color);
+                    pricePlus1.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case 2:
+                    pricePlus10.getLabel().setColor(color);
+                    pricePlus10.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case 3:
+                    pricePlus100.getLabel().setColor(color);
+                    pricePlus100.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+            }
+        } else {
+            switch (figures) {
+                case 1:
+                    priceMinus1.getLabel().setColor(color);
+                    priceMinus1.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case 2:
+                    priceMinus10.getLabel().setColor(color);
+                    priceMinus10.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case 3:
+                    priceMinus100.getLabel().setColor(color);
+                    priceMinus100.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+            }
+        }
+    }
+
+    public void toggleAuctionConfirmationButton(boolean enabled, Color color) {
+        confirmSale.getLabel().setColor(color);
+        confirmSale.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+    }
+
     public void setMarketStockText(ResourceType resource, int quantity) {
         switch (resource) {
             case ORE:
@@ -535,7 +608,7 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
-    private void setTradePrice(int tradePrice) {
+    public void setTradePrice(int tradePrice) {
         this.tradePrice = tradePrice;
         tradePriceLabel.setText(String.valueOf(tradePrice));
     }
@@ -568,5 +641,27 @@ public class MarketInterfaceTable extends Table {
 
         playerListPosition = 0;
         playerLabel.setText("Player " + otherPlayer.get(0).getPlayerNumber());
+    }
+
+    public int tradeAmount(ResourceType resource)
+    {
+        switch (resource) {
+            case ORE:
+                return oreTradeAmount;
+            case ENERGY:
+                return energyTradeAmount;
+            case FOOD:
+                return foodTradeAmount;
+            default:
+                return 0;
+        }
+    }
+
+    public void setAuctionConfirmationButtonFunction(ChangeListener event) {
+        confirmSale.addListener(event);
+    }
+
+    public int tradePrice() {
+        return tradePrice;
     }
 }
