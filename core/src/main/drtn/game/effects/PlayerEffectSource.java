@@ -15,7 +15,6 @@ package drtn.game.effects;
 
 import com.badlogic.gdx.utils.Array;
 import drtn.game.GameEngine;
-import drtn.game.GameEngine;
 
 
 public class PlayerEffectSource extends Array<PlayerEffect> {

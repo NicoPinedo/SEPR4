@@ -13,8 +13,6 @@ import drtn.game.enums.ResourceType;
 import drtn.game.exceptions.InvalidResourceTypeException;
 import drtn.game.util.Drawer;
 import drtn.game.util.TTFont;
-import drtn.game.enums.ResourceType;
-import drtn.game.exceptions.InvalidResourceTypeException;
 
 
 public class Tile extends Button {

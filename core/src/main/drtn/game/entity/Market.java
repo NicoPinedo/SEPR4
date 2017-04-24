@@ -1,20 +1,5 @@
 package drtn.game.entity;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
-import drtn.game.GameEngine;
-import drtn.game.Trade;
-import drtn.game.enums.ResourceType;
-import drtn.game.util.Drawer;
-import drtn.game.util.TTFont;
-import drtn.game.GameEngine;
 import drtn.game.enums.ResourceType;
 
 import java.util.Random;

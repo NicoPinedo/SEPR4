@@ -17,9 +17,6 @@ import com.badlogic.gdx.utils.Array;
 import drtn.game.entity.Tile;
 import drtn.game.enums.ResourceType;
 import drtn.game.exceptions.InvalidResourceTypeException;
-import drtn.game.entity.Tile;
-import drtn.game.enums.ResourceType;
-import drtn.game.exceptions.InvalidResourceTypeException;
 
 
 public class PlotEffect extends Array<Float[]> {

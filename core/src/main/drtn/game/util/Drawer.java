@@ -19,8 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import drtn.game.entity.Roboticon;
-import drtn.game.entity.Chancellor;
-
 
 public class Drawer {
     private static SpriteBatch batch;
