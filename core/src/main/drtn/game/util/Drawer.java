@@ -37,7 +37,7 @@ public class Drawer {
     //new method for assessment 3
     static {
         roboticonSprite = new Sprite(new Texture("roboticon/roboticon.png"));
-        chancellorSprite = new Sprite(new Texture("image/chancellor.png")); //TODO Get chancellor image path
+        chancellorSprite = new Sprite(new Texture("image/chancellor.png"));
         defaultTTFont = new TTFont(Gdx.files.internal("font/earthorbiter.ttf"),
                 12, 1, Color.BLACK, false);
         defaultFont = defaultTTFont.font();
