@@ -10,7 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-public class ChancellorTest {
+public class ChancellorTest extends TesterFile{
     private Game game = new Main();
     private Tile[] tiles = new Tile[16];
     private Player TestPlayer = new Player(0);

@@ -182,100 +182,19 @@ public class MarketInterfaceTable extends Table {
         playerLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
 
         playerBuyOre = new TextButton("+", lightButtonStyle);
-        playerBuyOre.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.ORE, oreTradeAmount + 1);
-            }
-        });
-
         playerBuyEnergy = new TextButton("+", lightButtonStyle);
-        playerBuyEnergy.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.ENERGY, energyTradeAmount + 1);
-            }
-        });
-
         playerBuyFood = new TextButton("+", lightButtonStyle);
-        playerBuyFood.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.FOOD, foodTradeAmount + 1);
-            }
-        });
-
         playerSellOre = new TextButton("-", lightButtonStyle);
-        playerSellOre.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.ORE, oreTradeAmount - 1);
-            }
-        });
-
         playerSellEnergy = new TextButton("-", lightButtonStyle);
-        playerSellEnergy.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.ENERGY, energyTradeAmount - 1);
-            }
-        });
-
         playerSellFood = new TextButton("-", lightButtonStyle);
-        playerSellFood.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradeAmount(ResourceType.FOOD, foodTradeAmount - 1);
-            }
-        });
 
         pricePlus1 = new TextButton("+ 1", lightButtonStyle);
-        pricePlus1.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice + 1);
-            }
-        });
-
         pricePlus10 = new TextButton("+ 10", lightButtonStyle);
-        pricePlus10.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice + 10);
-            }
-        });
-
         pricePlus100 = new TextButton("+ 100", lightButtonStyle);
-        pricePlus100.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice + 100);
-            }
-        });
 
         priceMinus1 = new TextButton("- 1", lightButtonStyle);
-        priceMinus1.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice - 1);
-            }
-        });
-
         priceMinus10 = new TextButton("- 10", lightButtonStyle);
-        priceMinus10.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice - 10);
-            }
-        });
-
         priceMinus100 = new TextButton("- 100", lightButtonStyle);
-        priceMinus100.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setTradePrice(tradePrice - 100);
-            }
-        });
 
         confirmSale = new TextButton("Send Offer to This Player", regularButtonStyle);
 
@@ -289,6 +208,8 @@ public class MarketInterfaceTable extends Table {
                     playerListPosition = 0;
                 }
                 playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+
+                setTradePrice(0);
             }
         });
 
@@ -302,6 +223,8 @@ public class MarketInterfaceTable extends Table {
                     playerListPosition = otherPlayer.size() - 1;
                 }
                 playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+
+                setTradePrice(0);
             }
         });
     }
@@ -445,6 +368,62 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    public void setAuctionQuantityButtonFunction(ResourceType resource, boolean add, ChangeListener event) {
+        if (add) {
+            switch (resource) {
+                case ORE:
+                    playerBuyOre.addListener(event);
+                    break;
+                case ENERGY:
+                    playerBuyEnergy.addListener(event);
+                    break;
+                case FOOD:
+                    playerBuyFood.addListener(event);
+                    break;
+            }
+        } else {
+                switch (resource) {
+                    case ORE:
+                        playerSellOre.addListener(event);
+                        break;
+                    case ENERGY:
+                        playerSellEnergy.addListener(event);
+                        break;
+                    case FOOD:
+                        playerSellFood.addListener(event);
+                        break;
+                }
+            }
+        }
+
+    public void setAuctionPriceButtonFunction(int figures, boolean add, ChangeListener event) {
+        if (add) {
+            switch (figures) {
+                case 1:
+                    pricePlus1.addListener(event);
+                    break;
+                case 2:
+                    pricePlus10.addListener(event);
+                    break;
+                case 3:
+                    pricePlus100.addListener(event);
+                    break;
+            }
+        } else {
+            switch (figures) {
+                case 1:
+                    priceMinus1.addListener(event);
+                    break;
+                case 2:
+                    priceMinus10.addListener(event);
+                    break;
+                case 3:
+                    priceMinus100.addListener(event);
+                    break;
+            }
+        }
+    }
+
     public void setMarketButtonText(ResourceType resource, boolean buy, String text) {
         if (buy) {
             switch (resource) {
@@ -480,7 +459,7 @@ public class MarketInterfaceTable extends Table {
         setMarketButtonText(resource, buy, String.valueOf(price));
     }
 
-    public void toggleButton(ResourceType resource, boolean buy, boolean enabled, Color color) {
+    public void toggleMarketButton(ResourceType resource, boolean buy, boolean enabled, Color color) {
         if (buy) {
             switch (resource) {
                 case ORE:
@@ -518,6 +497,79 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    public void toggleAuctionQuantityButton(ResourceType resource, boolean add, boolean enabled, Color color) {
+        if (add) {
+            switch (resource) {
+                case ORE:
+                    playerBuyOre.getLabel().setColor(color);
+                    playerBuyOre.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case ENERGY:
+                    playerBuyEnergy.getLabel().setColor(color);
+                    playerBuyEnergy.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case FOOD:
+                    playerBuyFood.getLabel().setColor(color);
+                    playerBuyFood.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+            }
+        } else {
+            switch (resource) {
+                case ORE:
+                    playerSellOre.getLabel().setColor(color);
+                    playerSellOre.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case ENERGY:
+                    playerSellEnergy.getLabel().setColor(color);
+                    playerSellEnergy.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case FOOD:
+                    playerSellFood.getLabel().setColor(color);
+                    playerSellFood.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+            }
+        }
+    }
+
+    public void toggleAuctionPriceButton(int figures, boolean add, boolean enabled, Color color) {
+        if (add) {
+            switch (figures) {
+                case 1:
+                    pricePlus1.getLabel().setColor(color);
+                    pricePlus1.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case 2:
+                    pricePlus10.getLabel().setColor(color);
+                    pricePlus10.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case 3:
+                    pricePlus100.getLabel().setColor(color);
+                    pricePlus100.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+            }
+        } else {
+            switch (figures) {
+                case 1:
+                    priceMinus1.getLabel().setColor(color);
+                    priceMinus1.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case 2:
+                    priceMinus10.getLabel().setColor(color);
+                    priceMinus10.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+                case 3:
+                    priceMinus100.getLabel().setColor(color);
+                    priceMinus100.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    break;
+            }
+        }
+    }
+
+    public void toggleAuctionConfirmationButton(boolean enabled, Color color) {
+        confirmSale.getLabel().setColor(color);
+        confirmSale.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+    }
+
     public void setMarketStockText(ResourceType resource, int quantity) {
         switch (resource) {
             case ORE:
@@ -535,9 +587,9 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
-    private void setTradePrice(int tradePrice) {
+    public void setTradePrice(int tradePrice) {
         this.tradePrice = tradePrice;
-        tradePriceLabel.setText(String.valueOf(tradePrice));
+        tradePriceLabel.setText(String.valueOf(tradePrice) + "/" + otherPlayer.get(playerListPosition).getResource(ResourceType.MONEY));
     }
 
     public void setTradeAmount(ResourceType resource, int value) {
@@ -568,5 +620,35 @@ public class MarketInterfaceTable extends Table {
 
         playerListPosition = 0;
         playerLabel.setText("Player " + otherPlayer.get(0).getPlayerNumber());
+
+        setTradePrice(0);
+    }
+
+    public int tradeAmount(ResourceType resource)
+    {
+        switch (resource) {
+            case ORE:
+                return oreTradeAmount;
+            case ENERGY:
+                return energyTradeAmount;
+            case FOOD:
+                return foodTradeAmount;
+            default:
+                return 0;
+        }
+    }
+
+    public void setAuctionConfirmationButtonFunction(ChangeListener event) {
+        confirmSale.addListener(event);
+    }
+
+    public int tradePrice() {
+        return tradePrice;
+    }
+
+    public Player selectedPlayer() { return otherPlayer.get(playerListPosition); }
+
+    public void setAuctionConfirmationButtonText(String text) {
+        confirmSale.setText(text);
     }
 }
