@@ -58,7 +58,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
         largeButtonStyle = new TextButton.TextButtonStyle();
         largeButtonStyle.font = headerFontRegular.font();
-        largeButtonStyle.fontColor = Color.BLACK;
+        largeButtonStyle.fontColor = Color.WHITE;
         largeButtonStyle.pressedOffsetX = 1;
         largeButtonStyle.pressedOffsetY = -1;
 
@@ -386,6 +386,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 engine.pauseGame();
             }
         });
+        drawer.toggleButton(pauseButton, true, Color.BLACK);
 
         //Button which can be clicked on to go to the mini game
         miniGameButton = new TextButton("Mini Game ($20)", largeButtonStyle);
@@ -400,6 +401,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 }
             }
         });
+        drawer.toggleButton(miniGameButton, true, Color.BLACK);
 
         //Button allowing players to upgrade roboticons' food-production capabilities
         foodUpgradeButton = new TextButton("PRICE", smallButtonStyle);
@@ -408,7 +410,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(2);
 
-                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.FOOD);
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
                 updateUpgradeOptions();
             }
         });
@@ -420,7 +422,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(0);
 
-                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.ORE);
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
                 updateUpgradeOptions();
             }
         });
@@ -434,7 +436,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 engine.upgradeRoboticon(1);
 
-                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.ENERGY);
+                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
                 updateUpgradeOptions();
             }
         });
