@@ -590,6 +590,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableRight.add(selectedTileInfoTable).padBottom(20);
 
         marketInterfaceTable = new MarketInterfaceTable();
+        marketInterfaceTable.refreshPlayers(engine.players(), engine.currentPlayer());
         marketInterfaceTable.align(Align.top);
         tableRight.row();
         tableRight.add(marketInterfaceTable).colspan(2).height(299);

@@ -4,7 +4,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.*;
+
+import com.badlogic.gdx.utils.Timer;
 import drtn.game.effects.PlayerEffect;
 import drtn.game.effects.PlayerEffectSource;
 import drtn.game.effects.PlotEffect;
@@ -533,10 +535,7 @@ public class GameEngine {
      * @param resource The type of resource which the roboticon will gather more of {0: ore | 1: energy | 2: food}
      */
     public void upgradeRoboticon(int resource) {
-        if (selectedTile().getRoboticonStored().getLevel()[resource] == 0) {
-            gameScreen.showEventMessage("The roboticon on this tile has malfunctioned!");
-        }
-         else if (selectedTile().getRoboticonStored().getLevel()[resource] < selectedTile().getRoboticonStored().getMaxLevel()) {
+         if (selectedTile().getRoboticonStored().getLevel()[resource] < selectedTile().getRoboticonStored().getMaxLevel()) {
             switch (resource) {
                 case (0):
                     currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getOreUpgradeCost());
@@ -618,7 +617,9 @@ public class GameEngine {
     	}
 
     	currentPlayerID = length - 1;
+
         market = new Market();
+
         this.chancellor = new Chancellor(tiles);
     }
 
@@ -1103,19 +1104,43 @@ public class GameEngine {
         gameScreen.marketInterfaceTable.setAuctionConfirmationButtonFunction(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+<<<<<<< HEAD
                 //TODO: AUCTION CODE HERE
+=======
+                Trade trade = new Trade(gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE),
+                        gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY),
+                        gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD),
+                        gameScreen.marketInterfaceTable.tradePrice(), currentPlayer(),
+                        gameScreen.marketInterfaceTable.selectedPlayer());
+
+                if (trade.execute()) {
+                    gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.GREEN);
+                    gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Trade successful!");
+                    gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
+
+                    Timer timer = new Timer();
+                    timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            resetAuctionInterface();
+                            gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Send Offer to This Player");
+                        }
+                    }, 3);
+                    timer.start();
+                }
+>>>>>>> origin/development
             }
         });
     }
 
     public void refreshAuctionPriceButtonAvailability() {
-        if (gameScreen.marketInterfaceTable.tradePrice() < currentPlayer().getResource(ResourceType.MONEY)) {
+        if (gameScreen.marketInterfaceTable.tradePrice() < gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, true, true, Color.GREEN);
 
-            if (gameScreen.marketInterfaceTable.tradePrice() + 10 <= currentPlayer().getResource(ResourceType.MONEY)) {
+            if (gameScreen.marketInterfaceTable.tradePrice() + 10 <= gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
                 gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, true, true, Color.GREEN);
 
-                if (gameScreen.marketInterfaceTable.tradePrice() + 100 <= currentPlayer().getResource(ResourceType.MONEY)) {
+                if (gameScreen.marketInterfaceTable.tradePrice() + 100 <= gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
                     gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, false, Color.RED);

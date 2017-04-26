@@ -67,7 +67,7 @@ public class Chancellor {
     public Chancellor(Tile[] tiles) {
         this.tiles = tiles;
         this.reward = 50;
-        this.movePeriod = 1090;
+        this.movePeriod = 1200;
         this.moveDelay = new Timer();
         this.location = new Integer[2];
         this.location[0] = 256; //x coordinate
