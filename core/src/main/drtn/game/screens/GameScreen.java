@@ -120,14 +120,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     private TextButton miniGameButton;
     /**
-     * Button which allows players to claim selected tiles
-     */
-    private TextButton claimTileButton;
-    /**
-     * Button which allows players to deploy owned roboticons onto selected tiles
-     */
-    private TextButton deployRoboticonButton;
-    /**
      * Button allowing players to upgrade roboticons' food-production capabilities
      */
     private TextButton foodUpgradeButton;
@@ -270,6 +262,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 tile.drawBorder();
             }
 
+            if (engine.chancellor().getisActive()){
+                updateChancellor();
+            }
+
             // Draw animation.
             renderAnimation(delta, IAnimation.AnimationType.Tile);
 
@@ -290,10 +286,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                         tableRight.getX() + engine.selectedTile().getRoboticonStored().getIcon().getX(),
                         engine.selectedTile().getRoboticonStored().getIcon().getY()
                 );
-            }
-
-            if (engine.chancellor().getisActive()){
-                updateChancellor();
             }
 
             if (eventMessageOverlayVisible) {
@@ -680,7 +672,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * This will allow them to upgrade its food, energy or ore production stats
      */
     private void constructUpgradeOverlay() {
-        upgradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 200, 3);
+        upgradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 300, 170, 3);
         //Establish the upgrade overlay
 
         upgradeOverlayVisible = false;
@@ -690,11 +682,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Visual guff
 
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("FOOD", smallFontRegular, Color.WHITE, foodUpgradeButton, 175, 0)).left();
+        upgradeOverlay.table().add(new LabelledElement("FOOD", smallFontRegular, Color.WHITE, foodUpgradeButton, 250, 0)).left();
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("ENERGY", smallFontRegular, Color.WHITE, energyUpgradeButton, 175, 0)).left();
+        upgradeOverlay.table().add(new LabelledElement("ENERGY", smallFontRegular, Color.WHITE, energyUpgradeButton, 250, 0)).left();
         upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("ORE", smallFontRegular, Color.WHITE, oreUpgradeButton, 175, 0)).left().padBottom(20);
+        upgradeOverlay.table().add(new LabelledElement("ORE", smallFontRegular, Color.WHITE, oreUpgradeButton, 250, 0)).left().padBottom(20);
         //Add buttons for upgrading roboticons to the overlay
         //Like in the market, each button's label is the monetary price of the upgrade that it performs
 
