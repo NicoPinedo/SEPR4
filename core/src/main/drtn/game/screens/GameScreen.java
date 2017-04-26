@@ -58,7 +58,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
         largeButtonStyle = new TextButton.TextButtonStyle();
         largeButtonStyle.font = headerFontRegular.font();
-        largeButtonStyle.fontColor = Color.WHITE;
+        largeButtonStyle.fontColor = Color.BLACK;
         largeButtonStyle.pressedOffsetX = 1;
         largeButtonStyle.pressedOffsetY = -1;
 
@@ -347,7 +347,17 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     public void drawRectangles() {
+        drawer.lineRectangle(Color.WHITE, 256, 0, 513, 512, 1);
+        //Border around map
+
         drawer.borderedRectangle(Color.WHITE, Color.GRAY, 45, 165, 165, 37, 1);
+        //"Next Phase" button background
+
+        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 30, 471, 195, 37, 1);
+        //Pause button background
+
+        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 794, 471, 205, 37, 1);
+        //Pause button background
     }
 
     /**
@@ -765,13 +775,13 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         engine.setMarketButtonFunctions();
         engine.setAuctionButtonFunctions();
 
-        marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, engine.market().getOreBuyPrice());
-        marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, engine.market().getOreSellPrice());
-        marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, engine.market().getEnergyBuyPrice());
-        marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, engine.market().getEnergySellPrice());
-        marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, engine.market().getFoodBuyPrice());
-        marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, engine.market().getFoodSellPrice());
-        marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, engine.market().getRoboticonBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + engine.market().getOreBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, "+" + engine.market().getOreSellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, "-" + engine.market().getEnergyBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, "+" + engine.market().getEnergySellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + engine.market().getFoodBuyPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + engine.market().getFoodSellPrice());
+        marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + engine.market().getRoboticonBuyPrice());
 
         marketInterfaceTable.setMarketStockText(ResourceType.ORE, engine.market().getOreStock());
         marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, engine.market().getEnergyStock());

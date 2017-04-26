@@ -694,8 +694,8 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (market.buy(ResourceType.ORE, 1, currentPlayer())) {
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, market.getOreBuyPrice());
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, market.getOreSellPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + market.getOreBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, "+" + market.getOreSellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ORE, market.getOreStock());
 
                     refreshMarketButtonAvailability();
@@ -712,8 +712,8 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (market.buy(ResourceType.ENERGY, 1, currentPlayer())) {
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, market.getEnergyBuyPrice());
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, market.getEnergySellPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, "-" + market.getEnergyBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, "+" + market.getEnergySellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, market.getEnergyStock());
 
                     refreshMarketButtonAvailability();
@@ -730,8 +730,8 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (market.buy(ResourceType.FOOD, 1, currentPlayer())) {
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, market.getFoodBuyPrice());
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, market.getFoodSellPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + market.getFoodBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + market.getFoodSellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.FOOD, market.getFoodStock());
 
                     refreshMarketButtonAvailability();
@@ -748,7 +748,7 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (market.buy(ResourceType.ROBOTICON, 1, currentPlayer())) {
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, market.getRoboticonBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + market.getRoboticonBuyPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ROBOTICON, market.getRoboticonStock());
 
                     if (currentPlayer().getResource(ResourceType.MONEY) < market.getRoboticonBuyPrice() || market.getRoboticonStock() == 0) {
@@ -765,8 +765,8 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (market.sell(ResourceType.ORE, 1, currentPlayer())) {
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, market.getOreBuyPrice());
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, market.getOreSellPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + market.getOreBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, "+" + market.getOreSellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ORE, market.getOreStock());
 
                     refreshMarketButtonAvailability();
@@ -783,8 +783,8 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (market.sell(ResourceType.ENERGY, 1, currentPlayer())) {
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, market.getEnergyBuyPrice());
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, market.getEnergySellPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, "-" + market.getEnergyBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, "+" + market.getEnergySellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, market.getEnergyStock());
 
                     refreshMarketButtonAvailability();
@@ -801,8 +801,8 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (market.sell(ResourceType.FOOD, 1, currentPlayer())) {
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, market.getFoodBuyPrice());
-                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, market.getFoodSellPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + market.getFoodBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + market.getFoodSellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.FOOD, market.getFoodStock());
 
                     refreshMarketButtonAvailability();
@@ -893,7 +893,7 @@ public class GameEngine {
     }
 
     public void openRoboticonMarketInterface() {
-        gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, market.getRoboticonBuyPrice());
+        gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + market.getRoboticonBuyPrice());
 
         if (currentPlayer().getResource(ResourceType.MONEY) >= market.getRoboticonBuyPrice()) {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, true, Color.GREEN);
