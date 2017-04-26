@@ -1099,6 +1099,13 @@ public class GameEngine {
                 refreshAuctionPriceButtonAvailability();
             }
         });
+
+        gameScreen.marketInterfaceTable.setAuctionConfirmationButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //TODO: AUCTION CODE HERE
+            }
+        });
     }
 
     public void refreshAuctionPriceButtonAvailability() {

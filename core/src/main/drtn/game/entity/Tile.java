@@ -46,9 +46,13 @@ public class Tile extends Button {
     /**
      * Defines the font of the text inside the tile's tooltip
      */
-    private final TTFont tooltipFont;
+    private final TTFont tooltipFontRegular;
     /**
-     * Holds game-state for the purpose of accessing the game's renderer
+     * Defines the font of the text inside the tile's tooltip
+     */
+    private final TTFont tooltipFontSmall;
+    /**
+     * Copy of tooltipFontRegular that stores lower-resolution glyphs
      */
     private Game game;
     /**
@@ -136,7 +140,8 @@ public class Tile extends Button {
         tooltipFillColor = Color.GRAY;
         tooltipLineColor = Color.BLACK;
 
-        tooltipFont = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 36);
+        tooltipFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 36);
+        tooltipFontSmall = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 20);
         //Visual parameters of the tile's tooltip
 
         tooltipActive = false;
@@ -379,13 +384,33 @@ public class Tile extends Button {
             if (Gdx.input.getY() < tooltipHeight) {
                 drawer.borderedRectangle(tooltipFillColor, tooltipLineColor, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace, Gdx.input.getY() + tooltipCursorSpace, tooltipWidth, tooltipHeight, 1);
                 //Draw the tooltip's main space onto the screen in the region to the top-left of the cursor
-                drawer.text("Tile " + this.ID, tooltipFont, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace);
+                drawer.text("Tile " + this.ID, tooltipFontRegular, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace);
                 //Draw an identification label in that space
+
+                if (isOwned()) {
+                    drawer.text("Ore: " + OreCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 40);
+                    drawer.text("Energy: " + EnergyCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 60);
+                    drawer.text("Food: " + FoodCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 80);
+                } else {
+                    drawer.text("Ore: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 40);
+                    drawer.text("Energy: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 60);
+                    drawer.text("Food: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 80);
+                }
             } else {
                 drawer.borderedRectangle(tooltipFillColor, tooltipLineColor, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace, tooltipWidth, tooltipHeight, 1);
-                drawer.text("Tile " + this.ID, tooltipFont, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace);
+                drawer.text("Tile " + this.ID, tooltipFontRegular, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace);
                 //Do the same thing, but in the region to the bottom-left of the cursor if the cursor is near the
                 //top of the game's window
+
+                if (isOwned()) {
+                    drawer.text("Ore: " + OreCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 40);
+                    drawer.text("Energy: " + EnergyCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 60);
+                    drawer.text("Food: " + FoodCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 80);
+                } else {
+                    drawer.text("Ore: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 40);
+                    drawer.text("Energy: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 60);
+                    drawer.text("Food: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 80);
+                }
             }
         }
     }
