@@ -268,7 +268,7 @@ public class MarketInterfaceTable extends Table {
         add(new Label("Roboticons", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(roboticonStockLabel).left();
 
-        debug();
+        //debug();
     }
 
     private void showAuctionInterface() {

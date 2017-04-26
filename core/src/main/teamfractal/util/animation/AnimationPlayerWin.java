@@ -27,7 +27,7 @@ public class AnimationPlayerWin implements IAnimation {
         AbstractAnimationScreen.Size size = screen.getScreenSize();
         batch.begin();
         font.setColor(1,1,1, 1);
-        font.draw(batch,  "PLAYER " + playerId + " WINS" +
+        font.draw(batch,  "PLAYER " + playerId + " WINS",
                 size.Width/2, size.Height/2 + font.getLineHeight()/2,
                 0, Align.center, false);
         batch.end();
