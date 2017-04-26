@@ -81,7 +81,7 @@ public class SelectedTileInfoTable extends Table {
 
     public void toggleClaimTileButton(boolean enabled) {
         if (enabled) {
-            claimTileButton.getLabel().setColor(Color.WHITE);
+            claimTileButton.getLabel().setColor(Color.BLACK);
         } else {
             claimTileButton.getLabel().setColor(Color.GRAY);
         }
@@ -91,7 +91,7 @@ public class SelectedTileInfoTable extends Table {
 
     public void toggleDeployRoboticonButton(boolean enabled) {
         if (enabled) {
-            deployRoboticonButton.getLabel().setColor(Color.WHITE);
+            deployRoboticonButton.getLabel().setColor(Color.BLACK);
         } else {
             deployRoboticonButton.getLabel().setColor(Color.GRAY);
         }

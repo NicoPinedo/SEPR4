@@ -389,37 +389,30 @@ public class Tile extends Button {
      */
     public void drawTooltip() {
         if (tooltipActive == true) {
-            if (Gdx.input.getY() < tooltipHeight) {
-                drawer.borderedRectangle(tooltipFillColor, tooltipLineColor, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace, Gdx.input.getY() + tooltipCursorSpace, tooltipWidth, tooltipHeight, 1);
-                //Draw the tooltip's main space onto the screen in the region to the top-left of the cursor
-                drawer.text("Tile " + this.ID, tooltipFontRegular, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace);
-                //Draw an identification label in that space
-
-                if (isOwned()) {
-                    drawer.text("Ore: " + OreCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 40);
-                    drawer.text("Energy: " + EnergyCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 60);
-                    drawer.text("Food: " + FoodCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 80);
-                } else {
-                    drawer.text("Ore: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 40);
-                    drawer.text("Energy: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 60);
-                    drawer.text("Food: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace + 80);
-                }
+            if (Gdx.input.getY() < tooltipHeight + 4) {
+                drawTooltipContents(Gdx.input.getY() + tooltipCursorSpace);
+            } else if (Gdx.input.getY() > Gdx.graphics.getHeight() - 70) {
+                drawTooltipContents(Gdx.graphics.getHeight() - tooltipHeight - tooltipCursorSpace - 70);
             } else {
-                drawer.borderedRectangle(tooltipFillColor, tooltipLineColor, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace, tooltipWidth, tooltipHeight, 1);
-                drawer.text("Tile " + this.ID, tooltipFontRegular, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace);
-                //Do the same thing, but in the region to the bottom-left of the cursor if the cursor is near the
-                //top of the game's window
-
-                if (isOwned()) {
-                    drawer.text("Ore: " + OreCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 40);
-                    drawer.text("Energy: " + EnergyCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 60);
-                    drawer.text("Food: " + FoodCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 80);
-                } else {
-                    drawer.text("Ore: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 40);
-                    drawer.text("Energy: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 60);
-                    drawer.text("Food: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace + 80);
-                }
+                drawTooltipContents(Gdx.input.getY() - tooltipHeight - tooltipCursorSpace);
             }
+        }
+    }
+
+    private void drawTooltipContents(int y) {
+        drawer.borderedRectangle(tooltipFillColor, tooltipLineColor, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace, y, tooltipWidth, tooltipHeight, 1);
+        //Draw the tooltip's main space onto the screen in the region to the top-left of the cursor
+        drawer.text("Tile " + this.ID, tooltipFontRegular, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace);
+        //Draw an identification label in that space
+
+        if (isOwned()) {
+            drawer.text("Ore: " + OreCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 40);
+            drawer.text("Energy: " + EnergyCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 60);
+            drawer.text("Food: " + FoodCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 80);
+        } else {
+            drawer.text("Ore: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 40);
+            drawer.text("Energy: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 60);
+            drawer.text("Food: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 80);
         }
     }
 

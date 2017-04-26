@@ -125,7 +125,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     /**
      * Button which can be clicked on to go to the mini game
      */
-
     private TextButton miniGameButton;
     /**
      * Button allowing players to upgrade roboticons' food-production capabilities
@@ -366,6 +365,19 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
         drawer.borderedRectangle(Color.WHITE, Color.GRAY, 794, 471, 205, 37, 1);
         //Pause button background
+
+        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 806, 133, 63, 21, 1);
+        //Claim button background
+
+        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 919, 133, 75, 21, 1);
+        //Deploy button background
+
+        drawer.borderedRectangle(Color.WHITE, Color.WHITE, 769, 167, 255, 1, 1);
+        //Line separating SelectedTileInfoTable from MarketInterfaceTable
+
+        drawer.lineRectangle(Color.WHITE, 804, 36, 64, 64, 1);
+        drawer.lineRectangle(Color.WHITE, 924, 36, 64, 64, 1);
+        //Borders around College and Roboticon icons in SelectedTileInfoTable
     }
 
     /**
