@@ -1104,9 +1104,6 @@ public class GameEngine {
         gameScreen.marketInterfaceTable.setAuctionConfirmationButtonFunction(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-<<<<<<< HEAD
-                //TODO: AUCTION CODE HERE
-=======
                 Trade trade = new Trade(gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE),
                         gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY),
                         gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD),
@@ -1128,7 +1125,6 @@ public class GameEngine {
                     }, 3);
                     timer.start();
                 }
->>>>>>> origin/development
             }
         });
     }
