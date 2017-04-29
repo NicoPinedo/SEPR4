@@ -1,28 +1,25 @@
-package main.drtn.game;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game;
 
 import com.badlogic.gdx.Game;
-import main.drtn.game.screens.SplashScreen;
+import drtn.game.screens.SplashScreen;
 
 
 public class Main extends Game {
-	/**
-	 * Core game-state that enables the game to interact with the renderer and switch between screens
-	 */
-	private Game game;
-
-	/**
-	 * Class constructor that instantiates a game-state for the very first time
-	 */
-	public Main() {
-		game = this;
-	}
 
 	/**
 	 * Automatically set the game-state to load the splash-screen as soon as the game window opens
 	 */
 	@Override
 	public void create () {
-		setScreen(new SplashScreen(game));
+		setScreen(new SplashScreen(this));
 		// setScreen(new MiniGameScreen());
 		//Load the splash screen as soon as the game opens
 	}

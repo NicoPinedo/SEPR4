@@ -1,9 +1,15 @@
-package main.drtn.game.entity;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
 
-import main.drtn.game.Trade;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.Trade;
-import main.drtn.game.enums.ResourceType;
+package drtn.game.entity;
+
+import drtn.game.Trade;
+import drtn.game.enums.ResourceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +43,7 @@ public class Player {
     /**
      * The college that the player is playing as.
      */
-    private main.drtn.game.entity.College College;
+    private drtn.game.entity.College College;
     /**
      * A list of the tiles that the player owns.
      */
@@ -94,6 +100,8 @@ public class Player {
                 return this.OreCount;
             case MONEY:
                 return this.money;
+            case ROBOTICON:
+                return this.inventoryRoboticons;
             default:
                 //Unable to reach this state as a ResourceType must be passed.
                 //TODO: Improve this - Kieran
@@ -121,6 +129,7 @@ public class Player {
                     break;
                 case MONEY:
                     this.money = newCount;
+                    break;
                 default:
             }
         }

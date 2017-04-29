@@ -1,4 +1,12 @@
-package main.drtn.game.entity;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game.entity;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -9,12 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.exceptions.InvalidResourceTypeException;
-import main.drtn.game.util.Drawer;
-import main.drtn.game.util.TTFont;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.exceptions.InvalidResourceTypeException;
+import drtn.game.enums.ResourceType;
+import drtn.game.exceptions.InvalidResourceTypeException;
+import drtn.game.util.Drawer;
+import drtn.game.util.TTFont;
 
 
 public class Tile extends Button {
@@ -48,9 +54,13 @@ public class Tile extends Button {
     /**
      * Defines the font of the text inside the tile's tooltip
      */
-    private final TTFont tooltipFont;
+    private final TTFont tooltipFontRegular;
     /**
-     * Holds game-state for the purpose of accessing the game's renderer
+     * Defines the font of the text inside the tile's tooltip
+     */
+    private final TTFont tooltipFontSmall;
+    /**
+     * Copy of tooltipFontRegular that stores lower-resolution glyphs
      */
     private Game game;
     /**
@@ -72,7 +82,7 @@ public class Tile extends Button {
     /**
      * A modifier influencing how much ore is produced.
      */
-    private boolean landmark;
+    private String surfaceGraphic;
     /**
      * The player that owns the tile, if it has one.
      */
@@ -114,10 +124,10 @@ public class Tile extends Button {
      * @param EnergyCount The multiplier for the production of energy
      * @param OreCount    The multiplier for the production of ore
      * @param FoodCount The multiplier for the production of food
-     * @param landmark    A boolean to signify if the tile is to be a landmark or not
+     * @param surfaceGraphic  A string to signify what the graphics of the tile are.
      * @param runnable    An object encapsulating a method that can be executed when the tile is clicked on
      */
-    public Tile(Game game, int ID, int EnergyCount, int OreCount, int FoodCount, boolean landmark, final Runnable runnable) {
+    public Tile(Game game, int ID, int EnergyCount, int OreCount, int FoodCount, String surfaceGraphic, final Runnable runnable) {
         super(new ButtonStyle());
         //Execute the constructor for the class' parent Button class using default visual parameters
 
@@ -130,15 +140,16 @@ public class Tile extends Button {
         this.ID = ID;
         //Import and save the tile's assigned getID
 
-        tooltipWidth = 76;
-        tooltipHeight = 33;
+        tooltipWidth = 122;
+        tooltipHeight = 35;
         tooltipCursorSpace = 3;
-        tooltipTextSpace = 3;
+        tooltipTextSpace = 5;
 
         tooltipFillColor = Color.GRAY;
         tooltipLineColor = Color.BLACK;
 
-        tooltipFont = new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 36);
+        tooltipFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 36);
+        tooltipFontSmall = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 20);
         //Visual parameters of the tile's tooltip
 
         tooltipActive = false;
@@ -153,8 +164,38 @@ public class Tile extends Button {
         this.OreCount = OreCount;
         //Import and save the tile's determined resource yields
 
-        this.landmark = landmark;
-        //Import and save the tile's landmark status
+        //Switch case determines tile graphic types, if not their graphic type is null
+        double newCount;
+        double multiplier = 1.5;
+        switch(ID){
+            case 2:
+            case 3:
+            case 9:
+            case 14:
+                surfaceGraphic = "Ore";
+                newCount = OreCount*multiplier;
+                this.OreCount = (int) newCount;
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 11:
+                surfaceGraphic = "Energy";
+                newCount = EnergyCount*multiplier;
+                this.EnergyCount = (int) newCount;
+                break;
+            case 4:
+            case 10:
+            case 12:
+            case 13:
+            case 15:
+                surfaceGraphic = "Food";
+                newCount = FoodCount*multiplier;
+                this.FoodCount = (int) newCount;
+                break;
+        }
+        this.surfaceGraphic = surfaceGraphic;
+        //Import and save the tile's graphic type
 
         this.runnable = runnable;
         this.owner = null;
@@ -221,7 +262,6 @@ public class Tile extends Button {
         if (roboticonStored != null && owner != null) {
 
             if ((owner.getResource(ResourceType.ENERGY) >= 3) && (owner.getResource(ResourceType.FOOD) >= 2)) {
-                //TODO: why are these negative? - Kieran
                 owner.varyResource(ResourceType.ENERGY, -3);
                 owner.varyResource(ResourceType.FOOD, -2);
 
@@ -349,17 +389,30 @@ public class Tile extends Button {
      */
     public void drawTooltip() {
         if (tooltipActive == true) {
-            if (Gdx.input.getY() < tooltipHeight) {
-                drawer.borderedRectangle(tooltipFillColor, tooltipLineColor, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace, Gdx.input.getY() + tooltipCursorSpace, tooltipWidth, tooltipHeight, 1);
-                //Draw the tooltip's main space onto the screen in the region to the top-left of the cursor
-                drawer.text("Tile " + this.ID, tooltipFont, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() + tooltipCursorSpace + tooltipTextSpace);
-                //Draw an identification label in that space
+            if (Gdx.input.getY() < tooltipHeight + 4) {
+                drawTooltipContents(Gdx.input.getY() + tooltipCursorSpace);
+            } else if (Gdx.input.getY() > Gdx.graphics.getHeight() - 70) {
+                drawTooltipContents(Gdx.graphics.getHeight() - tooltipHeight - tooltipCursorSpace - 70);
             } else {
-                drawer.borderedRectangle(tooltipFillColor, tooltipLineColor, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace, tooltipWidth, tooltipHeight, 1);
-                drawer.text("Tile " + this.ID, tooltipFont, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, Gdx.input.getY() - tooltipHeight - tooltipCursorSpace + tooltipTextSpace);
-                //Do the same thing, but in the region to the bottom-left of the cursor if the cursor is near the
-                //top of the game's window
+                drawTooltipContents(Gdx.input.getY() - tooltipHeight - tooltipCursorSpace);
             }
+        }
+    }
+
+    private void drawTooltipContents(int y) {
+        drawer.borderedRectangle(tooltipFillColor, tooltipLineColor, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace, y, tooltipWidth, tooltipHeight, 1);
+        //Draw the tooltip's main space onto the screen in the region to the top-left of the cursor
+        drawer.text("Tile " + this.ID, tooltipFontRegular, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace);
+        //Draw an identification label in that space
+
+        if (isOwned()) {
+            drawer.text("Ore: " + OreCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 40);
+            drawer.text("Energy: " + EnergyCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 60);
+            drawer.text("Food: " + FoodCount, tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 80);
+        } else {
+            drawer.text("Ore: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 40);
+            drawer.text("Energy: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 60);
+            drawer.text("Food: ???", tooltipFontSmall, Gdx.input.getX() - tooltipWidth - tooltipCursorSpace + tooltipTextSpace, y + tooltipTextSpace + 80);
         }
     }
 
@@ -380,7 +433,7 @@ public class Tile extends Button {
             float tileY = Gdx.graphics.getHeight() - getHeight() - getY();
 
             drawer.lineRectangle(tileBorderColor,
-                    (int)tileX, (int)tileY,
+                    (int)tileX + 1, (int)tileY + 1,
                     (int)(this.getWidth() - 1),
                     (int)(this.getHeight() - 1),
                     tileBorderThickness);

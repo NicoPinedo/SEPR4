@@ -1,10 +1,16 @@
-package main.drtn.game.entity;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game.entity;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import main.drtn.game.entity.Player;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
+import drtn.game.enums.ResourceType;
 
 import java.util.Random;
 import java.util.Timer;
@@ -55,6 +61,10 @@ public class Chancellor {
      * The texture encoding the Chancellor's visual representation
      */
     private Texture iconTexture;
+    /**
+     * Stores the current tile number of the Chancellor
+     */
+    private int tileNum;
 
     /**
      * Initialises chancellor for later use in the game
@@ -65,7 +75,7 @@ public class Chancellor {
     public Chancellor(Tile[] tiles) {
         this.tiles = tiles;
         this.reward = 50;
-        this.movePeriod = 490;
+        this.movePeriod = 1200;
         this.moveDelay = new Timer();
         this.location = new Integer[2];
         this.location[0] = 256; //x coordinate
@@ -77,9 +87,12 @@ public class Chancellor {
 
     public void move() {
         Random rand = new Random();
-        int tileNum;
-        tileNum = rand.nextInt(15)+1; //Chooses random tile value (1-15)
-        currentTile = tiles[tileNum];
+        int newTileNum = tileNum;
+        while (newTileNum == tileNum){
+            newTileNum = rand.nextInt(15)+1; //Chooses random tile value (1-15)
+        }
+        currentTile = tiles[newTileNum];
+        tileNum = newTileNum;
 
         int tileWidth;
         tileWidth = 128;
@@ -199,4 +212,8 @@ public class Chancellor {
     public Tile getTile() {return currentTile;}
 
     public boolean getisActive() {return isActive;}
+
+    public int getReward(){
+        return reward;
+    }
 }

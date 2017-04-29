@@ -1,10 +1,17 @@
-package main.drtn.game;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game;
 
 import com.badlogic.gdx.Game;
-import main.drtn.game.Main;
-import main.drtn.game.entity.Player;
-import main.drtn.game.entity.Roboticon;
-import main.drtn.game.entity.Tile;
+import drtn.game.entity.Player;
+import drtn.game.entity.Roboticon;
+import drtn.game.entity.Tile;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -22,7 +29,7 @@ public class RoboticonTest extends TesterFile {
 
     private Game game = new Main();
     private Player TestPlayer = new Player(0);
-    private Tile TestTile = new Tile(game, 0,0, 0, 0, true, new Runnable() {
+    private Tile TestTile = new Tile(game, 0,0, 0, 0, null, new Runnable() {
         @Override
         public void run() {
 

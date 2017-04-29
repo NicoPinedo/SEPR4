@@ -1,4 +1,12 @@
-package main.drtn.game.util;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game.util;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,9 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import main.drtn.game.entity.Roboticon;
-import main.drtn.game.entity.Chancellor;
-
+import drtn.game.entity.Roboticon;
 
 public class Drawer {
     private static SpriteBatch batch;
@@ -39,7 +45,7 @@ public class Drawer {
     //new method for assessment 3
     static {
         roboticonSprite = new Sprite(new Texture("roboticon/roboticon.png"));
-        chancellorSprite = new Sprite(new Texture("image/chancellor.png")); //TODO Get chancellor image path
+        chancellorSprite = new Sprite(new Texture("image/chancellor.png"));
         defaultTTFont = new TTFont(Gdx.files.internal("font/earthorbiter.ttf"),
                 12, 1, Color.BLACK, false);
         defaultFont = defaultTTFont.font();

@@ -1,9 +1,17 @@
-package main.teamfractal.util.screens;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package teamfractal.util.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import main.teamfractal.util.animation.IAnimation;
+import teamfractal.util.animation.IAnimation;
 
 import java.util.ArrayList;
 import java.util.Iterator;

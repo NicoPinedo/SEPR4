@@ -1,37 +1,30 @@
-package main.drtn.game;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
-import main.drtn.game.effects.PlayerEffectSource;
-import main.drtn.game.effects.PlotEffect;
-import main.drtn.game.entity.*;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.exceptions.InvalidResourceTypeException;
-import main.drtn.game.screens.GameScreen;
-import main.drtn.game.screens.MiniGameScreen;
-import main.drtn.game.util.Drawer;
-import main.drtn.game.util.GameTimer;
-import main.drtn.game.util.TTFont;
-import main.drtn.game.effects.PlayerEffect;
-import main.drtn.game.effects.PlotEffectSource;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.screens.GameScreen;
-import main.drtn.game.effects.PlayerEffect;
-import main.drtn.game.effects.PlayerEffectSource;
-import main.drtn.game.effects.PlotEffect;
-import main.drtn.game.effects.PlotEffectSource;
-import main.drtn.game.entity.*;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.exceptions.InvalidResourceTypeException;
-import main.drtn.game.screens.GameScreen;
-import main.drtn.game.screens.MiniGameScreen;
-import main.drtn.game.util.Drawer;
-import main.drtn.game.util.GameTimer;
-import main.drtn.game.util.TTFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.*;
+
+import com.badlogic.gdx.utils.Timer;
+import drtn.game.effects.PlayerEffect;
+import drtn.game.effects.PlayerEffectSource;
+import drtn.game.effects.PlotEffect;
+import drtn.game.effects.PlotEffectSource;
+import drtn.game.entity.*;
+import drtn.game.enums.ResourceType;
+import drtn.game.exceptions.InvalidResourceTypeException;
+import drtn.game.screens.GameScreen;
+import drtn.game.screens.MiniGameScreen;
+import drtn.game.util.Drawer;
 
 import java.util.*;
 
@@ -69,11 +62,6 @@ public class GameEngine {
      * Defines whether or not a tile has been acquired in the current phase of the game
      */
     private boolean tileAcquired;
-    /**
-     * Timer used to dictate the pace and flow of the game
-     * This has a visual interface which will be displayed in the top-left corner of the game-screen
-     */
-    private GameTimer timer;
     /**
      * Object providing QOL drawing functions to simplify visual construction and rendering tasks
      */
@@ -140,21 +128,6 @@ public class GameEngine {
         drawer = new Drawer(this.game);
         //Import QOL drawing function
 
-
-        //Set up objects to hold player-data
-        //Start the game such that player 1 makes the first move
-
-        //Start the game in the first phase (of 5, which recur until all tiles are claimed)
-
-        timer = new GameTimer(0, new TTFont(Gdx.files.internal("font/testfontbignoodle.ttf"), 120), Color.WHITE, new Runnable() {
-            @Override
-            public void run() {
-                nextPhase(); // Timeout event
-            }
-        });
-        //Set up game timer
-        //Game timer automatically ends the current turn when it reaches 0
-
         tiles = new Tile[16];
         //Initialise data for all 16 tiles on the screen
         //This instantiation does NOT automatically place the tiles on the game's main interface
@@ -163,7 +136,7 @@ public class GameEngine {
             final int fi = i;
             final GameScreen gs = gameScreen;
 
-            tiles[i] = new Tile(this.game, i + 1, 5, 5, 5, false, new Runnable() {
+            tiles[i] = new Tile(this.game, i + 1, 5, 5, 5, null, new Runnable() {
                 @Override
                 public void run() {
                     gs.selectTile(tiles[fi], true);
@@ -230,44 +203,55 @@ public class GameEngine {
 
     // Changed in Assessment 3: Refactored nextPhase() from giant if-else statement to switch statement.
     public void nextPhase() {
-        timer.stop();
+        gameScreen.phaseInfoTable.timer.stop();
         nextPlayer();
+        resetAuctionInterface();
         System.out.println("Player " + currentPlayerID + " | Phase " + phase);
-        
-        market.refreshButtonAvailability();
+
         switch (phase) {
             case 1:
                 tileAcquired = false;
                 drawer.toggleButton(gameScreen.endTurnButton(), false, Color.GRAY);
                 market.produceRoboticon();
+
+                closeMarketInterface();
                 break;
 
             case 2:
-                timer.setTime(0, 30);
-                timer.start();
-                drawer.toggleButton(gameScreen.endTurnButton(), true, Color.WHITE);
+                gameScreen.phaseInfoTable.timer.setTime(0, 30);
+                gameScreen.phaseInfoTable.timer.start();
+
+                openRoboticonMarketInterface();
+
+                drawer.toggleButton(gameScreen.endTurnButton(), true, Color.BLACK);
                 break;
 
             case 3:
-            	timer.setTime(0, 45);
-                timer.start();
+                gameScreen.phaseInfoTable.timer.setTime(0, 45);
+                gameScreen.phaseInfoTable.timer.start();
+
+                closeMarketInterface();
+            
                 this.beginChancellorMode();
                 break;
 
             case 4:
                 this.stopChancellorMode();
-                timer.setTime(0, 5);
-                timer.start();
+            
+                gameScreen.phaseInfoTable.timer.setTime(0, 5);
+                gameScreen.phaseInfoTable.timer.start();
+
                 produceResource();
-		clearEffects();
+            
+		            clearEffects();
                 setEffects();
                 System.out.println("test");
-                gameScreen.updateInventoryLabels();
-                market.refreshPlayers();
-                market.refreshAuction();	
+                gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
                 break;
 
             case 5:
+                openResourceMarketInterface();
+            
                 if(checkGameEnd()){
                     System.out.println("Someone win");
                     gameScreen.showPlayerWin(getWinner());
@@ -277,10 +261,7 @@ public class GameEngine {
 
 
 
-        gameScreen.updatePhaseLabel();
-        market.refreshPlayers();
-        market.setPlayerListPosition(0);
-        market.refreshAuction();
+        gameScreen.phaseInfoTable.updateLabels(phase);
 
         //If the upgrade overlay is open, close it when the next phase begins
         if (gameScreen.getUpgradeOverlayVisible()) {
@@ -294,12 +275,6 @@ public class GameEngine {
             testTrade();
         }
     }
-
-
-
-
-
-
 
     private void produceResource() {
         Player player = currentPlayer();
@@ -317,10 +292,6 @@ public class GameEngine {
         if (currentPlayerID >= players.length) {
             currentPlayerID = 0;
 
-           
-                
-            
-
             phase ++;
             if (phase >= 6) {
                 phase = 1;
@@ -331,13 +302,10 @@ public class GameEngine {
 
         // Find and draw the icon representing the "new" player's associated college
         if (!isCurrentlyAiPlayer()){
-	        gameScreen.currentPlayerIcon().setDrawable(new TextureRegionDrawable(new TextureRegion(players[currentPlayerID].getCollege().getLogoTexture())));
-	        gameScreen.currentPlayerIcon().setSize(64, 64);
-	
 	        // Display the "new" player's inventory on-screen
-	        gameScreen.updateInventoryLabels();
-	
-	        gameScreen.updatePlayerName();
+            gameScreen.playerInfoTable.showPlayerInfo(currentPlayer());
+
+            gameScreen.marketInterfaceTable.refreshPlayers(players, currentPlayer());
         }
     }
 
@@ -346,7 +314,7 @@ public class GameEngine {
      * Specifically pauses the game's timer and marks the engine's internal play-state to [State.PAUSE]
      */
     public void pauseGame() {
-        timer.stop();
+        gameScreen.phaseInfoTable.timer.stop();
         //Stop the game's timer
 
         gameScreen.openPauseStage();
@@ -370,9 +338,9 @@ public class GameEngine {
         gameScreen.openGameStage();
         //Show the main in-game interface again and prepare it to accept inputs
 
-        if (timer.minutes() > 0 || timer.seconds() > 0) {
-            timer.increment();
-            timer.start();
+        if (gameScreen.phaseInfoTable.timer.minutes() > 0 || gameScreen.phaseInfoTable.timer.seconds() > 0) {
+            gameScreen.phaseInfoTable.timer.increment();
+            gameScreen.phaseInfoTable.timer.start();
         }
         //Restart the game's timer from where it left off
         //The timer needs to be incremented by 1 second before being restarted because, for a reason that I can't
@@ -453,7 +421,7 @@ public class GameEngine {
                     selectedTile.assignRoboticon(Roboticon);
                     roboticonIDCounter += 1;
                     players[currentPlayerID].decreaseRoboticonInventory();
-                    gameScreen.updateInventoryLabels();
+                    gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
                 }
             }
         }
@@ -516,15 +484,6 @@ public class GameEngine {
     }
 
     /**
-     * Returns the GameTimer declared and managed by the engine
-     *
-     * @return GameTimer The game's internal timer
-     */
-    public GameTimer timer() {
-        return timer;
-    }
-
-    /**
      * Collectively returns every Tile managed by the engine in array
      *
      * @return Tile[] An array of all Tile objects (encapsulating tile-data) managed by the engine
@@ -575,7 +534,7 @@ public class GameEngine {
     public void updateCurrentPlayer(Player currentPlayer) {
         players[currentPlayerID] = currentPlayer;
 
-        gameScreen.updateInventoryLabels();
+        gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
         //Refresh the on-screen inventory labels to reflect the new object's possessions
     }
 
@@ -584,10 +543,7 @@ public class GameEngine {
      * @param resource The type of resource which the roboticon will gather more of {0: ore | 1: energy | 2: food}
      */
     public void upgradeRoboticon(int resource) {
-        if (selectedTile().getRoboticonStored().getLevel()[resource] == 0) {
-            gameScreen.showEventMessage("The roboticon on this tile has malfunctioned!");
-        }
-         else if (selectedTile().getRoboticonStored().getLevel()[resource] < selectedTile().getRoboticonStored().getMaxLevel()) {
+         if (selectedTile().getRoboticonStored().getLevel()[resource] < selectedTile().getRoboticonStored().getMaxLevel()) {
             switch (resource) {
                 case (0):
                     currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getOreUpgradeCost());
@@ -667,8 +623,11 @@ public class GameEngine {
     		college.assignPlayer(player);
     		player.assignCollege(college);
     	}
+
     	currentPlayerID = length - 1;
-        market = new Market(game, this);
+
+        market = new Market();
+
         this.chancellor = new Chancellor(tiles);
     }
 
@@ -738,10 +697,502 @@ public class GameEngine {
     }
 
 
+    public void setMarketButtonFunctions() {
+        gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.ORE, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (market.buy(ResourceType.ORE, 1, currentPlayer())) {
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + market.getOreBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, "+" + market.getOreSellPrice());
+                    gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ORE, market.getOreStock());
 
+                    refreshMarketButtonAvailability();
 
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ORE);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
 
+                    resetAuctionInterface();
+                }
+            }
+        });
 
+        gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.ENERGY, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (market.buy(ResourceType.ENERGY, 1, currentPlayer())) {
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, "-" + market.getEnergyBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, "+" + market.getEnergySellPrice());
+                    gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, market.getEnergyStock());
+
+                    refreshMarketButtonAvailability();
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ENERGY);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
+                }
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.FOOD, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (market.buy(ResourceType.FOOD, 1, currentPlayer())) {
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + market.getFoodBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + market.getFoodSellPrice());
+                    gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.FOOD, market.getFoodStock());
+
+                    refreshMarketButtonAvailability();
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.FOOD);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
+                }
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.ROBOTICON, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (market.buy(ResourceType.ROBOTICON, 1, currentPlayer())) {
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + market.getRoboticonBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ROBOTICON, market.getRoboticonStock());
+
+                    if (currentPlayer().getResource(ResourceType.MONEY) < market.getRoboticonBuyPrice() || market.getRoboticonStock() == 0) {
+                        gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, false, Color.RED);
+                    }
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ROBOTICON);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                }
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.ORE, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (market.sell(ResourceType.ORE, 1, currentPlayer())) {
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + market.getOreBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, "+" + market.getOreSellPrice());
+                    gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ORE, market.getOreStock());
+
+                    refreshMarketButtonAvailability();
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ORE);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
+                }
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.ENERGY, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (market.sell(ResourceType.ENERGY, 1, currentPlayer())) {
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, "-" + market.getEnergyBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, "+" + market.getEnergySellPrice());
+                    gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, market.getEnergyStock());
+
+                    refreshMarketButtonAvailability();
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ENERGY);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
+                }
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.FOOD, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (market.sell(ResourceType.FOOD, 1, currentPlayer())) {
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + market.getFoodBuyPrice());
+                    gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + market.getFoodSellPrice());
+                    gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.FOOD, market.getFoodStock());
+
+                    refreshMarketButtonAvailability();
+
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.FOOD);
+                    gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                    resetAuctionInterface();
+                }
+            }
+        });
+    }
+
+    public void refreshMarketButtonAvailability() {
+        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getOreBuyPrice() && market.getOreStock() > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getEnergyBuyPrice() && market.getEnergyStock() > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getFoodBuyPrice() && market.getFoodStock() > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.ORE) > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.ENERGY) > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.FOOD) > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, false, Color.RED);
+        }
+    }
+
+    public void openResourceMarketInterface() {
+        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getOreBuyPrice()) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getEnergyBuyPrice()) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getFoodBuyPrice()) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.ORE) > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.ENERGY) > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, false, Color.RED);
+        }
+
+        if (currentPlayer().getResource(ResourceType.FOOD) > 0) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, false, Color.RED);
+        }
+    }
+
+    public void openRoboticonMarketInterface() {
+        gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + market.getRoboticonBuyPrice());
+
+        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getRoboticonBuyPrice()) {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, false, Color.RED);
+        }
+    }
+
+    public void closeMarketInterface() {
+        gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, false, Color.GRAY);
+        gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, false, Color.GRAY);
+        gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, false, Color.GRAY);
+        gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, false, Color.GRAY);
+        gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, false, Color.GRAY);
+        gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, false, Color.GRAY);
+        gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, false, Color.GRAY);
+    }
+
+    public void resetAuctionInterface() {
+        gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, 0);
+        gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, 0);
+        gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.FOOD, 0);
+        gameScreen.marketInterfaceTable.setTradePrice(0);
+
+        if (currentPlayer().getResource(ResourceType.ORE) > 0) {
+            gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, false, Color.RED);
+        }
+        gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, false, Color.RED);
+
+        if (currentPlayer().getResource(ResourceType.ENERGY) > 0) {
+            gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, false, Color.RED);
+        }
+        gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, false, Color.RED);
+
+        if (currentPlayer().getResource(ResourceType.FOOD) > 0) {
+            gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, false, Color.RED);
+        }
+        gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, false, Color.RED);
+
+        refreshAuctionPriceButtonAvailability();
+
+        gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
+    }
+
+    public void setAuctionButtonFunctions() {
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ORE, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) + 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) < currentPlayer().getResource(ResourceType.ORE)) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ENERGY, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) + 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) < currentPlayer().getResource(ResourceType.ENERGY)) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.FOOD, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.FOOD, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) + 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) < currentPlayer().getResource(ResourceType.FOOD)) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ORE, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) - 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) > 0) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ENERGY, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) - 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) > 0) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.FOOD, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.FOOD, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) - 1);
+
+                if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) > 0) {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, false, Color.RED);
+                }
+
+                gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
+
+                refreshAuctionConfirmationButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(1, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 1);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(2, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 10);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(3, true, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 100);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(1, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 1);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(2, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 10);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionPriceButtonFunction(3, false, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 100);
+
+                refreshAuctionPriceButtonAvailability();
+            }
+        });
+
+        gameScreen.marketInterfaceTable.setAuctionConfirmationButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Trade trade = new Trade(gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE),
+                        gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY),
+                        gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD),
+                        gameScreen.marketInterfaceTable.tradePrice(), currentPlayer(),
+                        gameScreen.marketInterfaceTable.selectedPlayer());
+
+                if (trade.execute()) {
+                    gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.GREEN);
+                    gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Trade successful!");
+                    gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
+
+                    Timer timer = new Timer();
+                    timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            resetAuctionInterface();
+                            gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Send Offer to This Player");
+                        }
+                    }, 3);
+                    timer.start();
+                }
+            }
+        });
+    }
+
+    public void refreshAuctionPriceButtonAvailability() {
+        if (gameScreen.marketInterfaceTable.tradePrice() < gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, true, true, Color.GREEN);
+
+            if (gameScreen.marketInterfaceTable.tradePrice() + 10 <= gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, true, true, Color.GREEN);
+
+                if (gameScreen.marketInterfaceTable.tradePrice() + 100 <= gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
+                    gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, false, Color.RED);
+                }
+            } else {
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, true, false, Color.RED);
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, false, Color.RED);
+            }
+        } else {
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, true, false, Color.RED);
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, true, false, Color.RED);
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, false, Color.RED);
+        }
+
+        if (gameScreen.marketInterfaceTable.tradePrice() > 0) {
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, false, true, Color.GREEN);
+
+            if (gameScreen.marketInterfaceTable.tradePrice() - 10 >= 0) {
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, false, true, Color.GREEN);
+
+                if (gameScreen.marketInterfaceTable.tradePrice() - 100 >= 0) {
+                    gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, true, Color.GREEN);
+                } else {
+                    gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
+                }
+            } else {
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, false, false, Color.RED);
+                gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
+            }
+        } else {
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, false, false, Color.RED);
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, false, false, Color.RED);
+            gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
+        }
+
+        refreshAuctionConfirmationButtonAvailability();
+    }
+
+    public void refreshAuctionConfirmationButtonAvailability() {
+        if ((gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) > 0
+                || gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) > 0
+                || gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) > 0)
+                && gameScreen.marketInterfaceTable.tradePrice() > 0) {
+            gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(true, Color.GREEN);
+        } else {
+            gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
+        }
+    }
 
     /**
      * Encodes possible play-states

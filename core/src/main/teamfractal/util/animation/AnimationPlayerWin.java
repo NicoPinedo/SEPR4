@@ -1,10 +1,18 @@
-package main.teamfractal.util.animation;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package teamfractal.util.animation;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Align;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
-import main.teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
+import teamfractal.util.screens.AbstractAnimationScreen;
 
 public class AnimationPlayerWin implements IAnimation {
     private final int playerId;
@@ -27,7 +35,7 @@ public class AnimationPlayerWin implements IAnimation {
         AbstractAnimationScreen.Size size = screen.getScreenSize();
         batch.begin();
         font.setColor(1,1,1, 1);
-        font.draw(batch,  "PLAYER " + playerId + " WINS",
+        font.draw(batch,  "PLAYER " + playerId + " WINS\nCongratulations! You're now the University of York's Vice-Chancellor!",
                 size.Width/2, size.Height/2 + font.getLineHeight()/2,
                 0, Align.center, false);
         batch.end();

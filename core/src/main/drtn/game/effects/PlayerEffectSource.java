@@ -1,21 +1,15 @@
 /**
  * @author DRTN
  * Team Website with download:
- * https://misterseph.github.io/DuckRelatedFractalProject/
+ * https://nicopinedo.github.io/SEPR4/
  *
- * This Class contains either modifications or is entirely new in Assessment 3
- *
- * If you are in any doubt a complete changelog can be found here:
- * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
- *
- * And a more concise report can be found in our Change3 document.
+ * This Class contains either modifications or is entirely new in Assessment 4
  **/
 
-package main.drtn.game.effects;
+package drtn.game.effects;
 
 import com.badlogic.gdx.utils.Array;
-import main.drtn.game.GameEngine;
-import main.drtn.game.GameEngine;
+import drtn.game.GameEngine;
 
 
 public class PlayerEffectSource extends Array<PlayerEffect> {

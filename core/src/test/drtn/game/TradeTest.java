@@ -1,7 +1,15 @@
-package main.drtn.game;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
 
-import main.drtn.game.entity.Player;
-import main.drtn.game.enums.ResourceType;
+package drtn.game;
+
+import drtn.game.entity.Player;
+import drtn.game.enums.ResourceType;
 import org.junit.Before;
 import org.junit.Test;
 

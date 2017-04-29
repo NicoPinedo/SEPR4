@@ -1,6 +1,14 @@
-package main.drtn.game;
-import main.drtn.game.entity.AiPlayer;
-import main.drtn.game.entity.Player;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game;
+import drtn.game.entity.AiPlayer;
+import drtn.game.entity.Player;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,8 +1,16 @@
-package main.drtn.game;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
 
-import main.drtn.game.entity.Player;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.enums.ResourceType;
+package drtn.game;
+
+import drtn.game.entity.Player;
+import drtn.game.enums.ResourceType;
+import drtn.game.enums.ResourceType;
 
 /**
  * Class to facilitate trades for assessment 3
@@ -59,9 +67,9 @@ public class Trade {
 	 * @return true if trade is successful, false if it fails
 	 */
 	public boolean execute(){
-		if (sender.getResource(ResourceType.ENERGY) > energyAmount && sender.getResource(ResourceType.FOOD) > foodAmount
-				&& sender.getResource(ResourceType.ORE) > oreAmount) {
-			if (targetPlayer.getResource(ResourceType.MONEY) > getPrice()) {
+		if (sender.getResource(ResourceType.ENERGY) >= energyAmount && sender.getResource(ResourceType.FOOD) >= foodAmount
+				&& sender.getResource(ResourceType.ORE) >= oreAmount) {
+			if (targetPlayer.getResource(ResourceType.MONEY) >= getPrice()) {
 				targetPlayer.varyResource(ResourceType.ORE, this.oreAmount);
 				targetPlayer.varyResource(ResourceType.ENERGY, this.energyAmount);
 				targetPlayer.varyResource(ResourceType.FOOD, this.foodAmount);

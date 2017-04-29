@@ -1,4 +1,12 @@
-package main.drtn.game.screens;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -14,13 +22,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import main.drtn.game.GameEngine;
-import main.drtn.game.util.Drawer;
-import main.drtn.game.util.TTFont;
-import main.drtn.game.GameEngine;
-import main.drtn.game.GameEngine;
-import main.drtn.game.util.Drawer;
-import main.drtn.game.util.TTFont;
+import drtn.game.GameEngine;
+import drtn.game.util.Drawer;
+import drtn.game.util.TTFont;
+import drtn.game.GameEngine;
+import drtn.game.GameEngine;
+import drtn.game.util.Drawer;
+import drtn.game.util.TTFont;
 
 /**
  * New Class for Assessment 3, allows user to slect the number of players
@@ -162,8 +170,6 @@ public class PlayerSelectScreen implements Screen {
         stage = new Stage();
         table = new Table();
         //Initialise stage and button-table
-        
-        
 
         titleFont = new TTFont(Gdx.files.internal("font/earthorbiterxtrabold.ttf"), 120, 2, Color.BLACK, false);
         menuFont = new TTFont(Gdx.files.internal("font/enterthegrid.ttf"), 36, 2, Color.BLACK, false);
@@ -342,6 +348,4 @@ public class PlayerSelectScreen implements Screen {
 		playerAmountLabel.setText("" + playerAmount);
 		AIPlayerAmountLabel.setText("" + AIPlayerAmount);
 	}
-	
-
 }

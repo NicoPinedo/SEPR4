@@ -1,18 +1,20 @@
-package main.drtn.game;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game;
 
 import com.badlogic.gdx.Game;
-import main.drtn.game.Main;
-import main.drtn.game.entity.Player;
-import main.drtn.game.entity.Roboticon;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
-
 import com.badlogic.gdx.graphics.Color;
-import main.drtn.game.entity.Player;
-import main.drtn.game.entity.Roboticon;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.exceptions.InvalidResourceTypeException;
+import drtn.game.entity.Player;
+import drtn.game.entity.Roboticon;
+import drtn.game.entity.Tile;
+import drtn.game.enums.ResourceType;
+import drtn.game.exceptions.InvalidResourceTypeException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -28,7 +30,7 @@ import static org.junit.Assert.*;
 public class TileTest extends TesterFile {
     private Game game = new Main();
     private Player TestPlayer = new Player(1);
-    private Tile TestTile = new Tile(game, 0, 5, 5, 5, true, new Runnable() {
+    private Tile TestTile = new Tile(game, 0, 5, 5, 5, null, new Runnable() {
         @Override
         public void run() {
 

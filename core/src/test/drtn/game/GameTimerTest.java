@@ -1,9 +1,17 @@
-package main.drtn.game;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import main.drtn.game.util.GameTimer;
-import main.drtn.game.util.TTFont;
+import drtn.game.util.GameTimer;
+import drtn.game.util.TTFont;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

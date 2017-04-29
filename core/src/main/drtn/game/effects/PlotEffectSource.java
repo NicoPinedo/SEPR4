@@ -1,23 +1,18 @@
 /**
  * @author DRTN
  * Team Website with download:
- * https://misterseph.github.io/DuckRelatedFractalProject/
+ * https://nicopinedo.github.io/SEPR4/
  *
- * This Class contains either modifications or is entirely new in Assessment 3
- *
- * If you are in any doubt a complete changelog can be found here:
- * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
- *
- * And a more concise report can be found in our Change3 document.
+ * This Class contains either modifications or is entirely new in Assessment 4
  **/
 
-package main.drtn.game.effects;
+package drtn.game.effects;
 
 import com.badlogic.gdx.utils.Array;
-import main.drtn.game.GameEngine;
-import main.drtn.game.entity.Tile;
-import main.drtn.game.enums.ResourceType;
-import main.drtn.game.exceptions.InvalidResourceTypeException;
+import drtn.game.GameEngine;
+import drtn.game.entity.Tile;
+import drtn.game.enums.ResourceType;
+import drtn.game.exceptions.InvalidResourceTypeException;
 
 /**
  * Created by Joseph on 13/02/2017.

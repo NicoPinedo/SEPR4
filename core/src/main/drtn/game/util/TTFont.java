@@ -1,11 +1,21 @@
-package main.drtn.game.util;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
+package drtn.game.util;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
-
+/**
+ * @author Duck Related Team Name in Big Massive Letters
+ */
 public class TTFont {
 
     /**
@@ -201,7 +211,7 @@ public class TTFont {
      * Returns the (consistent) size of the internal BitmapFont's characters
      *
      *
-     * @return int The size of the font's characters
+     * @return Integer The size of the font's characters
      */
     public int size() {
         return TTFStyle.size;
