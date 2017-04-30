@@ -82,6 +82,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     public UpgradeOverlay upgradeOverlay;
 
+    private TradeOverlay tradeOverlay;
+
     private boolean shown = false;
     private IAnimation lastTileClickedFlash;
     private IAnimation playerWin;
@@ -127,7 +129,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      */
     private TextButton miniGameButton;
 
-    private Overlay tradeOverlay;
     private Overlay eventMessageOverlay;
     private Label eventMessage;
     private TextButton closeEventMessageButton;
@@ -140,16 +141,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private Batch batch;
     private int height;
     private int width;
-    private Label currentPlayerLabel;
-    private boolean drawRoboticonIcon;
     private Tile selectedTile;
     private Table tableRight;
     private boolean eventMessageOverlayVisible;
-	private TextButton confirmTradeButton;
-	private TextButton cancelTradeButton;
-	private Overlay tooExpensiveOverlay;
-	private boolean tooExpensiveOverlayVisible;
-	private TextButton closePriceOverlayButton;
     private boolean activeTrade;
     private Trade currentTrade;
     /**
@@ -213,7 +207,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         constructUpgradeOverlay();
         //Construct roboticon upgrade overlay (and, again, hide it for the moment)
 
-        constructTooExpensiveOverlay();
         constructEventMessageOverlay();
 
         //drawer.debug(gameStage);
@@ -269,13 +262,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 upgradeOverlay.act(delta);
                 upgradeOverlay.draw();
             }
-
-            if (drawRoboticonIcon) {
-                drawer.drawRoboticon(selectedTile.getRoboticonStored(),
-                        tableRight.getX() + engine.selectedTile().getRoboticonStored().getIcon().getX(),
-                        engine.selectedTile().getRoboticonStored().getIcon().getY()
-                );
-            }
+            //Draw the roboticon upgrade overlay to the screen if the "upgrade" button has been selected
 
             if (eventMessageOverlayVisible) {
                 eventMessageOverlay.act(delta);
@@ -286,12 +273,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 tradeOverlay.act(delta);
                 tradeOverlay.draw();
             }
-
-            if (tooExpensiveOverlayVisible) {
-            	tooExpensiveOverlay.act(delta);
-            	tooExpensiveOverlay.draw();
-            }
-            //Draw the roboticon upgrade overlay to the screen if the "upgrade" button has been selected
         } else if (engine.state() == GameEngine.State.PAUSE) {
             drawer.filledRectangle(Color.WHITE, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             //If the game is paused, render a white background...
@@ -409,39 +390,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
         drawer.toggleButton(miniGameButton, true, Color.BLACK);
-
-        confirmTradeButton = new TextButton("Confirm", smallButtonStyle);
-        confirmTradeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-               closeTradeOverlay();
-               if (! currentTrade.execute()){
-            	   openTooExpensiveOverlay();
-               }
-               else{
-                   playerInfoTable.showPlayerInventory(engine.currentPlayer());
-            	   engine.testTrade();
-               }
-
-            }
-        });
-
-        cancelTradeButton = new TextButton("Cancel", smallButtonStyle);
-        cancelTradeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-               closeTradeOverlay();
-               engine.testTrade();
-            }
-        });
-
-        closePriceOverlayButton = new TextButton("close", smallButtonStyle);
-        closePriceOverlayButton.addListener(new ChangeListener(){
-        	@Override
-        	public void changed(ChangeEvent event, Actor actor) {
-        		closeTooExpensiveOverlay();
-        	}
-        });
 
         closeEventMessageButton = new TextButton("CLOSE MESSAGE", smallButtonStyle);
         closeEventMessageButton.addListener(new ChangeListener() {
@@ -694,33 +642,47 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     //new for assessment 3
     private void constructTradeOverlay(Trade trade){
-    	tradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 300, 3);
+    	tradeOverlay = new TradeOverlay();
+
+        String offeredResources = "";
+        offeredResources += trade.oreAmount + " Ore\n";
+        offeredResources += trade.energyAmount + " Energy\n";
+        offeredResources += trade.foodAmount + " Food";
+
+        tradeOverlay.setOffer(trade.getSender().getCollege().getName() + " College", offeredResources, trade.getPrice() + " Money");
+
+        tradeOverlay.setAcceptButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                closeTradeOverlay();
+                if (currentTrade.execute()){
+                    playerInfoTable.showPlayerInventory(engine.currentPlayer());
+                    engine.testTrade();
+
+                    marketInterfaceTable.setTradePrice(marketInterfaceTable.tradePrice());
+
+                    if (engine.phase() == 2) {
+                        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getRoboticonBuyPrice()) {
+                            marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, true, Color.GREEN);
+                        } else {
+                            marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, false, Color.RED);
+                        }
+                    } else if (engine.phase() == 5) {
+                        engine.refreshMarketButtonAvailability();
+                    }
+                }
+            }
+        });
+
+        tradeOverlay.setRejectButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                closeTradeOverlay();
+                engine.testTrade();
+            }
+        });
+
     	tradeOverlayVisible = false;
-        tradeOverlay.table().add(new Label("INCOMING TRADE", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
-
-        tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("From: Player " + trade.getSender().getPlayerNumber(), new Label.LabelStyle(smallFontLight.font(), Color.WHITE))).left();
-        tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("ORE: " + trade.oreAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
-        tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("ENERGY: " + trade.energyAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
-        tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("FOOD " + trade.foodAmount, new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
-        tradeOverlay.table().row();
-        tradeOverlay.table().add(new Label("PRICE: " + trade.getPrice(), new Label.LabelStyle(smallFontRegular.font(), Color.WHITE))).left();
-        tradeOverlay.table().row();
-        tradeOverlay.table().add(confirmTradeButton);
-        tradeOverlay.table().add(cancelTradeButton);
-    }
-
-    //new for assessment 3
-    private void constructTooExpensiveOverlay(){
-    	tooExpensiveOverlay = new Overlay(Color.GRAY, Color.WHITE, 250, 300, 3);
-    	tooExpensiveOverlayVisible = false;
-
-    	tooExpensiveOverlay.table().add(new Label("NOT ENOUGH MONEY!", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
-    	tooExpensiveOverlay.table().row();
-    	tooExpensiveOverlay.table().add(closePriceOverlayButton);
     }
 
     private void constructMarketInterface() {
@@ -880,6 +842,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     public void closeTradeOverlay(){
     	tradeOverlayVisible = false;
 
+        engine.removeTrade(currentTrade);
+
         Gdx.input.setInputProcessor(gameStage);
         //Direct user inputs back towards the main stage
 
@@ -894,21 +858,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 		constructTradeOverlay(trade);
 		currentTrade = trade;
 		openTradeOverlay();
-		
+
 	}
-
-    private void openTooExpensiveOverlay() {
-        tooExpensiveOverlayVisible = true;
-        Gdx.input.setInputProcessor(tooExpensiveOverlay);
-    }
-
-    private void closeTooExpensiveOverlay() {
-        tooExpensiveOverlayVisible = false;
-
-        Gdx.input.setInputProcessor(gameStage);
-        //Direct user inputs back towards the main stage
-
-    }
 
     void assignEngine(GameEngine engine) {
         this.engine = engine;

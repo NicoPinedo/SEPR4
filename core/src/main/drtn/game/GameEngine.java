@@ -1121,27 +1121,39 @@ public class GameEngine {
         gameScreen.marketInterfaceTable.setAuctionConfirmationButtonFunction(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Trade trade = new Trade(gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE),
-                        gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY),
-                        gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD),
-                        gameScreen.marketInterfaceTable.tradePrice(), currentPlayer(),
-                        gameScreen.marketInterfaceTable.selectedPlayer());
+                boolean offerSent = false;
 
-                if (trade.execute()) {
-                    gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.GREEN);
-                    gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Trade successful!");
-                    gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
+                for (Trade tradeInQueue : trades) {
+                    if (tradeInQueue.getTargetPlayer() == gameScreen.marketInterfaceTable.selectedPlayer()) {
+                        offerSent = true;
 
-                    Timer timer = new Timer();
-                    timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            resetAuctionInterface();
-                            gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Send Offer to This Player");
-                        }
-                    }, 3);
-                    timer.start();
+                        gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
+                        gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Offer Already Sent");
+                    }
                 }
+
+                if (offerSent == false) {
+                    Trade trade = new Trade(gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE),
+                            gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY),
+                            gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD),
+                            gameScreen.marketInterfaceTable.tradePrice(), currentPlayer(),
+                            gameScreen.marketInterfaceTable.selectedPlayer());
+
+                    trades.add(trade);
+
+                    gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.GREEN);
+                    gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Offer Sent Successfully!");
+                }
+
+                Timer timer = new Timer();
+                timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        resetAuctionInterface();
+                        gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Send Offer to This Player");
+                    }
+                }, 3);
+                timer.start();
             }
         });
     }
@@ -1295,6 +1307,10 @@ public class GameEngine {
         } else {
             gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
         }
+    }
+
+    public void removeTrade(Trade trade) {
+        trades.removeValue(trade, true);
     }
 
     /**
