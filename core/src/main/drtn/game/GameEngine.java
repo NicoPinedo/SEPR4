@@ -1183,9 +1183,13 @@ public class GameEngine {
     }
 
     public void refreshUpgradeOverlay() {
-        gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ORE, selectedTile.getResource(ResourceType.ORE));
-        gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ENERGY, selectedTile.getResource(ResourceType.ENERGY));
-        gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.FOOD, selectedTile.getResource(ResourceType.FOOD));
+        try {
+            gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ORE, selectedTile.getResource(ResourceType.ORE));
+            gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ENERGY, selectedTile.getResource(ResourceType.ENERGY));
+            gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.FOOD, selectedTile.getResource(ResourceType.FOOD));
+        } catch (InvalidResourceTypeException e) {
+            //Do nothing: this should never, ever happen
+        }
 
         if (selectedTile.hasRoboticon()) {
             gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ORE, selectedTile.getRoboticonStored().getLevel()[0]);
