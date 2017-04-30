@@ -380,6 +380,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 engine.nextPhase();
+                
+                lastTileClickedFlash.cancelAnimation();
             }
         });
         drawer.toggleButton(endTurnButton, false, Color.GRAY);
@@ -526,10 +528,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 engine.claimTile();
 
-                selectTile(engine.selectedTile(), false);
-                //Refresh tile information and tile management UI
+                lastTileClickedFlash.cancelAnimation();
             }
         });
+
         selectedTileInfoTable.setDeployRoboticonButtonFunction(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -792,7 +794,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             addAnimation(lastTileClickedFlash);
         }
 
-        selectedTileInfoTable.hideTileInfo();
         selectedTileInfoTable.showTileInfo(tile);
 
         if (tile.isOwned()) {
@@ -848,7 +849,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
             }
             //Deselect latest tile
-            engine.selectTile(engine.tiles()[0]);
+            engine.deselectTile();
             if (lastTileClickedFlash != null) {
                 lastTileClickedFlash.cancelAnimation();
                 lastTileClickedFlash = null;

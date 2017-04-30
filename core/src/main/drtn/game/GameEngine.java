@@ -189,12 +189,18 @@ public class GameEngine {
         return _instance;
     }
 
-    public void selectTile(Tile tile) {selectedTile = tile;}
+    public void updateSelectedTileObject(Tile tile) {selectedTile = tile;}
+
+    public void deselectTile() {
+        selectedTile = null;
+
+        gameScreen.selectedTileInfoTable.hideTileInfo();
+    }
 
     /**
      * Advances the game's progress upon call
      * Acts as a state machine of sorts, moving the game from one phase to another depending on what phase it is
-     * currently at when this method if called. If player 1 is the current player in any particular phase, then the
+     * currently at when this method is called. If player 1 is the current player in any particular phase, then the
      * phase number remains and control is handed off to the other player: otherwise, control returns to player 1 and
      * the game advances to the next state, implementing any state-specific features as it goes.
      *
@@ -208,24 +214,35 @@ public class GameEngine {
     // Changed in Assessment 3: Refactored nextPhase() from giant if-else statement to switch statement.
     public void nextPhase() {
         gameScreen.phaseInfoTable.timer.stop();
+
         nextPlayer();
+
+        deselectTile();
         resetAuctionInterface();
+
         System.out.println("Player " + currentPlayerID + " | Phase " + phase);
 
         switch (phase) {
             case 1:
                 tileAcquired = false;
+                //Reset the tile-acquisition flag to allow for one more to be obtained
+
                 drawer.toggleButton(gameScreen.endTurnButton(), false, Color.GRAY);
+                //Stop the game from advancing until a tile has been claimed
+
                 market.produceRoboticon();
 
                 closeMarketInterface();
+                //Close the market if phase 1 is beginning straight off the back of phase 5
                 break;
 
             case 2:
                 gameScreen.phaseInfoTable.timer.setTime(0, 30);
                 gameScreen.phaseInfoTable.timer.start();
+                //Impose a time-limit on phase 2
 
                 openRoboticonMarketInterface();
+                //Allow for roboticons to be purchased
 
                 drawer.toggleButton(gameScreen.endTurnButton(), true, Color.BLACK);
                 break;
@@ -233,23 +250,23 @@ public class GameEngine {
             case 3:
                 gameScreen.phaseInfoTable.timer.setTime(0, 45);
                 gameScreen.phaseInfoTable.timer.start();
+                //Impose a time limit on phase 3
 
                 closeMarketInterface();
             
-                this.beginChancellorMode();
+                beginChancellorMode();
+                //Setup the "Capture the Chancellor" minigame
                 break;
 
             case 4:
                 this.stopChancellorMode();
-            
-                gameScreen.phaseInfoTable.timer.setTime(0, 5);
-                gameScreen.phaseInfoTable.timer.start();
+                //Stop the Chancellor's shenanigans
 
                 produceResource();
             
                 clearEffects();
                 setEffects();
-                System.out.println("test");
+
                 gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
                 break;
 

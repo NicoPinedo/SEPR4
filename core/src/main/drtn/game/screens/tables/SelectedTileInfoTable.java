@@ -137,10 +137,10 @@ public class SelectedTileInfoTable extends Table {
 
     public void hideTileInfo() {
         claimTileButton.setTouchable(Touchable.disabled);
-        claimTileButton.setColor(Color.GRAY);
+        claimTileButton.getLabel().setColor(Color.GRAY);
 
         deployRoboticonButton.setTouchable(Touchable.disabled);
-        deployRoboticonButton.setColor(Color.GRAY);
+        deployRoboticonButton.getLabel().setColor(Color.GRAY);
 
         deployRoboticonButton.setText("DEPLOY");
 

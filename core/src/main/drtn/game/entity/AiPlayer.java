@@ -67,7 +67,7 @@ public class AiPlayer extends Player {
             case 1:
                 for (Tile tile : engine.tiles()) {
                     if (!tile.isOwned()) {
-                        engine.selectTile(tile);
+                        engine.updateSelectedTileObject(tile);
                         engine.claimTile();
                         break;
                     }
@@ -96,7 +96,7 @@ public class AiPlayer extends Player {
                     }
 
                     if (!tile.hasRoboticon()) {
-                        engine.selectTile(tile);
+                        engine.updateSelectedTileObject(tile);
                         engine.deployRoboticon();
                     }
                 }
