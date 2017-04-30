@@ -215,7 +215,7 @@ public class MarketInterfaceTable extends Table {
                 } else {
                     playerListPosition = 0;
                 }
-                playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+                playerLabel.setText(otherPlayer.get(playerListPosition).getCollege().getName());
 
                 setTradePrice(0);
             }
@@ -230,7 +230,7 @@ public class MarketInterfaceTable extends Table {
                 } else {
                     playerListPosition = otherPlayer.size() - 1;
                 }
-                playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+                playerLabel.setText(otherPlayer.get(playerListPosition).getCollege().getName());
 
                 setTradePrice(0);
             }
@@ -280,10 +280,6 @@ public class MarketInterfaceTable extends Table {
     }
 
     private void showAuctionInterface() {
-        playerListPosition = 0;
-
-        setTradePrice(0);
-
         add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(40);
         add(new Label("#", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
         add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
@@ -291,14 +287,12 @@ public class MarketInterfaceTable extends Table {
         //Visual guff
 
         row();
-        oreTradeAmount = 0;
         add(new Label("Ore", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(oreTradeAmountLabel).left();
         add(playerBuyOre).left();
         add(playerSellOre).left();
 
         row();
-        energyTradeAmount = 0;
         add(new Label("Energy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(energyTradeAmountLabel).left();
         add(playerBuyEnergy).left();
@@ -311,7 +305,6 @@ public class MarketInterfaceTable extends Table {
         add(playerSellFood).left();
 
         row();
-        tradePrice = 0;
         add(new Label("Price", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().colspan(2).padTop(15);
         add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20).padTop(15);
         add(new Label("Less", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20).padTop(15);
@@ -627,7 +620,7 @@ public class MarketInterfaceTable extends Table {
         }
 
         playerListPosition = 0;
-        playerLabel.setText("Player " + otherPlayer.get(0).getPlayerNumber());
+        playerLabel.setText(otherPlayer.get(0).getCollege().getName());
 
         setTradePrice(0);
     }

@@ -380,8 +380,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 engine.nextPhase();
-                
-                lastTileClickedFlash.cancelAnimation();
             }
         });
         drawer.toggleButton(endTurnButton, false, Color.GRAY);
@@ -527,8 +525,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 engine.claimTile();
-
-                lastTileClickedFlash.cancelAnimation();
             }
         });
 
