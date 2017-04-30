@@ -98,11 +98,15 @@ public class GameEngine {
     private Array<Trade> trades;
 	private College[] colleges;
 
+    /**
+     * Defines all of the random PlotEffects that can occur during the game
+     */
     private PlotEffectSource plotEffectSource;
+
+    /**
+     * Defines all of the random PlayerEffects that can occur during the game
+     */
     private PlayerEffectSource playerEffectSource;
-    private float effectChance;
-
-
 
     /**
      * Constructs the game's engine. Imports the game's state (for direct renderer access) and the data held by the
@@ -243,7 +247,7 @@ public class GameEngine {
 
                 produceResource();
             
-		            clearEffects();
+                clearEffects();
                 setEffects();
                 System.out.println("test");
                 gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
@@ -655,9 +659,6 @@ public class GameEngine {
 
     }
     private void setupEffects() throws InvalidResourceTypeException {
-        //Initialise the fractional chance of any given effect being applied at the start of a round
-        effectChance = (float) 0.25;
-
         plotEffectSource = new PlotEffectSource(this);
         playerEffectSource = new PlayerEffectSource(this);
 
@@ -665,29 +666,20 @@ public class GameEngine {
 
     private void setEffects() {
         Random RNGesus = new Random();
+        int plotEffectIndex = RNGesus.nextInt(plotEffectSource.size);
+        int playerEffectIndex = RNGesus.nextInt(playerEffectSource.size);
 
-        for (PlotEffect PTE : plotEffectSource) {
-            if (RNGesus.nextFloat() <= effectChance) {
-                PTE.executeRunnable();
-
-                if (!(isCurrentlyAiPlayer())) {
-                    gameScreen.showEventMessage(PTE.getDescription());
-                }
-		break;    
+        if (RNGesus.nextInt(2) == 0) {
+            plotEffectSource.get(plotEffectIndex).executeRunnable();
+            if (!(isCurrentlyAiPlayer())) {
+                gameScreen.showEventMessage(plotEffectSource.get(plotEffectIndex).getDescription());
+            }
+        } else {
+            playerEffectSource.get(playerEffectIndex).executeRunnable();
+            if (!(isCurrentlyAiPlayer())) {
+                gameScreen.showEventMessage(playerEffectSource.get(playerEffectIndex).getDescription());
             }
         }
-
-        for (PlayerEffect PLE : playerEffectSource) {
-            if (RNGesus.nextFloat() <= effectChance) {
-                PLE.executeRunnable();
-
-                if (!(isCurrentlyAiPlayer())) {
-                    gameScreen.showEventMessage(PLE.getDescription());
-                }
-            }
-        }
-
-
     }
 
     private void clearEffects() {

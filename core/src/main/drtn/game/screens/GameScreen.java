@@ -375,7 +375,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     //Extended for Assessment 3 with new buttons
     private void constructButtons() {
         //Button that, when clicked, ends the current turn for the current player prematurely
-
         endTurnButton = new TextButton("NEXT PHASE", largeButtonStyle);
         endTurnButton.addListener(new ChangeListener() {
             @Override
