@@ -53,13 +53,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private static TextButton.TextButtonStyle smallButtonStyle;
 
     private static TTFont headerFontRegular;
-    private static TTFont headerFontLight;
     private static TTFont smallFontRegular;
     private static TTFont smallFontLight;
 
     static {
         headerFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 24);
-        headerFontLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 24);
 
         smallFontRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 16);
         smallFontLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 16);
@@ -350,13 +348,19 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         drawer.borderedRectangle(Color.WHITE, Color.GRAY, 794, 471, 205, 37, 1);
         //Pause button background
 
-        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 806, 133, 63, 21, 1);
+        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 806, 132, 63, 21, 1);
         //Claim button background
 
-        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 919, 133, 75, 21, 1);
-        //Deploy button background
+        drawer.borderedRectangle(Color.WHITE, Color.GRAY, 911, 132, 91, 21, 1);
+        //Deploy/upgrade button background
 
-        drawer.borderedRectangle(Color.WHITE, Color.WHITE, 769, 167, 255, 1, 1);
+        drawer.borderedRectangle(Color.LIGHT_GRAY, Color.GRAY, 809, 174, 75, 21, 1);
+        //Market interface selection button background
+
+        drawer.borderedRectangle(Color.LIGHT_GRAY, Color.GRAY, 905, 174, 83, 21, 1);
+        //Auction interface selection button background
+
+        drawer.borderedRectangle(Color.WHITE, Color.WHITE, 769, 163, 255, 1, 1);
         //Line separating SelectedTileInfoTable from MarketInterfaceTable
 
         drawer.lineRectangle(Color.WHITE, 804, 36, 64, 64, 1);
@@ -479,7 +483,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableLeft.add(endTurnButton).padTop(15).padBottom(30);
         //Add the "End Phase" button to the table
 
-        drawer.addTableRow(tableLeft, new Label("CURRENT PLAYER", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE)),  2);
+        tableLeft.row();
+        tableLeft.add(new Label("CURRENT PLAYER", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).colspan(2);
         //Window-dressing: adds "CURRENT PLAYER" label
 
         playerInfoTable = new PlayerInfoTable();
@@ -487,7 +492,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableLeft.row();
         tableLeft.add(playerInfoTable).padTop(5);
 
-        drawer.addTableRow(tableLeft, pauseButton, 98, 0, 0, 0, 2);
+        tableLeft.row();
+        tableLeft.add(pauseButton).padTop(98).colspan(2);
         //Prepare and add the pause button to the bottom of the table
 
         gameStage.addActor(tableLeft);
@@ -556,7 +562,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         tableRight.add(marketInterfaceTable).colspan(2).height(299);
         //Establish market and add market interface to right-hand table
 
-        drawer.addTableRow(tableRight, miniGameButton);
+        tableRight.row();
+        tableRight.add(miniGameButton);
 
         gameStage.addActor(tableRight);
         //Add right-hand table to the stage
@@ -606,7 +613,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         pauseTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         //Centre the pause menu's contents
 
-        drawer.addTableRow(pauseTable, new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.BLACK)), 0, 0, 30, 0);
+        pauseTable.row();
+        pauseTable.add(new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.BLACK))).padBottom(30);
         //Add the game's logo to the pause menu
 
         TextButton.TextButtonStyle menuButtonStyle = new TextButton.TextButtonStyle();
@@ -628,7 +636,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         });
         //Establish and prepare a button to resume the game from the pause menu
 
-        drawer.addTableRow(pauseTable, resume);
+        pauseTable.row();
+        pauseTable.add(resume);
         //Add the resume button to the pause menu's interface
 
         pauseStage.addActor(pauseTable);
@@ -664,7 +673,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         eventMessageOverlay.table().row();
         eventMessageOverlay.table().add(eventMessage);
 
-        drawer.addTableRow(eventMessageOverlay.table(), closeEventMessageButton);
+        eventMessageOverlay.table().row();
+        eventMessageOverlay.table().add(closeEventMessageButton);
     }
 
     //new for assessment 3

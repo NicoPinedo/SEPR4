@@ -153,12 +153,15 @@ public class MainMenu implements Screen {
         //Initialise menu buttons using defined style
 
         //ADD TITLE BAR
-        drawer.addTableRow(table, new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.WHITE)), 0, 0, 0, 0);
-        drawer.addTableRow(table, new Label("(Title TBC)", new Label.LabelStyle(tempFont.font(), Color.WHITE)), 0, 0, 50, 0);
+        table.row();
+        table.add(new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.WHITE)));
+        table.row();
+        table.add(new Label("(Title TBC)", new Label.LabelStyle(tempFont.font(), Color.WHITE))).padBottom(50);
 
         //ADD BUTTONS - refactored for Assessment 3
         for (Button button : buttons) {
-            drawer.addTableRow(table, button);
+            table.row();
+            table.add(button);
         }
 
         //FINALISE TABLE

@@ -250,12 +250,16 @@ public class PlayerSelectScreen implements Screen {
         
         
         //add all buttons to the table
-        drawer.addTableRow(table, playerLabel);
-        drawer.addTableRow(table, removePlayerButton);
+        table.row();
+        table.add(playerLabel);
+        table.row();
+        table.add(removePlayerButton);
         table.add(playerAmountLabel).width(30);
         table.add(addPlayerButton).padLeft(20);
-        drawer.addTableRow(table, AIPlayerLabel);
-        drawer.addTableRow(table, removeAIPlayerButton);
+        table.row();
+        table.add(AIPlayerLabel);
+        table.row();
+        table.add(removeAIPlayerButton);
         table.add(AIPlayerAmountLabel);
         table.add(addAIPlayerButton);
         table.row();

@@ -130,12 +130,12 @@ public class MarketInterfaceTable extends Table {
             marketButton.getLabel().setColor(Color.GREEN);
             marketButton.setTouchable(Touchable.disabled);
 
-            auctionButton.getLabel().setColor(Color.WHITE);
+            auctionButton.getLabel().setColor(Color.BLACK);
             auctionButton.setTouchable(Touchable.enabled);
 
             showMarketInterface();
         } else {
-            marketButton.getLabel().setColor(Color.WHITE);
+            marketButton.getLabel().setColor(Color.BLACK);
             marketButton.setTouchable(Touchable.enabled);
 
             auctionButton.getLabel().setColor(Color.GREEN);
@@ -157,7 +157,7 @@ public class MarketInterfaceTable extends Table {
         });
 
         auctionButton = new TextButton("AUCTION", regularButtonStyle);
-        auctionButton.setColor(Color.WHITE);
+        auctionButton.getLabel().setColor(Color.BLACK);
         auctionButton.setTouchable(Touchable.enabled);
         auctionButton.addListener(new ChangeListener() {
             @Override
