@@ -1137,6 +1137,96 @@ public class GameEngine {
         });
     }
 
+    public void setUpgradeOverlayButtonFunctions() {
+        gameScreen.upgradeOverlay.setUpgradeButtonFunction(ResourceType.ORE, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                upgradeRoboticon(0);
+
+                gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ORE, selectedTile.getRoboticonStored().getLevel()[0]);
+                updateUpgradeOptions();
+            }
+        });
+
+        gameScreen.upgradeOverlay.setUpgradeButtonFunction(ResourceType.ENERGY, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                upgradeRoboticon(1);
+
+                gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ENERGY, selectedTile.getRoboticonStored().getLevel()[1]);
+                updateUpgradeOptions();
+            }
+        });
+
+        gameScreen.upgradeOverlay.setUpgradeButtonFunction(ResourceType.FOOD, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                upgradeRoboticon(2);
+
+                gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+
+                gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.FOOD, selectedTile.getRoboticonStored().getLevel()[2]);
+                updateUpgradeOptions();
+            }
+        });
+
+        gameScreen.upgradeOverlay.setCloseUpgradeOverlayButtonFunction(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.closeUpgradeOverlay();
+            }
+        });
+    }
+
+    public void refreshUpgradeOverlay() {
+        gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ORE, selectedTile.getResource(ResourceType.ORE));
+        gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ENERGY, selectedTile.getResource(ResourceType.ENERGY));
+        gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.FOOD, selectedTile.getResource(ResourceType.FOOD));
+
+        if (selectedTile.hasRoboticon()) {
+            gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ORE, selectedTile.getRoboticonStored().getLevel()[0]);
+            gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ENERGY, selectedTile.getRoboticonStored().getLevel()[1]);
+            gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.FOOD, selectedTile.getRoboticonStored().getLevel()[2]);
+        }
+
+        updateUpgradeOptions();
+    }
+
+    /**
+     * Updates the options available to the current player on the roboticon upgrade screen based on their money count
+     */
+    private void updateUpgradeOptions() {
+        gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ORE, "-" + selectedTile.getRoboticonStored().getOreUpgradeCost());
+        gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ENERGY, "-" + selectedTile.getRoboticonStored().getEnergyUpgradeCost());
+        gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.FOOD, "-" + selectedTile.getRoboticonStored().getFoodUpgradeCost());
+        //Refresh prices shown on upgrade screen
+
+        if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getOreUpgradeCost()) {
+            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ORE, true, Color.GREEN);
+        } else {
+            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ORE, false, Color.RED);
+        }
+        //Conditionally enable ore upgrade button
+
+        if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getEnergyUpgradeCost()) {
+            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ENERGY, true, Color.GREEN);
+        } else {
+            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ENERGY, false, Color.RED);
+        }
+        //Conditionally enable energy upgrade button
+
+        if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getFoodUpgradeCost()) {
+            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.FOOD, true, Color.GREEN);
+        } else {
+            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.FOOD, false, Color.RED);
+        }
+        //Conditionally enable food upgrade button
+    }
+
     public void refreshAuctionPriceButtonAvailability() {
         if (gameScreen.marketInterfaceTable.tradePrice() < gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, true, true, Color.GREEN);

@@ -82,6 +82,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     public SelectedTileInfoTable selectedTileInfoTable;
     public MarketInterfaceTable marketInterfaceTable;
 
+    public UpgradeOverlay upgradeOverlay;
+
     private boolean shown = false;
     private IAnimation lastTileClickedFlash;
     private IAnimation playerWin;
@@ -126,26 +128,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * Button which can be clicked on to go to the mini game
      */
     private TextButton miniGameButton;
-    /**
-     * Button allowing players to upgrade roboticons' food-production capabilities
-     */
-    private TextButton foodUpgradeButton;
-    /**
-     * Button allowing players to upgrade roboticons' ore-production capabilities
-     */
-    private TextButton oreUpgradeButton;
-    /**
-     * Button allowing players to upgrade roboticons' energy-production capabilities
-     */
-    private TextButton energyUpgradeButton;
-    /**
-     * Button allowing players to escape from the upgrade overlay if they decide against upgrading roboticons
-     */
-    private TextButton closeUpgradeOverlayButton;
-    /**
-     * Customised stage that shows up to offer roboticon upgrade choices
-     */
-    private Overlay upgradeOverlay;
+
     private Overlay tradeOverlay;
     private Overlay eventMessageOverlay;
     private Label eventMessage;
@@ -231,6 +214,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
         constructUpgradeOverlay();
         //Construct roboticon upgrade overlay (and, again, hide it for the moment)
+
         constructTooExpensiveOverlay();
         constructEventMessageOverlay();
 
@@ -423,54 +407,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         });
         drawer.toggleButton(miniGameButton, true, Color.BLACK);
 
-        //Button allowing players to upgrade roboticons' food-production capabilities
-        foodUpgradeButton = new TextButton("PRICE", smallButtonStyle);
-        foodUpgradeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.upgradeRoboticon(2);
-
-                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
-                updateUpgradeOptions();
-            }
-        });
-
-        //Button allowing players to upgrade roboticons' ore-production capabilities
-        oreUpgradeButton = new TextButton("PRICE", smallButtonStyle);
-        oreUpgradeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.upgradeRoboticon(0);
-
-                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
-                updateUpgradeOptions();
-            }
-        });
-
-        /*
-         * Button allowing players to upgrade roboticons' energy-production capabilities
-         */
-        energyUpgradeButton = new TextButton("PRICE", smallButtonStyle);
-        energyUpgradeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                engine.upgradeRoboticon(1);
-
-                playerInfoTable.updateResource(engine.currentPlayer(), ResourceType.MONEY);
-                updateUpgradeOptions();
-            }
-        });
-
-        //Button allowing players to escape from the upgrade overlay if they decide against upgrading roboticons
-
-        closeUpgradeOverlayButton = new TextButton("CLOSE", smallButtonStyle);
-        closeUpgradeOverlayButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                closeUpgradeOverlay();
-            }
-        });
-
         confirmTradeButton = new TextButton("Confirm", smallButtonStyle);
         confirmTradeButton.addListener(new ChangeListener() {
             @Override
@@ -598,7 +534,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                     selectTile(engine.selectedTile(), false);
                     //Re-select the current tile to update the UI
                 } else {
-                    updateUpgradeOptions();
+                    engine.refreshUpgradeOverlay();
                     //Refresh the upgrade options shown on the roboticon upgrade overlay
 
                     upgradeOverlayVisible = true;
@@ -704,26 +640,13 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * This will allow them to upgrade its food, energy or ore production stats
      */
     private void constructUpgradeOverlay() {
-        upgradeOverlay = new Overlay(Color.GRAY, Color.WHITE, 300, 170, 3);
+        upgradeOverlay = new UpgradeOverlay();
         //Establish the upgrade overlay
+
+        engine.setUpgradeOverlayButtonFunctions();
 
         upgradeOverlayVisible = false;
         //Stop the GameScreen's renderer from rendering the overlay right away
-
-        upgradeOverlay.table().add(new Label("UPGRADE ROBOTICON", new Label.LabelStyle(headerFontRegular.font(), Color.WHITE))).padBottom(20);
-        //Visual guff
-
-        upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("FOOD", smallFontRegular, Color.WHITE, foodUpgradeButton, 250, 0)).left();
-        upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("ENERGY", smallFontRegular, Color.WHITE, energyUpgradeButton, 250, 0)).left();
-        upgradeOverlay.table().row();
-        upgradeOverlay.table().add(new LabelledElement("ORE", smallFontRegular, Color.WHITE, oreUpgradeButton, 250, 0)).left().padBottom(20);
-        //Add buttons for upgrading roboticons to the overlay
-        //Like in the market, each button's label is the monetary price of the upgrade that it performs
-
-        drawer.addTableRow(upgradeOverlay.table(), closeUpgradeOverlayButton);
-        //Add a final button for closing the overlay
     }
 
     public boolean getUpgradeOverlayVisible() {
@@ -897,43 +820,12 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     //new for assessment 3
     public void closeUpgradeOverlay() {
         upgradeOverlayVisible = false;
-        
         //Hide the upgrade overlay again
+
         Gdx.input.setInputProcessor(gameStage);
         //Direct user inputs back towards the main stage
         
         engine.testTrade();
-    }
-
-    /**
-     * Updates the options available to the current player on the roboticon upgrade screen based on their money count
-     */
-    private void updateUpgradeOptions() {
-        oreUpgradeButton.setText(String.valueOf(engine.selectedTile().getRoboticonStored().getOreUpgradeCost()));
-        energyUpgradeButton.setText(String.valueOf(engine.selectedTile().getRoboticonStored().getEnergyUpgradeCost()));
-        foodUpgradeButton.setText(String.valueOf(engine.selectedTile().getRoboticonStored().getFoodUpgradeCost()));
-        //Refresh prices shown on upgrade screen
-
-        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.selectedTile().getRoboticonStored().getOreUpgradeCost()) {
-            drawer.toggleButton(oreUpgradeButton, true, Color.GREEN);
-        } else {
-            drawer.toggleButton(oreUpgradeButton, false, Color.RED);
-        }
-        //Conditionally enable ore upgrade button
-
-        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.selectedTile().getRoboticonStored().getEnergyUpgradeCost()) {
-            drawer.toggleButton(energyUpgradeButton, true, Color.GREEN);
-        } else {
-            drawer.toggleButton(energyUpgradeButton, false, Color.RED);
-        }
-        //Conditionally enable energy upgrade button
-
-        if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.selectedTile().getRoboticonStored().getFoodUpgradeCost()) {
-            drawer.toggleButton(foodUpgradeButton, true, Color.GREEN);
-        } else {
-            drawer.toggleButton(foodUpgradeButton, false, Color.RED);
-        }
-        //Conditionally enable food upgrade button
     }
 
     public void updateChancellor() {

@@ -70,12 +70,8 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 Tile foodProducer = game.currentPlayer().getTileList().get(0);
 
                 for (Tile plot : game.tiles()) {
-                    try {
-                        if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
-                            foodProducer = plot;
-                        }
-                    } catch (InvalidResourceTypeException e) {
-                        e.printStackTrace();
+                    if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
+                        foodProducer = plot;
                     }
                 }
 

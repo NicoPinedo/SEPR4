@@ -291,7 +291,7 @@ public class Tile extends Button {
      * @param type resource requested
      * @return int value representing the amount of type the player currently have
      */
-    public int getResource(ResourceType type) throws InvalidResourceTypeException {
+    public int getResource(ResourceType type) {
         switch (type) {
             case ENERGY:
                 return this.EnergyCount;
@@ -300,7 +300,7 @@ public class Tile extends Button {
             case ORE:
                 return this.OreCount;
             default:
-                throw new InvalidResourceTypeException();
+                return 0;
         }
     }
 
