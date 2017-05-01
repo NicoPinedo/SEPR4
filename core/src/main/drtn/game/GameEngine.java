@@ -341,9 +341,6 @@ public class GameEngine {
         gameScreen.phaseInfoTable.timer.stop();
         //Stop the game's timer
 
-        gameScreen.openPauseStage();
-        //Prepare the pause menu to accept user inputs
-
         state = State.PAUSE;
         //Mark that the game has been paused
     }
@@ -358,9 +355,6 @@ public class GameEngine {
     public void resumeGame() {
         state = State.RUN;
         //Mark that the game is now running again
-
-        gameScreen.openGameStage();
-        //Show the main in-game interface again and prepare it to accept inputs
 
         if (gameScreen.phaseInfoTable.timer.minutes() > 0 || gameScreen.phaseInfoTable.timer.seconds() > 0) {
             gameScreen.phaseInfoTable.timer.increment();

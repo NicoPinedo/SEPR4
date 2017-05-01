@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import drtn.game.GameEngine;
 import drtn.game.Trade;
 import drtn.game.entity.Tile;
@@ -34,7 +35,6 @@ import drtn.game.screens.tables.PhaseInfoTable;
 import drtn.game.screens.tables.PlayerInfoTable;
 import drtn.game.screens.tables.SelectedTileInfoTable;
 import drtn.game.util.Drawer;
-import drtn.game.util.LabelledElement;
 import drtn.game.util.Overlay;
 import drtn.game.util.TTFont;
 import teamfractal.util.animation.AnimationPlayerWin;
@@ -141,10 +141,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private Batch batch;
     private int height;
     private int width;
-    private Tile selectedTile;
     private Table tableRight;
     private boolean eventMessageOverlayVisible;
-    private boolean activeTrade;
     private Trade currentTrade;
     /**
      * The game-screen's initial constructor
@@ -179,7 +177,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      */
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(gameStage);
         if (shown) return;
 
         shown = true;
@@ -231,6 +228,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //OpenGL nonsense
         //First instruction sets background colour
 
+        Stage inputProcessor = gameStage;
+        //Initialise the Stage object holding a reference to the stage that will process inputs on the current frame
+
         if (engine.state() == GameEngine.State.RUN) {
             drawRectangles();
             //Draw window-dressing
@@ -252,27 +252,34 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             renderAnimation(delta, IAnimation.AnimationType.Tile);
 
             // Draw
-            if (!upgradeOverlayVisible) {
+            if (!upgradeOverlayVisible && !eventMessageOverlayVisible && !tradeOverlayVisible) {
                 for (Tile tile : engine.tiles()) {
                     tile.drawTooltip();
                     //If any of the tiles' tooltips are deemed "active", render them to the screen too
                 }
             }
             else {
-                upgradeOverlay.act(delta);
-                upgradeOverlay.draw();
-            }
-            //Draw the roboticon upgrade overlay to the screen if the "upgrade" button has been selected
+                if (upgradeOverlayVisible) {
+                    upgradeOverlay.act(delta);
+                    upgradeOverlay.draw();
+                    inputProcessor = upgradeOverlay;
+                    //Draw the roboticon upgrade overlay to the screen if the "upgrade" button has been selected
+                }
 
-            if (eventMessageOverlayVisible) {
-                eventMessageOverlay.act(delta);
-                eventMessageOverlay.draw();
+                if (eventMessageOverlayVisible) {
+                    eventMessageOverlay.act(delta);
+                    eventMessageOverlay.draw();
+                    inputProcessor = eventMessageOverlay;
+                }
+
+                if (tradeOverlayVisible) {
+                    tradeOverlay.act(delta);
+                    tradeOverlay.draw();
+                    inputProcessor = tradeOverlay;
+                }
             }
 
-            if (tradeOverlayVisible) {
-                tradeOverlay.act(delta);
-                tradeOverlay.draw();
-            }
+            Gdx.input.setInputProcessor(inputProcessor);
         } else if (engine.state() == GameEngine.State.PAUSE) {
             drawer.filledRectangle(Color.WHITE, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             //If the game is paused, render a white background...
@@ -491,9 +498,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                     upgradeOverlayVisible = true;
                     //Set the renderer to show the upgrade overlay if this button is clicked after a tile with a
                     //roboticon was clicked on
-
-                    Gdx.input.setInputProcessor(upgradeOverlay);
-                    //Direct user inputs towards the roboticon upgrade overlay
                 }
             }
         });
@@ -626,18 +630,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     public void showEventMessage(String message) {
         eventMessage.setText(message);
         eventMessageOverlayVisible = true;
-        Gdx.input.setInputProcessor(eventMessageOverlay);
     }
 
   //new for assessment 3
   public void hideEventMessage() {
         eventMessageOverlayVisible = false;
-        if (upgradeOverlayVisible) {
-            Gdx.input.setInputProcessor(upgradeOverlay);
-        }
-        else {
-            Gdx.input.setInputProcessor(gameStage);
-        }
     }
 
     //new for assessment 3
@@ -719,20 +716,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     }
 
     /**
-     * Prepares the renderer to render the main stage again (after pausing) by setting it up to accept inputs again
-     */
-    public void openGameStage() {
-        Gdx.input.setInputProcessor(gameStage);
-    }
-
-    /**
-     * Prepares the renderer to render the pause-screen stage again by setting it up to accept inputs again
-     */
-    public void openPauseStage() {
-        Gdx.input.setInputProcessor(pauseStage);
-    }
-
-    /**
      * The code to be run whenever a particular tile is clicked on
      * Specifically updates the label identifying the selected tile, the college icon linked to the player who owns
      * it, the icon representing the Roboticon planted on it and the available options for the tile in the main
@@ -741,7 +724,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
      * @param tile The tile being clicked on
      */
     public void selectTile(Tile tile, boolean showAnimation) {
-        selectedTile = tile;
         if (lastTileClickedFlash != null) {
             lastTileClickedFlash.cancelAnimation();
             lastTileClickedFlash = null;
@@ -789,9 +771,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     public void closeUpgradeOverlay() {
         upgradeOverlayVisible = false;
         //Hide the upgrade overlay again
-
-        Gdx.input.setInputProcessor(gameStage);
-        //Direct user inputs back towards the main stage
         
         engine.testTrade();
     }
@@ -836,17 +815,12 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
     private void openTradeOverlay() {
         tradeOverlayVisible = true;
-        Gdx.input.setInputProcessor(tradeOverlay);
     }
     
     public void closeTradeOverlay(){
     	tradeOverlayVisible = false;
 
         engine.removeTrade(currentTrade);
-
-        Gdx.input.setInputProcessor(gameStage);
-        //Direct user inputs back towards the main stage
-
     }
 
 	public boolean TradeOverlayVisible() {
@@ -868,6 +842,4 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     public Game getGame(){
         return this.game;
     }
-	
-    
 }
