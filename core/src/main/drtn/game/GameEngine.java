@@ -9,12 +9,10 @@
 package drtn.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.*;
-
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import drtn.game.effects.PlayerEffectSource;
 import drtn.game.effects.PlotEffect;
@@ -23,7 +21,6 @@ import drtn.game.entity.*;
 import drtn.game.enums.ResourceType;
 import drtn.game.exceptions.InvalidResourceTypeException;
 import drtn.game.screens.GameScreen;
-import drtn.game.screens.MainMenu;
 import drtn.game.screens.MiniGameScreen;
 import drtn.game.util.Drawer;
 
@@ -96,7 +93,13 @@ public class GameEngine {
     private int roboticonIDCounter = 0;
     // Added in Assessment 3: Added to keep track of trades, colleges and random events.
     // ---------------------------------------------------------------------------------
+    /**
+     * An array storing the currently pending trades
+     */
     private Array<Trade> trades;
+    /**
+     * An array storing all the playable colleges
+     */
 	private College[] colleges;
 
     /**
@@ -186,12 +189,23 @@ public class GameEngine {
     }
     // ---------------------------------------------------------------------------------
 
+    /**
+     * Getter for the instance of the GameEngine
+     * @return The GameEngine object
+     */
     public static GameEngine getInstance() {
         return _instance;
     }
 
+    /**
+     * Setter fo the currently selected tile
+     * @param tile The tile that has been selected
+     */
     public void updateSelectedTileObject(Tile tile) {selectedTile = tile;}
 
+    /**
+     * Sets the currently selected tile to null
+     */
     public void deselectTile() {
         selectedTile = null;
 
@@ -305,6 +319,9 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Produces resources for the current players according to the tiles that they own
+     */
     private void produceResource() {
         for (Tile tile : currentPlayer().getTileList()) {
             tile.produce();
@@ -457,6 +474,9 @@ public class GameEngine {
         chancellor.updatePlayer(players[currentPlayerID]);
     }
 
+    /**
+     * Stops the "Catch the Chancellor" mini-game
+     */
     public void stopChancellorMode(){ chancellor.deactivate(); }
 
     /**
@@ -468,6 +488,11 @@ public class GameEngine {
     public State state() {
         return state;
     }
+
+    /**
+     * Getter for the chancellor object of the game
+     * @return The chancellor object
+     */
 
     public Chancellor chancellor() {
         return chancellor;
@@ -580,19 +605,23 @@ public class GameEngine {
 
             selectedTile().getRoboticonStored().upgrade(resource);
         }
-        //TODO: change this to the enum
-        //Upgrade the specified resource
-        //0: ORE
-        //1: ENERGY
-        //2: FOOD
+
     }
 
     // Added in Assessment 3 from here down to EOF.
 
+    /**
+     * Getter for the current phase
+     * @return The current phase
+     */
     public int getPhase() {
         return phase;
     }
 
+    /**
+     * Calculates who won the game
+     * @return The ID of the player who won the game
+     */
     public int getWinner(){
         List<Player> playersList = Arrays.asList(players);
         Collections.sort(playersList, new Comparator<Player>() {
@@ -603,16 +632,28 @@ public class GameEngine {
         });
         return playersList.get(0).getPlayerID();
     }
+
+    /**
+     * Returns true if the current player is AI
+     * @return True if the current player is an AI player, false otherwise
+     */
     public boolean isCurrentlyAiPlayer() {
         return currentPlayer().isAi();
     }
 
-    
-    
+
+    /**
+     * Adds a trade to the system
+     * @param trade The trade to be added
+     */
     public void addTrade(Trade trade){
     	trades.add(trade);
     }
 
+    /**
+     * Getter for the latest trade offer that has been sent
+     * @return The trade that has been committed
+     */
     public Trade getCurrentPendingTrade() {
         Iterator<Trade> it = trades.iterator();
 
@@ -626,7 +667,12 @@ public class GameEngine {
 
         return null;
     }
-    
+
+    /**
+     * Creates and initialises the players for the game
+     * @param AIAmount The amount of AI players that are playing
+     * @param playerAmount The amount fo human players that are playing
+     */
     public void initialisePlayers(int AIAmount, int playerAmount){
     	int length = AIAmount + playerAmount;
     	
@@ -635,7 +681,7 @@ public class GameEngine {
     		Player player = new Player(i);
     		players[i] = player;
     		College college = colleges[i];
-    		college.assignPlayer(player);
+    		college.assignPlayer(player); //assigns a college to the player based on their playerID
     		player.assignCollege(college);
     	}
     	for(int i = playerAmount; i < length; i++){
@@ -653,35 +699,57 @@ public class GameEngine {
         this.chancellor = new Chancellor(tiles);
     }
 
+    /**
+     * Tests whether there is a trade currently pending
+     */
     public void testTrade(){
         Trade trade = getCurrentPendingTrade();
         if (trade == null) return ;
         gameScreen.activeTrade(trade);
     }
 
+    /**
+     * Closes the trade overlay
+     */
     public void closeTrade(){
         gameScreen.closeTradeOverlay();
     }
 
-
+    /**
+     * Sets the current screen to the minigame screen
+     */
     public void miniGame() {
         game.setScreen(new MiniGameScreen());
     }
 
+    /**
+     * Getter for the current game screen
+     * @return The current game screen
+     */
     public GameScreen getGameScreen() {
         return gameScreen;
     }
 
+    /**
+     * Sets the current game screen to the main game screen
+     */
     public void backToGame(){
         game.setScreen(getGameScreen());
 
     }
+
+    /**
+     * Creates and initialises all of the effects
+     * @throws InvalidResourceTypeException
+     */
     private void setupEffects() throws InvalidResourceTypeException {
         plotEffectSource = new PlotEffectSource(this);
         playerEffectSource = new PlayerEffectSource(this);
 
     }
-
+    /**
+     * Randomly applies the effects
+     */
     private void setEffects() {
         Random RNGesus = new Random();
         int plotEffectIndex = RNGesus.nextInt(plotEffectSource.size);
@@ -699,14 +767,18 @@ public class GameEngine {
             }
         }
     }
-
+    /**
+     * Clears all imposed PlotEffects
+     */
     private void clearEffects() {
         for (PlotEffect PE : plotEffectSource) {
             PE.revertAll();
         }
     }
 
-
+    /**
+     * Sets the functions of all the buttons within the market
+     */
     public void setMarketButtonFunctions() {
         gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.ORE, true, new ChangeListener() {
             @Override
@@ -834,6 +906,9 @@ public class GameEngine {
         });
     }
 
+    /**
+     * Updates the appearance of the buttons within the market
+     */
     public void refreshMarketButtonAvailability() {
         if (currentPlayer().getResource(ResourceType.MONEY) >= market.getOreBuyPrice() && market.getOreStock() > 0) {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, true, Color.GREEN);
@@ -872,6 +947,9 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Initialises and opens the market interface
+     */
     public void openResourceMarketInterface() {
         gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + market.getOreBuyPrice());
         gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, "+" + market.getOreSellPrice());
@@ -917,6 +995,9 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Initialises and opens the roboticon market interface
+     */
     public void openRoboticonMarketInterface() {
         gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + market.getRoboticonBuyPrice());
 
@@ -927,6 +1008,9 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Closes the market interface
+     */
     public void closeMarketInterface() {
         gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, false, Color.GRAY);
         gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, false, Color.GRAY);
@@ -937,6 +1021,9 @@ public class GameEngine {
         gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, false, Color.GRAY);
     }
 
+    /**
+     * Resets the appearance of the auction interface
+     */
     public void resetAuctionInterface() {
         gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, 0);
         gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, 0);
@@ -969,6 +1056,9 @@ public class GameEngine {
         gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
     }
 
+    /**
+     * Sets the functions of the buttons within the market interface
+     */
     public void setAuctionButtonFunctions() {
         gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ORE, true, new ChangeListener() {
             @Override
@@ -1166,6 +1256,9 @@ public class GameEngine {
         });
     }
 
+    /**
+     * Sets the button functions of the upgrade overlay
+     */
     public void setUpgradeOverlayButtonFunctions() {
         gameScreen.upgradeOverlay.setUpgradeButtonFunction(ResourceType.ORE, new ChangeListener() {
             @Override
@@ -1211,6 +1304,9 @@ public class GameEngine {
         });
     }
 
+    /**
+     * Refreshes the values within the upgrade overlay
+     */
     public void refreshUpgradeOverlay() {
         try {
             gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ORE, selectedTile.getResource(ResourceType.ORE));
@@ -1273,6 +1369,9 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Updates the appearance of the auction table
+     */
     public void refreshAuctionPriceButtonAvailability() {
         if (gameScreen.marketInterfaceTable.tradePrice() < gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, true, true, Color.GREEN);
@@ -1319,6 +1418,9 @@ public class GameEngine {
         refreshAuctionConfirmationButtonAvailability();
     }
 
+    /**
+     * Updates the appearance of the auction table
+     */
     public void refreshAuctionConfirmationButtonAvailability() {
         if ((gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) > 0
                 || gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) > 0
@@ -1330,6 +1432,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Removes a specific trade from the array  of pending trades
+     * @param trade The trade to be removed
+     */
     public void removeTrade(Trade trade) {
         trades.removeValue(trade, true);
     }
