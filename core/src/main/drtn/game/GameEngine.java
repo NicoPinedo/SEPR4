@@ -301,8 +301,7 @@ public class GameEngine {
     }
 
     private void produceResource() {
-        Player player = currentPlayer();
-        for (Tile tile : player.getTileList()) {
+        for (Tile tile : currentPlayer().getTileList()) {
             tile.produce();
         }
     }
@@ -1222,31 +1221,44 @@ public class GameEngine {
      * Updates the options available to the current player on the roboticon upgrade screen based on their money count
      */
     private void updateUpgradeOptions() {
-        gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ORE, "-" + selectedTile.getRoboticonStored().getOreUpgradeCost());
-        gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ENERGY, "-" + selectedTile.getRoboticonStored().getEnergyUpgradeCost());
-        gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.FOOD, "-" + selectedTile.getRoboticonStored().getFoodUpgradeCost());
-        //Refresh prices shown on upgrade screen
-
-        if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getOreUpgradeCost()) {
-            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ORE, true, Color.GREEN);
+        if (selectedTile().getRoboticonStored().getLevel()[0] < 3) {
+            gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ORE, "-" + selectedTile.getRoboticonStored().getOreUpgradeCost());
+            if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getOreUpgradeCost()) {
+                gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ORE, true, Color.GREEN);
+            } else {
+                gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ORE, false, Color.RED);
+            }
+            //Conditionally enable ore upgrade button
         } else {
+            gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ORE, "MAX");
             gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ORE, false, Color.RED);
         }
-        //Conditionally enable ore upgrade button
 
-        if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getEnergyUpgradeCost()) {
-            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ENERGY, true, Color.GREEN);
+        if (selectedTile().getRoboticonStored().getLevel()[1] < 3) {
+            gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ENERGY, "-" + selectedTile.getRoboticonStored().getEnergyUpgradeCost());
+            if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getEnergyUpgradeCost()) {
+                gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ENERGY, true, Color.GREEN);
+            } else {
+                gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ENERGY, false, Color.RED);
+            }
+            //Conditionally enable energy upgrade button
         } else {
+            gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ENERGY, "MAX");
             gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ENERGY, false, Color.RED);
         }
-        //Conditionally enable energy upgrade button
 
-        if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getFoodUpgradeCost()) {
-            gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.FOOD, true, Color.GREEN);
+        if (selectedTile().getRoboticonStored().getLevel()[2] < 3) {
+            gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.FOOD, "-" + selectedTile.getRoboticonStored().getFoodUpgradeCost());
+            if (currentPlayer().getResource(ResourceType.MONEY) >= selectedTile.getRoboticonStored().getFoodUpgradeCost()) {
+                gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.FOOD, true, Color.GREEN);
+            } else {
+                gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.FOOD, false, Color.RED);
+            }
+            //Conditionally enable food upgrade button
         } else {
+            gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.FOOD, "MAX");
             gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.FOOD, false, Color.RED);
         }
-        //Conditionally enable food upgrade button
     }
 
     public void refreshAuctionPriceButtonAvailability() {
