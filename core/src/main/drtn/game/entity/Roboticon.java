@@ -59,6 +59,11 @@ public class Roboticon {
     private Texture iconTexture;
 
     /**
+     * Upgrade array, holds the possible levels of upgrade for the current robot. Stored as [Ore, Energy, Food]
+     */
+    private int Upgrades[] = {0, 0, 0};
+
+    /**
      * Constructor of the class
      *
      * @param ID     An integer uniquely defining the roboticon, starting at 0
@@ -197,5 +202,24 @@ public class Roboticon {
      */
     public int getMaxLevel() {
         return MaxLevel;
+    }
+
+    /**
+     * A method to return an array of all possible upgrades available to the roboticon at its current state
+     *
+     * @return Upgrades Returns an int Array in the form [Ore, Energy, Food]
+     */
+    public int[] possibleUpgrades() {
+        if (oreLevel <= MaxLevel) {
+            this.Upgrades[0] = oreLevel += 1;
+        }
+        if (energyLevel <= MaxLevel) {
+            this.Upgrades[1] = energyLevel += 1;
+        }
+        if (foodLevel <= MaxLevel) {
+            this.Upgrades[2] = foodLevel += 1;
+        }
+
+        return this.Upgrades;
     }
 }
