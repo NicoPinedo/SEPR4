@@ -575,9 +575,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         menuButtonStyle.pressedOffsetY = -1;
         //Establish the visual style of the pause menu's buttons
 
-        /*
-         * Button which allows players to resume the game from the pause menu
-         */
         TextButton resume = new TextButton("Resume", menuButtonStyle);
         resume.addListener(new ChangeListener() {
             @Override

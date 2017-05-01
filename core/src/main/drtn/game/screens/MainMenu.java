@@ -46,7 +46,7 @@ public class MainMenu implements Screen {
     /**
      * Array of all menu buttons
      */
-    private TextButton[] buttons = new TextButton[3];
+    private TextButton startButton;
 
     /**
      * Establishes the font which is used to encode the menu's options
@@ -127,34 +127,18 @@ public class MainMenu implements Screen {
         //Set up the format for the buttons on the menu
         //STILL NEED TO SORT OUT BUTTON ANIMATIONS
 
-        buttons[0] = new TextButton("Start Game", menuButtonStyle);
-        buttons[0].addListener(new ChangeListener() {
+        startButton = new TextButton("Start Game", menuButtonStyle);
+        startButton.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new PlayerSelectScreen(game));
             }
         });
 
-
-        buttons[1] = new TextButton("How to Play", menuButtonStyle);
-        buttons[2] = new TextButton("Leaderboard", menuButtonStyle);
-
-        //hideing the how to play and leaderboard button.
-        // buttons[0].setVisible(false);
-        buttons[1].setVisible(false); // New
-        buttons[2].setVisible(false); // New
-
-
-        //Initialise menu buttons using defined style
-
         //ADD TITLE BAR
         table.row();
         table.add(new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.WHITE))).padBottom(50);
-
-        //ADD BUTTONS - refactored for Assessment 3
-        for (Button button : buttons) {
-            table.row();
-            table.add(button);
-        }
+        table.row();
+        table.add(startButton);
 
         //FINALISE TABLE
         stage.addActor(table);

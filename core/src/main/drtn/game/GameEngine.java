@@ -23,6 +23,7 @@ import drtn.game.entity.*;
 import drtn.game.enums.ResourceType;
 import drtn.game.exceptions.InvalidResourceTypeException;
 import drtn.game.screens.GameScreen;
+import drtn.game.screens.MainMenu;
 import drtn.game.screens.MiniGameScreen;
 import drtn.game.util.Drawer;
 
