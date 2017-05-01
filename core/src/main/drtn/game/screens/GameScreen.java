@@ -379,6 +379,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 engine.pauseGame();
+
+                Gdx.input.setInputProcessor(pauseStage);
             }
         });
         drawer.toggleButton(pauseButton, true, Color.BLACK);

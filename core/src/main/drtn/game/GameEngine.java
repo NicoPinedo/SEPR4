@@ -9,6 +9,7 @@
 package drtn.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -260,6 +261,9 @@ public class GameEngine {
                 break;
 
             case 4:
+                gameScreen.phaseInfoTable.timer.setTime(0, 0);
+                gameScreen.phaseInfoTable.timer.stop();
+
                 this.stopChancellorMode();
                 //Stop the Chancellor's shenanigans
 
