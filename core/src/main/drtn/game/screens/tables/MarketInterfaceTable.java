@@ -217,7 +217,12 @@ public class MarketInterfaceTable extends Table {
                 }
                 playerLabel.setText(otherPlayer.get(playerListPosition).getCollege().getName());
 
+                setTradeAmount(ResourceType.ORE, 0);
+                setTradeAmount(ResourceType.ENERGY, 0);
+                setTradeAmount(ResourceType.FOOD, 0);
                 setTradePrice(0);
+
+                toggleAuctionConfirmationButton(false, Color.RED);
             }
         });
 
@@ -232,7 +237,12 @@ public class MarketInterfaceTable extends Table {
                 }
                 playerLabel.setText(otherPlayer.get(playerListPosition).getCollege().getName());
 
+                setTradeAmount(ResourceType.ORE, 0);
+                setTradeAmount(ResourceType.ENERGY, 0);
+                setTradeAmount(ResourceType.FOOD, 0);
                 setTradePrice(0);
+
+                toggleAuctionConfirmationButton(false, Color.RED);
             }
         });
     }
