@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import drtn.game.GameEngine;
 import drtn.game.util.Drawer;
 import drtn.game.util.TTFont;
@@ -173,8 +174,6 @@ public class PlayerSelectScreen implements Screen {
 
         titleFont = new TTFont(Gdx.files.internal("font/earthorbiterxtrabold.ttf"), 120, 2, Color.BLACK, false);
         menuFont = new TTFont(Gdx.files.internal("font/enterthegrid.ttf"), 36, 2, Color.BLACK, false);
-        tempFont = new TTFont(Gdx.files.internal("font/earthorbiter.ttf"), 24, 2, Color.BLACK, false);
-        //Initialise menu font
 
         Gdx.input.setInputProcessor(stage);
         //Set the stage up to accept user inputs
@@ -194,16 +193,20 @@ public class PlayerSelectScreen implements Screen {
         menuButtonStyle.pressedOffsetX = 1;
         menuButtonStyle.pressedOffsetY = -1;
         //Set up the format for the buttons on the menu
-       
-        
+
         playerAmount = 0;
         AIPlayerAmount = 0;
         
-        playerLabel = new Label("Players", new Label.LabelStyle(menuFont.font(), Color.WHITE));
+        playerLabel = new Label("HUMAN", new Label.LabelStyle(menuFont.font(), Color.WHITE));
+        playerLabel.setAlignment(Align.left);
         playerAmountLabel = new Label("0", new Label.LabelStyle(menuFont.font(), Color.WHITE));
-        AIPlayerLabel = new Label("AI Players", new Label.LabelStyle(menuFont.font(), Color.WHITE));
+        playerAmountLabel.setAlignment(Align.center);
+        AIPlayerLabel = new Label("CPU", new Label.LabelStyle(menuFont.font(), Color.WHITE));
+        AIPlayerLabel.setAlignment(Align.left);
         AIPlayerAmountLabel = new Label("0", new Label.LabelStyle(menuFont.font(), Color.WHITE));
-        addPlayerButton = new TextButton("more", menuButtonStyle);
+        AIPlayerAmountLabel.setAlignment(Align.center);
+
+        addPlayerButton = new TextButton("ADD", menuButtonStyle);
         addPlayerButton.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 playerAmount += 1;
@@ -212,7 +215,7 @@ public class PlayerSelectScreen implements Screen {
         });
         //increase number of human players
         
-        addAIPlayerButton = new TextButton("more", menuButtonStyle);
+        addAIPlayerButton = new TextButton("ADD", menuButtonStyle);
         addAIPlayerButton.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 AIPlayerAmount += 1;
@@ -221,7 +224,7 @@ public class PlayerSelectScreen implements Screen {
         });
         //increase number of AI players
         
-        removePlayerButton = new TextButton("less", menuButtonStyle);
+        removePlayerButton = new TextButton("RMV", menuButtonStyle);
         removePlayerButton.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 playerAmount -= 1;
@@ -230,7 +233,7 @@ public class PlayerSelectScreen implements Screen {
         });
         //decrease number of human players
         
-        removeAIPlayerButton = new TextButton("less", menuButtonStyle);
+        removeAIPlayerButton = new TextButton("RMV", menuButtonStyle);
         removeAIPlayerButton.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 AIPlayerAmount -= 1;
@@ -250,19 +253,19 @@ public class PlayerSelectScreen implements Screen {
         
         
         //add all buttons to the table
-        drawer.addTableRow(table, playerLabel);
-        drawer.addTableRow(table, removePlayerButton);
-        table.add(playerAmountLabel).width(30);
-        table.add(addPlayerButton).padLeft(20);
-        drawer.addTableRow(table, AIPlayerLabel);
-        drawer.addTableRow(table, removeAIPlayerButton);
-        table.add(AIPlayerAmountLabel);
-        table.add(addAIPlayerButton);
+        table.add(new Label("SET PLAYERS", new Label.LabelStyle(titleFont.font(), Color.WHITE))).colspan(4).padBottom(5);
         table.row();
-        table.add();
-        table.add();
-        table.add();
-        table.add(confirmButton);
+        table.add(playerLabel).width(200).padLeft(150);
+        table.add(removePlayerButton).width(100);
+        table.add(playerAmountLabel).width(50);
+        table.add(addPlayerButton).width(100).padRight(150);
+        table.row();
+        table.add(AIPlayerLabel).width(200).padLeft(150);
+        table.add(removeAIPlayerButton).width(100);
+        table.add(AIPlayerAmountLabel).width(50);
+        table.add(addAIPlayerButton).width(100).padRight(150);
+        table.row();
+        table.add(confirmButton).colspan(4).padTop(20);
         stage.addActor(table);
         refreshLabels();
 	}

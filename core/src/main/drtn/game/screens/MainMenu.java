@@ -46,7 +46,7 @@ public class MainMenu implements Screen {
     /**
      * Array of all menu buttons
      */
-    private TextButton[] buttons = new TextButton[3];
+    private TextButton startButton;
 
     /**
      * Establishes the font which is used to encode the menu's options
@@ -57,11 +57,6 @@ public class MainMenu implements Screen {
      * Establishes the font which is used to encode the game's title
      */
     private TTFont titleFont;
-
-    /**
-     * Establishes the font which, at the moment, encodes a "Title TBC" message
-     */
-    private TTFont tempFont;
 
     /**
      * Object defining QOL drawing functions for rectangles and on-screen tables
@@ -110,7 +105,6 @@ public class MainMenu implements Screen {
 
         titleFont = new TTFont(Gdx.files.internal("font/earthorbiterxtrabold.ttf"), 120, 2, Color.BLACK, false);
         menuFont = new TTFont(Gdx.files.internal("font/enterthegrid.ttf"), 36, 2, Color.BLACK, false);
-        tempFont = new TTFont(Gdx.files.internal("font/earthorbiter.ttf"), 24, 2, Color.BLACK, false);
         //Initialise menu font
 
         Gdx.input.setInputProcessor(stage);
@@ -133,33 +127,18 @@ public class MainMenu implements Screen {
         //Set up the format for the buttons on the menu
         //STILL NEED TO SORT OUT BUTTON ANIMATIONS
 
-        buttons[0] = new TextButton("Start Game", menuButtonStyle);
-        buttons[0].addListener(new ChangeListener() {
+        startButton = new TextButton("Start Game", menuButtonStyle);
+        startButton.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new PlayerSelectScreen(game));
             }
         });
 
-
-        buttons[1] = new TextButton("How to Play", menuButtonStyle);
-        buttons[2] = new TextButton("Leaderboard", menuButtonStyle);
-
-        //hideing the how to play and leaderboard button.
-        // buttons[0].setVisible(false);
-        buttons[1].setVisible(false); // New
-        buttons[2].setVisible(false); // New
-
-
-        //Initialise menu buttons using defined style
-
         //ADD TITLE BAR
-        drawer.addTableRow(table, new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.WHITE)), 0, 0, 0, 0);
-        drawer.addTableRow(table, new Label("(Title TBC)", new Label.LabelStyle(tempFont.font(), Color.WHITE)), 0, 0, 50, 0);
-
-        //ADD BUTTONS - refactored for Assessment 3
-        for (Button button : buttons) {
-            drawer.addTableRow(table, button);
-        }
+        table.row();
+        table.add(new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.WHITE))).padBottom(50);
+        table.row();
+        table.add(startButton);
 
         //FINALISE TABLE
         stage.addActor(table);

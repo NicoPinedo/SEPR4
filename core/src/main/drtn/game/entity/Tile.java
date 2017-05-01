@@ -119,13 +119,13 @@ public class Tile extends Button {
      * clicked on (for individual tile selection) and hovered over (to determine when the tile's tooltip should be
      * drawn).
      *
-     * @param game Variable storing the game's state
-     * @param ID   The tile's distictive getID value
-     * @param EnergyCount The multiplier for the production of energy
-     * @param OreCount    The multiplier for the production of ore
-     * @param FoodCount The multiplier for the production of food
-     * @param surfaceGraphic  A string to signify what the graphics of the tile are.
-     * @param runnable    An object encapsulating a method that can be executed when the tile is clicked on
+     * @param game           Variable storing the game's state
+     * @param ID             The tile's distictive getID value
+     * @param EnergyCount    The multiplier for the production of energy
+     * @param OreCount       The multiplier for the production of ore
+     * @param FoodCount      The multiplier for the production of food
+     * @param surfaceGraphic A string to signify what the graphics of the tile are.
+     * @param runnable       An object encapsulating a method that can be executed when the tile is clicked on
      */
     public Tile(Game game, int ID, int EnergyCount, int OreCount, int FoodCount, String surfaceGraphic, final Runnable runnable) {
         super(new ButtonStyle());
@@ -167,13 +167,13 @@ public class Tile extends Button {
         //Switch case determines tile graphic types, if not their graphic type is null
         double newCount;
         double multiplier = 1.5;
-        switch(ID){
+        switch (ID) {
             case 2:
             case 3:
             case 9:
             case 14:
                 surfaceGraphic = "Ore";
-                newCount = OreCount*multiplier;
+                newCount = OreCount * multiplier;
                 this.OreCount = (int) newCount;
                 break;
             case 5:
@@ -181,7 +181,7 @@ public class Tile extends Button {
             case 7:
             case 11:
                 surfaceGraphic = "Energy";
-                newCount = EnergyCount*multiplier;
+                newCount = EnergyCount * multiplier;
                 this.EnergyCount = (int) newCount;
                 break;
             case 4:
@@ -190,7 +190,7 @@ public class Tile extends Button {
             case 13:
             case 15:
                 surfaceGraphic = "Food";
-                newCount = FoodCount*multiplier;
+                newCount = FoodCount * multiplier;
                 this.FoodCount = (int) newCount;
                 break;
         }
@@ -260,28 +260,22 @@ public class Tile extends Button {
      */
     public void produce() {
         if (roboticonStored != null && owner != null) {
-
-            if ((owner.getResource(ResourceType.ENERGY) >= 3) && (owner.getResource(ResourceType.FOOD) >= 2)) {
-                owner.varyResource(ResourceType.ENERGY, -3);
-                owner.varyResource(ResourceType.FOOD, -2);
-
             int[] modifiers = this.roboticonStored.productionModifier();
 
             int OreProduce = modifiers[0] * this.OreCount;
-                owner.varyResource(ResourceType.ORE, OreProduce);
+            owner.varyResource(ResourceType.ORE, OreProduce);
             //Add the tile's ore yields to the owner's resource-counters
-                System.out.println("Ore produced: " + OreProduce);
+            System.out.println("Ore produced: " + OreProduce);
 
             int EnergyProduce = modifiers[1] * this.EnergyCount;
-                owner.varyResource(ResourceType.ENERGY, EnergyProduce);
+            owner.varyResource(ResourceType.ENERGY, EnergyProduce);
             //Add the tile's energy yields to the owner's resource-counters
-                System.out.println("Energy produced: " + EnergyProduce);
+            System.out.println("Energy produced: " + EnergyProduce);
 
             int FoodProduce = modifiers[2] * this.FoodCount;
-                owner.varyResource(ResourceType.FOOD, FoodProduce);
+            owner.varyResource(ResourceType.FOOD, FoodProduce);
             //Add the tile's food yields to the owner's resource-counters
-                System.out.println("Food produced: " + FoodProduce);
-            }
+            System.out.println("Food produced: " + FoodProduce);
         }
     }
 
@@ -299,9 +293,9 @@ public class Tile extends Button {
                 return this.FoodCount;
             case ORE:
                 return this.OreCount;
-            default:
-                throw new InvalidResourceTypeException();
         }
+
+        throw new InvalidResourceTypeException();
     }
 
     /**

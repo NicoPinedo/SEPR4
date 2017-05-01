@@ -130,12 +130,12 @@ public class MarketInterfaceTable extends Table {
             marketButton.getLabel().setColor(Color.GREEN);
             marketButton.setTouchable(Touchable.disabled);
 
-            auctionButton.getLabel().setColor(Color.WHITE);
+            auctionButton.getLabel().setColor(Color.BLACK);
             auctionButton.setTouchable(Touchable.enabled);
 
             showMarketInterface();
         } else {
-            marketButton.getLabel().setColor(Color.WHITE);
+            marketButton.getLabel().setColor(Color.BLACK);
             marketButton.setTouchable(Touchable.enabled);
 
             auctionButton.getLabel().setColor(Color.GREEN);
@@ -157,7 +157,7 @@ public class MarketInterfaceTable extends Table {
         });
 
         auctionButton = new TextButton("AUCTION", regularButtonStyle);
-        auctionButton.setColor(Color.WHITE);
+        auctionButton.getLabel().setColor(Color.BLACK);
         auctionButton.setTouchable(Touchable.enabled);
         auctionButton.addListener(new ChangeListener() {
             @Override
@@ -215,9 +215,14 @@ public class MarketInterfaceTable extends Table {
                 } else {
                     playerListPosition = 0;
                 }
-                playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+                playerLabel.setText(otherPlayer.get(playerListPosition).getCollege().getName());
 
+                setTradeAmount(ResourceType.ORE, 0);
+                setTradeAmount(ResourceType.ENERGY, 0);
+                setTradeAmount(ResourceType.FOOD, 0);
                 setTradePrice(0);
+
+                toggleAuctionConfirmationButton(false, Color.RED);
             }
         });
 
@@ -230,9 +235,14 @@ public class MarketInterfaceTable extends Table {
                 } else {
                     playerListPosition = otherPlayer.size() - 1;
                 }
-                playerLabel.setText("Player " + otherPlayer.get(playerListPosition).getPlayerNumber());
+                playerLabel.setText(otherPlayer.get(playerListPosition).getCollege().getName());
 
+                setTradeAmount(ResourceType.ORE, 0);
+                setTradeAmount(ResourceType.ENERGY, 0);
+                setTradeAmount(ResourceType.FOOD, 0);
                 setTradePrice(0);
+
+                toggleAuctionConfirmationButton(false, Color.RED);
             }
         });
     }
@@ -280,10 +290,6 @@ public class MarketInterfaceTable extends Table {
     }
 
     private void showAuctionInterface() {
-        playerListPosition = 0;
-
-        setTradePrice(0);
-
         add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(40);
         add(new Label("#", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
         add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
@@ -291,14 +297,12 @@ public class MarketInterfaceTable extends Table {
         //Visual guff
 
         row();
-        oreTradeAmount = 0;
         add(new Label("Ore", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(oreTradeAmountLabel).left();
         add(playerBuyOre).left();
         add(playerSellOre).left();
 
         row();
-        energyTradeAmount = 0;
         add(new Label("Energy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(energyTradeAmountLabel).left();
         add(playerBuyEnergy).left();
@@ -311,7 +315,6 @@ public class MarketInterfaceTable extends Table {
         add(playerSellFood).left();
 
         row();
-        tradePrice = 0;
         add(new Label("Price", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().colspan(2).padTop(15);
         add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20).padTop(15);
         add(new Label("Less", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20).padTop(15);
@@ -627,7 +630,7 @@ public class MarketInterfaceTable extends Table {
         }
 
         playerListPosition = 0;
-        playerLabel.setText("Player " + otherPlayer.get(0).getPlayerNumber());
+        playerLabel.setText(otherPlayer.get(0).getCollege().getName());
 
         setTradePrice(0);
     }
@@ -643,6 +646,20 @@ public class MarketInterfaceTable extends Table {
                 return foodTradeAmount;
             default:
                 return 0;
+        }
+    }
+
+    public void toggleAuctionAccess(boolean enabled) {
+        if (enabled) {
+            auctionButton.setTouchable(Touchable.enabled);
+            auctionButton.getLabel().setColor(Color.BLACK);
+        } else {
+            if (!market) {
+                switchInterface();
+            }
+
+            auctionButton.setTouchable(Touchable.disabled);
+            auctionButton.getLabel().setColor(Color.RED);
         }
     }
 

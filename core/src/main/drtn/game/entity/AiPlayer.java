@@ -65,13 +65,14 @@ public class AiPlayer extends Player {
         switch(engine.getPhase()) {
             // Claim land
             case 1:
-                for (Tile tile : engine.tiles()) {
-                    if (!tile.isOwned()) {
-                        engine.selectTile(tile);
+                int size = engine.tiles.length;
+                while (true){
+                    int index = rnd.nextInt(size);
+                    if (!engine.tiles[index].isOwned()){
+                        engine.updateSelectedTileObject(engine.tiles[index]);
                         engine.claimTile();
                         break;
-                    }
-                }
+                }}
                 break;
 
             // Buy roboticon
@@ -96,7 +97,7 @@ public class AiPlayer extends Player {
                     }
 
                     if (!tile.hasRoboticon()) {
-                        engine.selectTile(tile);
+                        engine.updateSelectedTileObject(tile);
                         engine.deployRoboticon();
                     }
                 }

@@ -274,12 +274,9 @@ public class GameTimer extends com.badlogic.gdx.scenes.scene2d.ui.Label {
 
     /**
      * Stops the timer (and changes the timer's colour appropriately)
-     *
-     * Changed in Assessment 3 (to reset back to 0:0)
      */
     public void stop() {
         timer.stop();
-        setTime(0, 0);
 
         this.setColor(pauseColour);
     }
