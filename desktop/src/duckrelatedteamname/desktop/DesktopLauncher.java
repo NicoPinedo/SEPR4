@@ -8,6 +8,7 @@
 
 package duckrelatedteamname.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import drtn.game.Main;
@@ -25,9 +26,11 @@ public class DesktopLauncher {
 
 		//GAME CONFIG
 		config.title = "Duck-Related Game";
+		config.addIcon("icon.png", Files.FileType.Internal);
+		config.backgroundFPS = 1;
+		config.vSyncEnabled = true;
 		config.width = 1024;
 		config.height = 512;
-		config.vSyncEnabled = true;
 		config.resizable = false;
 
 		new LwjglApplication(new Main(), config);
