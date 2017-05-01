@@ -74,7 +74,7 @@ public class GameEngine {
      * Array holding the tiles to be laid over the map
      * Note that the tiles' visuals are encoded by the image declared and stored in the GameScreen class (and not here)
      */
-    private Tile[] tiles;
+    public Tile[] tiles;
     /**
      * Holds the data pertaining to the currently-selected tile
      */

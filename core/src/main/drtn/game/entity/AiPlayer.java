@@ -65,13 +65,14 @@ public class AiPlayer extends Player {
         switch(engine.getPhase()) {
             // Claim land
             case 1:
-                for (Tile tile : engine.tiles()) {
-                    if (!tile.isOwned()) {
-                        engine.updateSelectedTileObject(tile);
+                int size = engine.tiles.length;
+                for (int i=0; i < size; i++){
+                    int index = rnd.nextInt(size);
+                    if (!engine.tiles[index].isOwned()){
+                        engine.updateSelectedTileObject(engine.tiles[index]);
                         engine.claimTile();
                         break;
-                    }
-                }
+                }}
                 break;
 
             // Buy roboticon
