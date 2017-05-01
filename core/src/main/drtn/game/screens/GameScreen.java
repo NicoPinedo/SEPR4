@@ -344,8 +344,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         drawer.borderedRectangle(Color.WHITE, Color.WHITE, 769, 163, 255, 1, 1);
         //Line separating SelectedTileInfoTable from MarketInterfaceTable
 
-        drawer.lineRectangle(Color.WHITE, 804, 36, 64, 64, 1);
-        drawer.lineRectangle(Color.WHITE, 924, 36, 64, 64, 1);
+        drawer.lineRectangle(Color.WHITE, 803, 35, 66, 66, 1);
+        drawer.lineRectangle(Color.WHITE, 923, 35, 66, 66, 1);
         //Borders around College and Roboticon icons in SelectedTileInfoTable
     }
 

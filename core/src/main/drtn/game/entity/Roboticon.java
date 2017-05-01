@@ -75,7 +75,7 @@ public class Roboticon {
         this.CurrentTile = Tile;
         this.Owner = Player;
 
-        this.iconTexture = new Texture("image/Roboticon111.png");
+        this.iconTexture = new Texture("image/Roboticon.png");
         this.icon = new Image(iconTexture);
 
         this.CurrentTile.assignRoboticon(this);
