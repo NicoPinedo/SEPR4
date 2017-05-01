@@ -639,6 +639,20 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    public void toggleAuctionAccess(boolean enabled) {
+        if (enabled) {
+            auctionButton.setTouchable(Touchable.enabled);
+            auctionButton.getLabel().setColor(Color.BLACK);
+        } else {
+            if (!market) {
+                switchInterface();
+            }
+
+            auctionButton.setTouchable(Touchable.disabled);
+            auctionButton.getLabel().setColor(Color.RED);
+        }
+    }
+
     public void setAuctionConfirmationButtonFunction(ChangeListener event) {
         confirmSale.addListener(event);
     }

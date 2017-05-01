@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.*;
 
 import com.badlogic.gdx.utils.Timer;
-import drtn.game.effects.PlayerEffect;
 import drtn.game.effects.PlayerEffectSource;
 import drtn.game.effects.PlotEffect;
 import drtn.game.effects.PlotEffectSource;
@@ -234,6 +233,8 @@ public class GameEngine {
 
                 closeMarketInterface();
                 //Close the market if phase 1 is beginning straight off the back of phase 5
+
+                gameScreen.marketInterfaceTable.toggleAuctionAccess(true);
                 break;
 
             case 2:
@@ -272,6 +273,8 @@ public class GameEngine {
 
             case 5:
                 openResourceMarketInterface();
+
+                gameScreen.marketInterfaceTable.toggleAuctionAccess(false);
             
                 if(checkGameEnd()){
                     System.out.println("Someone win");
