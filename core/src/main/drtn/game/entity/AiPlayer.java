@@ -66,7 +66,7 @@ public class AiPlayer extends Player {
             // Claim land
             case 1:
                 int size = engine.tiles.length;
-                for (int i=0; i < size; i++){
+                while (true){
                     int index = rnd.nextInt(size);
                     if (!engine.tiles[index].isOwned()){
                         engine.updateSelectedTileObject(engine.tiles[index]);
