@@ -57,6 +57,9 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
             = new TextureRegionDrawable(new TextureRegion(new Texture("minigame/badluck.png")));
     private static List<TextureRegionDrawable> textures;
 
+    /**
+     * Static initialization block. Adds card textures to an ArrayList.
+     */
     static {
         textures = new ArrayList<TextureRegionDrawable>(3);
         textures.add(cardTextureAddMoney);
@@ -78,6 +81,9 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
 
     private static TTFont smallFontRegular;
 
+    /**
+     * Method show() implements interface's method. Creates GUI for minigame and adds functions to it.
+     */
     @Override
     public void show() {
 
@@ -85,13 +91,21 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
         this.table = new Table();
         table.setFillParent(true);
 
+        /**
+         * New button objects created
+         */
         button1 = new ImageButton(cardTexture);
         button2 = new ImageButton(cardTexture);
         button3 = new ImageButton(cardTexture);
 
+        /**
+         * Font style added to the button.
+         */
         TextButton.TextButtonStyle buttonStyle = GameScreen.getLargeButtonStyle();
         buttonStyle.font = smallFontRegular.font();
-
+        /**
+         * Buttons are added to the screen.
+         */
         TextButton buttonBack = new TextButton("BACK", buttonStyle);
         table.add(button1).padRight(10);
         table.add(button2).padRight(10);
@@ -102,6 +116,9 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
         buttonBack.setPosition(Gdx.graphics.getWidth() - buttonBack.getWidth(), 0);
         stage.addActor(buttonBack);
 
+        /**
+         * Adds Listener to the "back" button. Allows to go back to the current game and updates players state.
+         */
         buttonBack.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -111,6 +128,9 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
             }
         });
 
+        /**
+         * Implements behaviour when button object is clicked.
+         */
         ChangeListener event = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -120,7 +140,9 @@ public class MiniGameScreen extends AbstractAnimationScreen implements Screen {
                 GameActions[] allActions = GameActions.values();
                 int index = rnd.nextInt(allActions.length);
                 GameActions choose_gift = allActions[index];
-
+                /**
+                 * Implements update of Player's Money and quantity of Roboticons.
+                 */
                 Player player = GameEngine.getInstance().currentPlayer();
                 System.out.println(choose_gift.toString());
                 switch (choose_gift) {
