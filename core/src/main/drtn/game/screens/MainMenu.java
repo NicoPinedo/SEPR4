@@ -59,11 +59,6 @@ public class MainMenu implements Screen {
     private TTFont titleFont;
 
     /**
-     * Establishes the font which, at the moment, encodes a "Title TBC" message
-     */
-    private TTFont tempFont;
-
-    /**
      * Object defining QOL drawing functions for rectangles and on-screen tables
      * Used in this class accelerate table row creation
      */
@@ -110,7 +105,6 @@ public class MainMenu implements Screen {
 
         titleFont = new TTFont(Gdx.files.internal("font/earthorbiterxtrabold.ttf"), 120, 2, Color.BLACK, false);
         menuFont = new TTFont(Gdx.files.internal("font/enterthegrid.ttf"), 36, 2, Color.BLACK, false);
-        tempFont = new TTFont(Gdx.files.internal("font/earthorbiter.ttf"), 24, 2, Color.BLACK, false);
         //Initialise menu font
 
         Gdx.input.setInputProcessor(stage);
@@ -154,9 +148,7 @@ public class MainMenu implements Screen {
 
         //ADD TITLE BAR
         table.row();
-        table.add(new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.WHITE)));
-        table.row();
-        table.add(new Label("(Title TBC)", new Label.LabelStyle(tempFont.font(), Color.WHITE))).padBottom(50);
+        table.add(new Label("Sabbaticoup", new Label.LabelStyle(titleFont.font(), Color.WHITE))).padBottom(50);
 
         //ADD BUTTONS - refactored for Assessment 3
         for (Button button : buttons) {
