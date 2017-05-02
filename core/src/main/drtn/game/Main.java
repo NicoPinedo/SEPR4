@@ -29,10 +29,4 @@ public class Main extends Game {
 	//Use CTRL-Q after clicking on a keyword to read up on what it does
 	//If you ever reference a class that hasn't been imported, use ALT-ENTER to generate the import call
 	//Each screen will run create(), resize() and then render() in that order
-
-	//TO-DO FOR THE NEXT GROUP:
-	// - Implement icons/tooltips for identifying roboticon upgrades
-	// - Visually distinguish buttons from labels
-	// - Balance the game: it's currently possible to get infinite money through repeated buying and selling
-	// - Extend tile tooltips to show resource yields ONCE TILES HAVE BEEN CLAIMED
 }
