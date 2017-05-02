@@ -43,13 +43,6 @@ public class PlayerEffect {
     private Runnable runnable;
 
     /**
-     * Overlay to provide a visual indication of the effect's applications and influences
-     */
-
-
-
-
-    /**
      * Constructor that imports the parameters of the effect along with a custom block of code in which it can be used
      *
      * @param name The name of the effect
@@ -86,11 +79,6 @@ public class PlayerEffect {
     }
 
     /**
-     * Method that populates the effect's associated overlay
-     */
-
-
-    /**
      * Imposes the effect on the player by changing the resources that they have
      * Their resources can be added to, subtracted from, multiplied or divided
      *
@@ -109,8 +97,6 @@ public class PlayerEffect {
             player.setResource(ResourceType.MONEY, player.getResource(ResourceType.MONEY) + (int) modifiers[3]);
         }
     }
-
-
 
     /**
      * Executes the runnable
