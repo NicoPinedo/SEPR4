@@ -303,6 +303,8 @@ public class MarketInterfaceTable extends Table {
 
     /**
      * Switches between showing the market's interface and showing the auction house's interface upon being called
+     * Works by clearing the table's contents and then repopulating them with the actors pertaining to the desired
+     * interface
      */
     public void switchInterface() {
         market = !market;

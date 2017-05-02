@@ -24,17 +24,49 @@ import drtn.game.util.TTFont;
  */
 public class PlayerInfoTable extends Table {
 
+    /**
+     * Image object intended to hold visual representations of players' associated colleges
+     */
     private Image collegeImage;
 
+    /**
+     * Label identifying the current player's ID
+     */
     private Label playerLabel;
+
+    /**
+     * Label identifying the current player's associated college
+     */
     private Label collegeLabel;
 
+    /**
+     * Label encoding the amount of ore that the active player currently owns
+     */
     private Label oreCounterLabel;
+
+    /**
+     * Label encoding the amount of food that the active player currently owns
+     */
     private Label foodCounterLabel;
+
+    /**
+     * Label encoding the amount of energy that the active player currently owns
+     */
     private Label energyCounterLabel;
+
+    /**
+     * Label encoding the amount of money that the active player currently owns
+     */
     private Label moneyCounterLabel;
+
+    /**
+     * Label encoding the amount of roboticons that the active player currently owns
+     */
     private Label roboticonCounterLabel;
 
+    /**
+     * Constructs the table which will identify active players' associated colleges and describe their inventories
+     */
     public PlayerInfoTable() {
         final int textSize = 16;
         final int labelWidth = 80;
@@ -82,6 +114,12 @@ public class PlayerInfoTable extends Table {
         add(inventoryTable).center();
     }
 
+    /**
+     * Creates a label to render text in a specific style and aligns it left-wise
+     *
+     * @param font The font that will encode the label's textual contents
+     * @return A label encoded with the provided font and aligned left-wise
+     */
     private Label prepareLabel(BitmapFont font) {
         Label label = new Label("", new Label.LabelStyle(font, Color.WHITE));
         label.setAlignment(Align.left);
@@ -89,6 +127,13 @@ public class PlayerInfoTable extends Table {
         return label;
     }
 
+    /**
+     * Creates a label to render text in a specific style and aligns it left-wise
+     *
+     * @param text The text to be encoded in the label
+     * @param font The font that will encode the label's textual contents
+     * @return A label encoded with the provided font and aligned left-wise
+     */
     private Label prepareLabel(String text, BitmapFont font) {
         Label label = new Label(text, new Label.LabelStyle(font, Color.WHITE));
         label.setAlignment(Align.left);
@@ -96,6 +141,11 @@ public class PlayerInfoTable extends Table {
         return label;
     }
 
+    /**
+     * Configures the table's contents to represent a specific player and display their inventory
+     *
+     * @param player The player to be represented
+     */
     public void showPlayerInfo(Player player) {
         collegeImage.setDrawable(player.getCollege().getLogo().getDrawable());
 
@@ -105,6 +155,11 @@ public class PlayerInfoTable extends Table {
         showPlayerInventory(player);
     }
 
+    /**
+     * Configures the table's contents to display a specific player's inventory
+     *
+     * @param player The player owning the inventory to be shown
+     */
     public void showPlayerInventory(Player player) {
         oreCounterLabel.setText(String.valueOf(player.getResource(ResourceType.ORE)));
         foodCounterLabel.setText(String.valueOf(player.getResource(ResourceType.FOOD)));
@@ -113,6 +168,12 @@ public class PlayerInfoTable extends Table {
         roboticonCounterLabel.setText(String.valueOf(player.getResource(ResourceType.ROBOTICON)));
     }
 
+    /**
+     * Updates a specific component of the table's inventory section
+     *
+     * @param player The player owning the goods to be represented
+     * @param resource The resource-type corresponding to the internal counter that is to be refreshed/updated
+     */
     public void updateResource(Player player, ResourceType resource) {
         if (resource == ResourceType.ORE) {
             oreCounterLabel.setText(String.valueOf(player.getResource(resource)));
