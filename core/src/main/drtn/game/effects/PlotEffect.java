@@ -37,12 +37,6 @@ public class PlotEffect extends Array<Float[]> {
     private Array<Tile> plotRegister;
 
     /**
-     * Overlay to provide a visual indication of the effect's presence and influences
-     */
-
-
-
-    /**
      * Constructor that imports the parameters of the effect along with a custom block of code in which it can be used
      *
      * @param name The name of the effect
@@ -59,19 +53,11 @@ public class PlotEffect extends Array<Float[]> {
         //Store the effect's modifiers at the base of the internal stack
 
         this.runnable = runnable;
-
         //Assign the effect to the proprietary method provided
 
         this.plotRegister = new Array<Tile>();
         //Establish the separate LandPlot stack to track affected tiles
-
-
-
     }
-
-
-
-
 
     /**
      * Imposes the effect's modifiers on the provided plot
@@ -149,6 +135,7 @@ public class PlotEffect extends Array<Float[]> {
             //Restore the original production modifiers of the aforementioned plot
         }
     }
+
     /**
      * Reverts all affected tiles back to their original states
      */
@@ -157,6 +144,7 @@ public class PlotEffect extends Array<Float[]> {
             revert();
         }
     }
+
     /**
      * Swaps the positions of the first two values within the internal stack
      */
@@ -176,12 +164,6 @@ public class PlotEffect extends Array<Float[]> {
     public void executeRunnable() {
         runnable.run();
     }
-
-    /**
-     * Getter for the overlay
-     * @return The overlay of the effect
-     */
-
 
     public String getDescription(){
         return this.description;

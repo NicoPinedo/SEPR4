@@ -28,69 +28,225 @@ import java.util.ArrayList;
  */
 public class MarketInterfaceTable extends Table {
 
+    /**
+     * Determines whether the interface is accessing the game's market or auction house
+     */
     private boolean market;
 
+    /**
+     * Table holding the buttons facilitating switches between the market's interface and the auction house's interface
+     */
     private Table navigationTable;
 
     private TextButton.TextButtonStyle regularButtonStyle;
     private TextButton.TextButtonStyle lightButtonStyle;
 
+    /**
+     * Opens the market's interface when clicked on
+     */
     private TextButton marketButton;
+
+    /**
+     * Opens the auction house's interface when clicked on
+     */
     private TextButton auctionButton;
 
+    /**
+     * Attempts to purchase one unit of ore for the current player when clicked on
+     */
     private TextButton buyOreButton;
+
+    /**
+     * Attempts to purchase one unit of energy for the current player when clicked on
+     */
     private TextButton buyEnergyButton;
+
+    /**
+     * Attempts to purchase one unit of food for the current player when clicked on
+     */
     private TextButton buyFoodButton;
+
+    /**
+     * Attempts to purchase one roboticon for the current player when clicked on
+     */
     private TextButton buyRoboticonButton;
 
+    /**
+     * Attempts to sell one of the active player's ore stocks to the market when clicked on
+     */
     private TextButton sellOreButton;
+
+    /**
+     * Attempts to sell one of the active player's energy stocks to the market when clicked on
+     */
     private TextButton sellEnergyButton;
+
+    /**
+     * Attempts to sell one of the active player's food stocks to the market when clicked on
+     */
     private TextButton sellFoodButton;
 
-    private TextButton playerBuyOre;
-    private TextButton playerBuyEnergy;
-    private TextButton playerBuyFood;
-    private TextButton playerSellOre;
-    private TextButton playerSellEnergy;
-    private TextButton playerSellFood;
+    /**
+     * Increases the amount of ore to be offered in the pending trade request
+     */
+    private TextButton auctionAddOre;
 
+    /**
+     * Increases the amount of energy to be offered in the pending trade request
+     */
+    private TextButton auctionAddEnergy;
+
+    /**
+     * Increases the amount of food to be offered in the pending trade request
+     */
+    private TextButton auctionAddFood;
+
+    /**
+     * Decreases the amount of ore to be offered in the pending trade request
+     */
+    private TextButton auctionSellOre;
+
+    /**
+     * Decreases the amount of energy to be offered in the pending trade request
+     */
+    private TextButton auctionSellEnergy;
+
+    /**
+     * Decreases the amount of food to be offered in the pending trade request
+     */
+    private TextButton auctionSellFood;
+
+    /**
+     * Adds 1 unit of currency to the price of the pending trade request
+     */
     private TextButton pricePlus1;
+
+    /**
+     * Adds 10 units of currency to the price of the pending trade request
+     */
     private TextButton pricePlus10;
+
+    /**
+     * Adds 100 units of currency to the price of the pending trade request
+     */
     private TextButton pricePlus100;
+
+    /**
+     * Subtracts 1 unit of currency from the price of the pending trade request
+     */
     private TextButton priceMinus1;
+
+    /**
+     * Subtracts 10 units of currency from the price of the pending trade request
+     */
     private TextButton priceMinus10;
+
+    /**
+     * Subtracts 100 units of currency from the price of the pending trade request
+     */
     private TextButton priceMinus100;
 
-    private TextButton confirmSale;
+    /**
+     * Confirms and sends the pending trade offer to the offer's intended recipient
+     */
+    private TextButton confirmOffer;
 
+    /**
+     * Advances through the list of possible recipients for the pending trade request
+     */
     private TextButton nextPlayerButton;
+
+    /**
+     * Retreats through the list of possible recipients for the pending trade request
+     */
     private TextButton prevPlayerButton;
 
+    /**
+     * Label encoding the amount of ore stocks currently held in the market
+     */
     private Label oreStockLabel;
+
+    /**
+     * Label encoding the amount of food stocks currently held in the market
+     */
     private Label foodStockLabel;
+
+    /**
+     * Label encoding the amount of energy stocks currently held in the market
+     */
     private Label energyStockLabel;
+
+    /**
+     * Label encoding the amount of roboticons currently held in the market
+     */
     private Label roboticonStockLabel;
 
+    /**
+     * Label encoding the amount of ore to be offered in the pending trade request
+     */
     private Label oreTradeAmountLabel;
+
+    /**
+     * Label encoding the amount of energy to be offered in the pending trade request
+     */
     private Label energyTradeAmountLabel;
+
+    /**
+     * Label encoding the amount of food to be offered in the pending trade request
+     */
     private Label foodTradeAmountLabel;
+
+    /**
+     * Label encoding the amount of money to be demanded in the pending trade request
+     */
     private Label tradePriceLabel;
+
+    /**
+     * Label representing the intended recipient of the pending trade request
+     */
     private Label playerLabel;
 
     private TTFont regularFont;
     private TTFont lightFont;
 
+    /**
+     * Holds the amount of ore to be offered in the pending trade request
+     */
     private int oreTradeAmount;
+
+    /**
+     * Holds the amount of energy to be offered in the pending trade request
+     */
     private int energyTradeAmount;
+
+    /**
+     * Holds the amount of food to be offered in the pending trade request
+     */
     private int foodTradeAmount;
+
+    /**
+     * Tracks the currently-selected position in the list of potential trade offer recipients
+     */
     private int playerListPosition;
+
+    /**
+     * Holds the amount of money to be demanded in the pending trade request
+     */
     private int tradePrice;
 
+    /**
+     * Array holding all of the valid potential recipients of the pending trade request
+     */
     private ArrayList<Player> otherPlayer;
 
+    /**
+     * Constructs the tabular interfaces of the game's market and auction house
+     * Displays the market's interface first by default
+     */
     public MarketInterfaceTable() {
         regularFont = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"), 16);
         lightFont = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"), 16);
+        //Import the fonts that will encode the text to be displayed in both interfaces
 
         regularButtonStyle = new TextButton.TextButtonStyle();
         regularButtonStyle.font = regularFont.font();
@@ -103,49 +259,8 @@ public class MarketInterfaceTable extends Table {
         lightButtonStyle.fontColor = Color.WHITE;
         lightButtonStyle.pressedOffsetX = 1;
         lightButtonStyle.pressedOffsetY = -1;
+        //Define the visual parameters of the interfaces' buttons
 
-        constructMarketElements();
-        constructAuctionElements();
-
-        navigationTable = new Table();
-        navigationTable.add(marketButton).width(100);
-        navigationTable.add(auctionButton).width(100);
-        add(navigationTable).colspan(4).padBottom(10);
-        row();
-
-        market = true;
-
-        showMarketInterface();
-    }
-
-    public void switchInterface() {
-        market = !market;
-
-        clearChildren();
-
-        add(navigationTable).colspan(4).padBottom(10);
-        row();
-
-        if (market) {
-            marketButton.getLabel().setColor(Color.GREEN);
-            marketButton.setTouchable(Touchable.disabled);
-
-            auctionButton.getLabel().setColor(Color.BLACK);
-            auctionButton.setTouchable(Touchable.enabled);
-
-            showMarketInterface();
-        } else {
-            marketButton.getLabel().setColor(Color.BLACK);
-            marketButton.setTouchable(Touchable.enabled);
-
-            auctionButton.getLabel().setColor(Color.GREEN);
-            auctionButton.setTouchable(Touchable.disabled);
-
-            showAuctionInterface();
-        }
-    }
-
-    private void constructMarketElements() {
         marketButton = new TextButton("MARKET", regularButtonStyle);
         marketButton.getLabel().setColor(Color.GREEN);
         marketButton.setTouchable(Touchable.disabled);
@@ -165,7 +280,67 @@ public class MarketInterfaceTable extends Table {
                 switchInterface();
             }
         });
+        //Set up the buttons allowing players to switch between viewing the market's interface and the auction house's
+        //interface
 
+        constructMarketElements();
+        constructAuctionElements();
+        //Construct both interfaces
+
+        navigationTable = new Table();
+        navigationTable.add(marketButton).width(100);
+        navigationTable.add(auctionButton).width(100);
+        add(navigationTable).colspan(4).padBottom(10);
+        row();
+        //Add buttons to switch between the market and auction interfaces
+
+        market = true;
+        //Note that the table is currently populated with the elements of the market's interface
+
+        showMarketInterface();
+        //Populate the table with the components of the market's interface
+    }
+
+    /**
+     * Switches between showing the market's interface and showing the auction house's interface upon being called
+     * Works by clearing the table's contents and then repopulating them with the actors pertaining to the desired
+     * interface
+     */
+    public void switchInterface() {
+        market = !market;
+        //Make a note of the switch
+
+        clearChildren();
+        //Clear the entire table
+
+        add(navigationTable).colspan(4).padBottom(10);
+        row();
+        //Re-integrate the buttons allowing players to switch between the market's interface and the auction house's interface
+
+        if (market) {
+            marketButton.getLabel().setColor(Color.GREEN);
+            marketButton.setTouchable(Touchable.disabled);
+
+            auctionButton.getLabel().setColor(Color.BLACK);
+            auctionButton.setTouchable(Touchable.enabled);
+
+            showMarketInterface();
+        } else {
+            marketButton.getLabel().setColor(Color.BLACK);
+            marketButton.setTouchable(Touchable.enabled);
+
+            auctionButton.getLabel().setColor(Color.GREEN);
+            auctionButton.setTouchable(Touchable.disabled);
+
+            showAuctionInterface();
+        }
+        //Populate the rest of the table with the required components based on what was previously present inside it
+    }
+
+    /**
+     * Constructs the components of the market's interface
+     */
+    private void constructMarketElements() {
         buyOreButton = new TextButton("", lightButtonStyle);
         buyEnergyButton = new TextButton("", lightButtonStyle);
         buyFoodButton = new TextButton("", lightButtonStyle);
@@ -180,6 +355,9 @@ public class MarketInterfaceTable extends Table {
         roboticonStockLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
     }
 
+    /**
+     * Constructs the components of the auction house's interface
+     */
     private void constructAuctionElements() {
         oreTradeAmountLabel = new Label("0", new Label.LabelStyle(lightFont.font(), Color.WHITE));
         energyTradeAmountLabel = new Label("0", new Label.LabelStyle(lightFont.font(), Color.WHITE));
@@ -189,12 +367,12 @@ public class MarketInterfaceTable extends Table {
 
         playerLabel = new Label("", new Label.LabelStyle(lightFont.font(), Color.WHITE));
 
-        playerBuyOre = new TextButton("+", lightButtonStyle);
-        playerBuyEnergy = new TextButton("+", lightButtonStyle);
-        playerBuyFood = new TextButton("+", lightButtonStyle);
-        playerSellOre = new TextButton("-", lightButtonStyle);
-        playerSellEnergy = new TextButton("-", lightButtonStyle);
-        playerSellFood = new TextButton("-", lightButtonStyle);
+        auctionAddOre = new TextButton("+", lightButtonStyle);
+        auctionAddEnergy = new TextButton("+", lightButtonStyle);
+        auctionAddFood = new TextButton("+", lightButtonStyle);
+        auctionSellOre = new TextButton("-", lightButtonStyle);
+        auctionSellEnergy = new TextButton("-", lightButtonStyle);
+        auctionSellFood = new TextButton("-", lightButtonStyle);
 
         pricePlus1 = new TextButton("+ 1", lightButtonStyle);
         pricePlus10 = new TextButton("+ 10", lightButtonStyle);
@@ -204,7 +382,7 @@ public class MarketInterfaceTable extends Table {
         priceMinus10 = new TextButton("- 10", lightButtonStyle);
         priceMinus100 = new TextButton("- 100", lightButtonStyle);
 
-        confirmSale = new TextButton("Send Offer to This Player", regularButtonStyle);
+        confirmOffer = new TextButton("Send Offer to This Player", regularButtonStyle);
 
         nextPlayerButton = new TextButton(">", lightButtonStyle);
         nextPlayerButton.addListener(new ChangeListener() {
@@ -216,11 +394,13 @@ public class MarketInterfaceTable extends Table {
                     playerListPosition = 0;
                 }
                 playerLabel.setText(otherPlayer.get(playerListPosition).getCollege().getName());
+                //Set the next player in the otherPlayer array to be the pending trade request's intended recipient
 
                 setTradeAmount(ResourceType.ORE, 0);
                 setTradeAmount(ResourceType.ENERGY, 0);
                 setTradeAmount(ResourceType.FOOD, 0);
                 setTradePrice(0);
+                //Reset the auction house's interface to acknowledge the newly-selected recipient's funds
 
                 toggleAuctionConfirmationButton(false, Color.RED);
             }
@@ -236,11 +416,13 @@ public class MarketInterfaceTable extends Table {
                     playerListPosition = otherPlayer.size() - 1;
                 }
                 playerLabel.setText(otherPlayer.get(playerListPosition).getCollege().getName());
+                //Set the previous player in the otherPlayer array to be the pending trade request's intended recipient
 
                 setTradeAmount(ResourceType.ORE, 0);
                 setTradeAmount(ResourceType.ENERGY, 0);
                 setTradeAmount(ResourceType.FOOD, 0);
                 setTradePrice(0);
+                //Reset the auction house's interface to acknowledge the newly-selected recipient's funds
 
                 toggleAuctionConfirmationButton(false, Color.RED);
             }
@@ -249,7 +431,8 @@ public class MarketInterfaceTable extends Table {
 
     /**
      * Builds the market's visual interface by populating it with labels and buttons
-     * Once this method has finished executing, the market can be drawn to a stage like any other actor
+     * Once this method has finished executing, the market's interface can be drawn to a stage like any other
+     * set of actors
      */
     private void showMarketInterface() {
         add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().width(120);
@@ -285,34 +468,36 @@ public class MarketInterfaceTable extends Table {
         row();
         add(new Label("Roboticons", new Label.LabelStyle(lightFont.font(), Color.WHITE))).left();
         add(roboticonStockLabel).left();
-
-        //debug();
     }
 
+    /**
+     * Builds the auction house's visual interface by populating it with labels and buttons
+     * Once this method has finished executing, the market's interface can be drawn to a stage like any other
+     * set of actors
+     */
     private void showAuctionInterface() {
         add(new Label("Item", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(40);
         add(new Label("#", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
         add(new Label("More", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
         add(new Label("Less", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().padRight(20);
-        //Visual guff
 
         row();
         add(new Label("Ore", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(oreTradeAmountLabel).left();
-        add(playerBuyOre).left();
-        add(playerSellOre).left();
+        add(auctionAddOre).left();
+        add(auctionSellOre).left();
 
         row();
         add(new Label("Energy", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(energyTradeAmountLabel).left();
-        add(playerBuyEnergy).left();
-        add(playerSellEnergy).left();
+        add(auctionAddEnergy).left();
+        add(auctionSellEnergy).left();
 
         row();
         add(new Label("Food", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left();
         add(foodTradeAmountLabel).left();
-        add(playerBuyFood).left();
-        add(playerSellFood).left();
+        add(auctionAddFood).left();
+        add(auctionSellFood).left();
 
         row();
         add(new Label("Price", new Label.LabelStyle(regularFont.font(), Color.WHITE))).left().colspan(2).padTop(15);
@@ -345,9 +530,17 @@ public class MarketInterfaceTable extends Table {
         tradeTargetSelectionTable.add(nextPlayerButton);
         add(tradeTargetSelectionTable).colspan(4).padTop(15);
         row();
-        add(confirmSale).colspan(4);
+        add(confirmOffer).colspan(4);
     }
 
+    /**
+     * Method allowing other classes to set the functions of the market interface's various purchasing/selling buttons
+     *
+     * @param resource The type of resource that is to be bought or sold when clicking on the targeted button
+     * @param buy Denotes whether to target the button that buys a particular resource for the active player or the
+     *            one that would sell it for them instead
+     * @param event Object containing the method to be executed when clicking on the targeted button
+     */
     public void setMarketButtonFunction(ResourceType resource, boolean buy, ChangeListener event) {
         if (buy) {
             switch (resource) {
@@ -379,34 +572,54 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Method allowing other classes to set the functions of the auction-house interface's various quantity-adjustment
+     * buttons
+     *
+     * @param resource The type of resource that is to be varied in the pending trade request through the targeted
+     *                 button
+     * @param add Denotes whether to target the button that reduces the amount of a particular resource to be offered
+     *            or the one that increases it instead
+     * @param event Object containing the method to be executed when clicking on the targeted button
+     */
     public void setAuctionQuantityButtonFunction(ResourceType resource, boolean add, ChangeListener event) {
         if (add) {
             switch (resource) {
                 case ORE:
-                    playerBuyOre.addListener(event);
+                    auctionAddOre.addListener(event);
                     break;
                 case ENERGY:
-                    playerBuyEnergy.addListener(event);
+                    auctionAddEnergy.addListener(event);
                     break;
                 case FOOD:
-                    playerBuyFood.addListener(event);
+                    auctionAddFood.addListener(event);
                     break;
             }
         } else {
                 switch (resource) {
                     case ORE:
-                        playerSellOre.addListener(event);
+                        auctionSellOre.addListener(event);
                         break;
                     case ENERGY:
-                        playerSellEnergy.addListener(event);
+                        auctionSellEnergy.addListener(event);
                         break;
                     case FOOD:
-                        playerSellFood.addListener(event);
+                        auctionSellFood.addListener(event);
                         break;
                 }
             }
         }
 
+    /**
+     * Method allowing other classes to set the functions of the auction-house interface's various price-adjustment
+     * buttons
+     *
+     * @param figures The number of digits in the amount of money that the targeted button should vary the pending
+     *                trade offer's price by [2 denotes values of +/- 10; 3 denotes values of +/- 100; etc.]
+     * @param add Denotes whether to target a button that reduces the amount of money to be offered or one that
+     *            increases it instead
+     * @param event Object containing the method to be executed when clicking on the targeted button
+     */
     public void setAuctionPriceButtonFunction(int figures, boolean add, ChangeListener event) {
         if (add) {
             switch (figures) {
@@ -435,6 +648,14 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Method allowing other classes to set the labels of the market interface's various price-adjustment buttons
+     *
+     * @param resource The type of resource that is to be bought or sold when clicking on the targeted button
+     * @param buy Denotes whether to target the button that buys a particular resource for the active player or the
+     *            one that would sell it for them instead
+     * @param text The text to be displayed on the surface of the targeted button
+     */
     public void setMarketButtonText(ResourceType resource, boolean buy, String text) {
         if (buy) {
             switch (resource) {
@@ -466,10 +687,27 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Method allowing other classes to set the labels of the market interface's various price-adjustment buttons
+     *
+     * @param resource The type of resource that is to be bought or sold when clicking on the targeted button
+     * @param buy Denotes whether to target the button that buys a particular resource for the active player or the
+     *            one that would sell it for them instead
+     * @param price The purchasing/selling cost to be displayed on the surface of the targeted button
+     */
     public void setMarketButtonText(ResourceType resource, boolean buy, int price) {
         setMarketButtonText(resource, buy, String.valueOf(price));
     }
 
+    /**
+     * Method allowing other classes to enable or disable the market interface's various price-adjustment buttons
+     *
+     * @param resource The type of resource that is to be bought or sold when clicking on the targeted button
+     * @param buy Denotes whether to target the button that buys a particular resource for the active player or the
+     *            one that would sell it for them instead
+     * @param enabled Determines whether the targeted button is to be enabled or disabled
+     * @param color Sets the new colour of the targeted button's surface-level label
+     */
     public void toggleMarketButton(ResourceType resource, boolean buy, boolean enabled, Color color) {
         if (buy) {
             switch (resource) {
@@ -508,40 +746,62 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Method allowing other classes to enable or disable the auction-house interface's various quantity-adjustment
+     * buttons
+     *
+     * @param resource The type of resource that is to be varied in the pending trade request through the targeted
+     *                 button
+     * @param add Denotes whether to target the button that reduces the amount of a particular resource to be offered
+     *            or the one that increases it instead
+     * @param enabled Determines whether the targeted button is to be enabled or disabled
+     * @param color Sets the new colour of the targeted button's surface-level label
+     */
     public void toggleAuctionQuantityButton(ResourceType resource, boolean add, boolean enabled, Color color) {
         if (add) {
             switch (resource) {
                 case ORE:
-                    playerBuyOre.getLabel().setColor(color);
-                    playerBuyOre.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    auctionAddOre.getLabel().setColor(color);
+                    auctionAddOre.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
                     break;
                 case ENERGY:
-                    playerBuyEnergy.getLabel().setColor(color);
-                    playerBuyEnergy.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    auctionAddEnergy.getLabel().setColor(color);
+                    auctionAddEnergy.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
                     break;
                 case FOOD:
-                    playerBuyFood.getLabel().setColor(color);
-                    playerBuyFood.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    auctionAddFood.getLabel().setColor(color);
+                    auctionAddFood.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
                     break;
             }
         } else {
             switch (resource) {
                 case ORE:
-                    playerSellOre.getLabel().setColor(color);
-                    playerSellOre.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    auctionSellOre.getLabel().setColor(color);
+                    auctionSellOre.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
                     break;
                 case ENERGY:
-                    playerSellEnergy.getLabel().setColor(color);
-                    playerSellEnergy.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    auctionSellEnergy.getLabel().setColor(color);
+                    auctionSellEnergy.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
                     break;
                 case FOOD:
-                    playerSellFood.getLabel().setColor(color);
-                    playerSellFood.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+                    auctionSellFood.getLabel().setColor(color);
+                    auctionSellFood.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
                     break;
             }
         }
     }
 
+    /**
+     * Method allowing other classes to enable or disable the auction-house interface's various price-adjustment
+     * buttons
+     *
+     * @param figures The number of digits in the amount of money that the targeted button should vary the pending
+     *                trade offer's price by [2 denotes values of +/- 10; 3 denotes values of +/- 100; etc.]
+     * @param add Denotes whether to target a button that reduces the amount of money to be offered or one that
+     *            increases it instead
+     * @param enabled Determines whether the targeted button is to be enabled or disabled
+     * @param color Sets the new colour of the targeted button's surface-level label
+     */
     public void toggleAuctionPriceButton(int figures, boolean add, boolean enabled, Color color) {
         if (add) {
             switch (figures) {
@@ -576,9 +836,16 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Method allowing other classes to enable or disable the button in the auction-house's interface that sends pending
+     * trade requests
+     *
+     * @param enabled Determines whether the targeted button is to be enabled or disabled
+     * @param color Sets the new colour of the targeted button's surface-level label
+     */
     public void toggleAuctionConfirmationButton(boolean enabled, Color color) {
-        confirmSale.getLabel().setColor(color);
-        confirmSale.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+        confirmOffer.getLabel().setColor(color);
+        confirmOffer.setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
     }
 
     public void setMarketStockText(ResourceType resource, int quantity) {
@@ -598,11 +865,22 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Method allowing other classes to set the amounts of money demanded in pending trade requests
+     *
+     * @param tradePrice The amount of money to be demanded in the pending trade request
+     */
     public void setTradePrice(int tradePrice) {
         this.tradePrice = tradePrice;
         tradePriceLabel.setText(String.valueOf(tradePrice) + "/" + otherPlayer.get(playerListPosition).getResource(ResourceType.MONEY));
     }
 
+    /**
+     * Method allowing other classes to set the amounts of resources offered in pending trade requests
+     *
+     * @param resource The resource to be offered in the pending trade request
+     * @param value The amount of that resource to be offered
+     */
     public void setTradeAmount(ResourceType resource, int value) {
         switch (resource) {
             case ORE:
@@ -620,6 +898,12 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Refreshes the list of potential trade-offer recipients that can be examined in the auction-house's interface
+     *
+     * @param players The list of players who are currently playing the game
+     * @param currentPlayer The player that is currently undertaking their turn
+     */
     public void refreshPlayers(Player[] players, Player currentPlayer) {
         otherPlayer = new ArrayList<Player>();
 
@@ -635,6 +919,12 @@ public class MarketInterfaceTable extends Table {
         setTradePrice(0);
     }
 
+    /**
+     * Returns the amount of a particular resource to be offered in the pending trade request
+     *
+     * @param resource The type of resource to inquire into
+     * @return The amount of that resource to be offered in the pending trade request
+     */
     public int tradeAmount(ResourceType resource)
     {
         switch (resource) {
@@ -649,6 +939,11 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Allows or revokes access to the auction-house's interface
+     *
+     * @param enabled Determines whether or not access to the auction-house's interface is to be permitted
+     */
     public void toggleAuctionAccess(boolean enabled) {
         if (enabled) {
             auctionButton.setTouchable(Touchable.enabled);
@@ -663,17 +958,37 @@ public class MarketInterfaceTable extends Table {
         }
     }
 
+    /**
+     * Method allowing other classes to set the function of the button made to confirm and send pending trade requests
+     *
+     * @param event Object containing the method to be executed through this button
+     */
     public void setAuctionConfirmationButtonFunction(ChangeListener event) {
-        confirmSale.addListener(event);
+        confirmOffer.addListener(event);
     }
 
+    /**
+     * Returns the current price attached to the pending trade-offer
+     *
+     * @return The price of the pending trade-offer
+     */
     public int tradePrice() {
         return tradePrice;
     }
 
+    /**
+     * Returns the player who is currently intended to receive the pending trade-offer
+     *
+     * @return The pending trade-offer's intended recipient
+     */
     public Player selectedPlayer() { return otherPlayer.get(playerListPosition); }
 
+    /**
+     * Sets the text to be displayed on the surface of the auction-house interface's trade-offer confirmation button
+     *
+     * @param text The text to be displayed on the button that confirms and sends pending trade-offers
+     */
     public void setAuctionConfirmationButtonText(String text) {
-        confirmSale.setText(text);
+        confirmOffer.setText(text);
     }
 }
