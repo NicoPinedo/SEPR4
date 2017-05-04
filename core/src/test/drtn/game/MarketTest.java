@@ -190,9 +190,7 @@ public class MarketTest extends TesterFile{
      *
      *     However the player attempts to sell 100 of the resource, triggering the exception
      * </p>
-     * @throws Exception Thrown when an invalid transaction is attempted.
      */
-
     @Test
     public void testGamble(){
         TestPlayer.setResource(ResourceType.MONEY, 49);
