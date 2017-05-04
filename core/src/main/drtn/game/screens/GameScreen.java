@@ -45,11 +45,7 @@ import teamfractal.util.screens.AbstractAnimationScreen;
 public class GameScreen extends AbstractAnimationScreen implements Screen {
     private final static int tileXOffset = 256;
 
-    /**
-     * Establish visual parameters for in-game buttons
-     */
     private static TextButton.TextButtonStyle largeButtonStyle;
-
     private static TextButton.TextButtonStyle smallButtonStyle;
 
     private static TTFont headerFontRegular;
@@ -75,13 +71,35 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         smallButtonStyle.pressedOffsetY = -1;
     }
 
+    /**
+     * Table configured to identify the active player (and what they own) at any point in the game's run-time
+     */
     public PlayerInfoTable playerInfoTable;
+
+    /**
+     * Table configured to identify the active phase (and what should be done in it) at any point in the game's run-time
+     */
     public PhaseInfoTable phaseInfoTable;
+
+    /**
+     * Table configured to identify the most recently-selected tile; who owns it, and whether or not it harbours a
+     * roboticon
+     */
     public SelectedTileInfoTable selectedTileInfoTable;
+
+    /**
+     * Table configured to act as an interface for the game's market
+     */
     public MarketInterfaceTable marketInterfaceTable;
 
+    /**
+     * Overlay made to simplify the process of upgrading roboticons deployed on selected tiles
+     */
     public UpgradeOverlay upgradeOverlay;
 
+    /**
+     * Overlay intended to appear whenever players receive trade offers and describe the terms of those offers
+     */
     private TradeOverlay tradeOverlay;
 
     private boolean shown = false;
@@ -132,22 +150,36 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     private Overlay eventMessageOverlay;
     private Label eventMessage;
     private TextButton closeEventMessageButton;
-    /**
-     * Determines whether the aforementioned roboticon upgrade overlay is to be drawn to the screen
-     */
 
+    /**
+     * Determines whether the roboticon upgrade overlay (upgradeOverlay) is to be drawn to the screen
+     */
     private boolean upgradeOverlayVisible;
+
+    /**
+     * Determines whether the trade request overlay (tradeOverlay) is to be drawn to the screen
+     */
     private boolean tradeOverlayVisible;
+
+    /**
+     * Serves as a rendering pipeline for visual objects that need to be drawn directly to the screen
+     */
     private Batch batch;
     private int height;
     private int width;
     private Table tableRight;
     private boolean eventMessageOverlayVisible;
+
+    /**
+     * The pending trade to be described in the next trade overlay that shows up
+     */
     private Trade currentTrade;
+
     /**
      * The game-screen's initial constructor
      *
      * @param game Variable storing the game's state for rendering purposes
+     * @param vsPlayer [TBC]
      */
     public GameScreen(Game game, boolean vsPlayer) {
         this.game = game;
@@ -206,13 +238,13 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 
         constructEventMessageOverlay();
 
-        //drawer.debug(gameStage);
-        //Call this to draw temporary debug lines around all of the actors on the stage
-
         constructMarketInterface();
+        //Construct the interface that will allow players to interact with the game's market
 
         System.out.println("GameScreen.show");
+
         engine.nextPhase();
+        //Kick-start the game's core state-machine
     }
 
     /**
@@ -276,6 +308,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                     tradeOverlay.act(delta);
                     tradeOverlay.draw();
                     inputProcessor = tradeOverlay;
+                    //Draw the trading overlay to the screen if the current player has received an impending trade offer
                 }
             }
 
@@ -323,6 +356,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         //Dispose of the stage
     }
 
+    /**
+     * Draws some of the visual makeup that helps to make the screen's appearance look rather nice
+     * Also responsible for drawing some button backgrounds, thereby indicating that certain buttons are clickable
+     */
     public void drawRectangles() {
         drawer.lineRectangle(Color.WHITE, 256, 0, 513, 512, 1);
         //Border around map
@@ -636,16 +673,25 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         eventMessageOverlayVisible = false;
     }
 
-    //new for assessment 3
+    /**
+     * Constructs (or reconstructs) and prepares an overlay to describe an impending trade offer and give its recipient
+     * a choice to accept or reject that offer
+     *
+     * @param trade The trade offer to be presented to the active player
+     */
     private void constructTradeOverlay(Trade trade){
     	tradeOverlay = new TradeOverlay();
+        //Build (or rebuild) the overlay's structure
 
         String offeredResources = "";
         offeredResources += trade.oreAmount + " Ore\n";
         offeredResources += trade.energyAmount + " Energy\n";
         offeredResources += trade.foodAmount + " Food";
+        //Compile the proposition's offerings into a multi-line string
 
         tradeOverlay.setOffer(trade.getSender().getCollege().getName() + " College", offeredResources, trade.getPrice() + " Money");
+        //Write the name of the college representing the player who sent the offer; the resources offered in the
+        //proposition and the monetary amount demanded in the proposition to the overlay itself
 
         tradeOverlay.setAcceptButtonFunction(new ChangeListener() {
             @Override
@@ -654,8 +700,12 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                 if (currentTrade.execute()){
                     playerInfoTable.showPlayerInventory(engine.currentPlayer());
                     engine.testTrade();
+                    //If the active player chooses to accept their offer, update their on-screen inventory to reflect
+                    //what they gained and what they lost
 
                     marketInterfaceTable.setTradePrice(marketInterfaceTable.tradePrice());
+                    //Reset the pricing section of the auction-house interface to acknowledge the active player's
+                    //loss of money in the trade that they just accepted
 
                     if (engine.phase() == 2) {
                         if (engine.currentPlayer().getResource(ResourceType.MONEY) >= engine.market().getRoboticonBuyPrice()) {
@@ -666,6 +716,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
                     } else if (engine.phase() == 5) {
                         engine.refreshMarketButtonAvailability();
                     }
+                    //Update the options available to the player in the market to acknowledge the active player's
+                    //loss of money in the trade that they just accepted
                 }
             }
         });
@@ -674,6 +726,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 closeTradeOverlay();
+                //If the active player rejects the trade offer that they receive, simply close the trade overlay
+
                 engine.testTrade();
             }
         });
@@ -681,6 +735,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
     	tradeOverlayVisible = false;
     }
 
+    /**
+     * Prepares the market's in-game interface (which is displayed on this screen) for later use
+     */
     private void constructMarketInterface() {
         engine.setMarketButtonFunctions();
         engine.setAuctionButtonFunctions();
@@ -692,21 +749,25 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + engine.market().getFoodBuyPrice());
         marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + engine.market().getFoodSellPrice());
         marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + engine.market().getRoboticonBuyPrice());
+        //Set the labels of the market's purchase/sale buttons to state the amounts of money that the active player
+        //will lose or gain in their respective transactions
 
         marketInterfaceTable.setMarketStockText(ResourceType.ORE, engine.market().getOreStock());
         marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, engine.market().getEnergyStock());
         marketInterfaceTable.setMarketStockText(ResourceType.FOOD, engine.market().getFoodStock());
         marketInterfaceTable.setMarketStockText(ResourceType.ROBOTICON, engine.market().getRoboticonStock());
+        //Update the market's internal stock labels
 
         engine.resetAuctionInterface();
+        //Prepare the auction-house section of the interface for later use
 
         engine.closeMarketInterface();
+        //Stop transactions from occurring in the market at the beginning of the game
     }
 
     /**
      * Returns the button used to allow for players to prematurely end their turns
      * This method is required to allow for the GameEngine class to turn the button off during phase 1
-     *
      *
      * @return TextButton The in-game "End Turn" button
      */
@@ -742,12 +803,18 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
             if (tile.hasRoboticon()) {
                 if (engine.phase() == 3 && tile.getOwner() == engine.currentPlayer()) {
                     selectedTileInfoTable.toggleDeployRoboticonButton(true);
+                    //Allow for the upgrading of roboticons that have been planted on owned tiles
                 } else {
                     selectedTileInfoTable.toggleDeployRoboticonButton(false);
+                    //Ensure that players can't upgrade roboticons that aren't theirs or upgrade their own outside
+                    //of phase 3
                 }
             } else {
                 if (engine.phase() == 3 && tile.getOwner() == engine.currentPlayer() && engine.currentPlayer().getRoboticonInventory() > 0) {
                     selectedTileInfoTable.toggleDeployRoboticonButton(true);
+                    //If the currently-selected tile is owned by the active player; that player owns at least one
+                    //roboticon and the tile itself doesn't harbour one, provide the player with the option to
+                    //deploy one of their spare roboticons on the tile if the game is currently in phase 3
                 } else {
                     selectedTileInfoTable.toggleDeployRoboticonButton(false);
                 }
@@ -755,11 +822,13 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         } else {
             if (engine.phase() == 1) {
                 selectedTileInfoTable.toggleClaimTileButton(true);
+                //Allow unclaimed tiles to be claimed by players during phase 1
             } else {
                 selectedTileInfoTable.toggleClaimTileButton(false);
             }
 
             selectedTileInfoTable.toggleDeployRoboticonButton(false);
+            //Stop players from trying to deploy roboticons on tiles that they don't own
         }
     }
 
@@ -774,6 +843,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
         engine.testTrade();
     }
 
+    /**
+     * Moves the chancellor's visual representation around the map during the "capture the chancellor" minigame
+     * that can take place in phase 3
+     */
     public void updateChancellor() {
         //Phase Timer less than 16 seconds?
         if (phaseInfoTable.timer.seconds() <= 15) {
@@ -827,6 +900,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen {
 		
 	}
 
+    /**
+     * Casts a trade-offer as the most important one to be dealt with
+     *
+     * @param trade The trade-offer to be presented ASAP
+     */
 	public void activeTrade(Trade trade) {
 		constructTradeOverlay(trade);
 		currentTrade = trade;
