@@ -1,3 +1,11 @@
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://nicopinedo.github.io/SEPR4/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 4
+ **/
+
 package drtn.game.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -11,9 +19,6 @@ import drtn.game.enums.ResourceType;
 import drtn.game.util.Overlay;
 import drtn.game.util.TTFont;
 
-/**
- * Created by Joseph on 30/04/2017.
- */
 public class UpgradeOverlay extends Overlay {
 
     private static TTFont headerFontRegular;

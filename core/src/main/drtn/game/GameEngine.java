@@ -155,9 +155,6 @@ public class GameEngine {
         //Configure all 16 tiles with independent yields and landmark data
         //Also assign listeners to them so that they can detect mouse clicks
 
-
-        //Instantiates the game's market and hands it direct renderer access
-
         state = State.RUN;
         //Mark the game's current play-state as "running" (IE: not paused)
 
@@ -246,11 +243,13 @@ public class GameEngine {
                 //Stop the game from advancing until a tile has been claimed
 
                 market.produceRoboticon();
+                //Increase the number of roboticons available for sale
 
                 closeMarketInterface();
                 //Close the market if phase 1 is beginning straight off the back of phase 5
 
                 gameScreen.marketInterfaceTable.toggleAuctionAccess(true);
+                //Allow players to send trade requests at this time
                 break;
 
             case 2:
@@ -262,6 +261,7 @@ public class GameEngine {
                 //Allow for roboticons to be purchased
 
                 drawer.toggleButton(gameScreen.endTurnButton(), true, Color.BLACK);
+                //Allow players to end this phase prematurely
                 break;
 
             case 3:
@@ -270,6 +270,7 @@ public class GameEngine {
                 //Impose a time limit on phase 3
 
                 closeMarketInterface();
+                //Stop allowing for roboticons to be purchased
             
                 beginChancellorMode();
                 //Setup the "Capture the Chancellor" minigame
@@ -278,33 +279,42 @@ public class GameEngine {
             case 4:
                 gameScreen.phaseInfoTable.timer.setTime(0, 0);
                 gameScreen.phaseInfoTable.timer.stop();
+                //Give players indefinite amounts of time to read the descriptions of the effects that are
+                //about to be imposed on them
 
                 this.stopChancellorMode();
                 //Stop the Chancellor's shenanigans
 
                 produceResource();
+                //Yield resources from the tiles that players own and add them to their respective inventories
             
                 clearEffects();
-                setEffects();
+                setEffect();
+                //Impose a new round of effects on the game's players
 
                 gameScreen.playerInfoTable.showPlayerInventory(currentPlayer());
+                //Update players' inventories to indicate their new resource-counts
                 break;
 
             case 5:
                 openResourceMarketInterface();
+                //Allow for ore, energy and/or food to be bought and sold from and to the market
 
                 gameScreen.marketInterfaceTable.toggleAuctionAccess(false);
+                //Stop players from sending trade-requests during this time
+                //This is done to ensure that players can't send requests offering certain amounts of resources
+                //before immediately selling some of those resources
             
                 if(checkGameEnd()){
                     System.out.println("Someone win");
                     gameScreen.showPlayerWin(getWinner());
                 }
+                //Check for a winner at this point if all tiles have been claimed
                 break;
         }
 
-
-
         gameScreen.phaseInfoTable.updateLabels(phase);
+        //Update the phaseInfoTable to describe the current phase of the game to the player
 
         //If the upgrade overlay is open, close it when the next phase begins
         if (gameScreen.getUpgradeOverlayVisible()) {
@@ -591,24 +601,26 @@ public class GameEngine {
      */
     public void upgradeRoboticon(int resource) {
          if (selectedTile().getRoboticonStored().getLevel()[resource] < selectedTile().getRoboticonStored().getMaxLevel()) {
-            switch (resource) {
-                case (0):
-                    currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getOreUpgradeCost());
-                    break;
-                case (1):
-                    currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getEnergyUpgradeCost());
-                    break;
-                case (2):
-                    currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getFoodUpgradeCost());
-                    break;
-            }
+             //Ensure that a level that has already been maxed out cannot be upgraded further
 
-            selectedTile().getRoboticonStored().upgrade(resource);
+             switch (resource) {
+                 case (0):
+                     currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getOreUpgradeCost());
+                     break;
+                 case (1):
+                     currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getEnergyUpgradeCost());
+                     break;
+                 case (2):
+                     currentPlayer().setResource(ResourceType.MONEY, currentPlayer().getResource(ResourceType.MONEY) - selectedTile.getRoboticonStored().getFoodUpgradeCost());
+                     break;
+             }
+             //Deduct the cost of the upgrade transaction from the active player's wallet
+
+             selectedTile().getRoboticonStored().upgrade(resource);
+             //Perform the desired upgrade once the money has been taken for it
         }
 
     }
-
-    // Added in Assessment 3 from here down to EOF.
 
     /**
      * Getter for the current phase
@@ -748,9 +760,9 @@ public class GameEngine {
 
     }
     /**
-     * Randomly applies the effects
+     * Applies one random effect to the active player upon being called
      */
-    private void setEffects() {
+    private void setEffect() {
         Random RNGesus = new Random();
         int plotEffectIndex = RNGesus.nextInt(plotEffectSource.size);
         int playerEffectIndex = RNGesus.nextInt(playerEffectSource.size);
@@ -767,6 +779,7 @@ public class GameEngine {
             }
         }
     }
+
     /**
      * Clears all imposed PlotEffects
      */
@@ -777,7 +790,7 @@ public class GameEngine {
     }
 
     /**
-     * Sets the functions of all the buttons within the market
+     * Sets the functions of all the buttons within the market's interface (to facilitate purchases and sales)
      */
     public void setMarketButtonFunctions() {
         gameScreen.marketInterfaceTable.setMarketButtonFunction(ResourceType.ORE, true, new ChangeListener() {
@@ -787,11 +800,15 @@ public class GameEngine {
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + market.getOreBuyPrice());
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, "+" + market.getOreSellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ORE, market.getOreStock());
+                    //Update the market's prices and stock to reflect the successful transaction
 
                     refreshMarketButtonAvailability();
+                    //Ensure that the active player can't buy anything they lack the funds for after potentially
+                    //losing money in their most recent transaction (or if the market itself has run out of stock)
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ORE);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                    //Update the player's inventory to reflect the outcome of the successful transaction
 
                     resetAuctionInterface();
                 }
@@ -805,11 +822,15 @@ public class GameEngine {
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, "-" + market.getEnergyBuyPrice());
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, "+" + market.getEnergySellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, market.getEnergyStock());
+                    //Update the market's prices and stock to reflect the successful transaction
 
                     refreshMarketButtonAvailability();
+                    //Ensure that the active player can't buy anything they lack the funds for after potentially
+                    //losing money in their most recent transaction (or if the market itself has run out of stock)
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ENERGY);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                    //Update the player's inventory to reflect the outcome of the successful transaction
 
                     resetAuctionInterface();
                 }
@@ -823,11 +844,15 @@ public class GameEngine {
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + market.getFoodBuyPrice());
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + market.getFoodSellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.FOOD, market.getFoodStock());
+                    //Update the market's prices and stock to reflect the successful transaction
 
                     refreshMarketButtonAvailability();
+                    //Ensure that the active player can't buy anything they lack the funds for after potentially
+                    //losing money in their most recent transaction (or if the market itself has run out of stock)
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.FOOD);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                    //Update the player's inventory to reflect the outcome of the successful transaction
 
                     resetAuctionInterface();
                 }
@@ -840,13 +865,17 @@ public class GameEngine {
                 if (market.buy(ResourceType.ROBOTICON, 1, currentPlayer())) {
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + market.getRoboticonBuyPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ROBOTICON, market.getRoboticonStock());
+                    //Update the market's prices and stock to reflect the successful transaction
 
                     if (currentPlayer().getResource(ResourceType.MONEY) < market.getRoboticonBuyPrice() || market.getRoboticonStock() == 0) {
                         gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, false, Color.RED);
                     }
+                    //Stop the player from being able to buy more roboticons that don't exist or simply aren't
+                    //affordable from their perspective
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ROBOTICON);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                    //Update the player's inventory to reflect the outcome of the successful transaction
                 }
             }
         });
@@ -858,11 +887,15 @@ public class GameEngine {
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + market.getOreBuyPrice());
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, false, "+" + market.getOreSellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ORE, market.getOreStock());
+                    //Update the market's prices and stock to reflect the successful transaction
 
                     refreshMarketButtonAvailability();
+                    //Ensure that the active player can't buy anything they lack the funds for after potentially
+                    //losing money in their most recent transaction (or if the market itself has run out of stock)
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ORE);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                    //Update the player's inventory to reflect the outcome of the successful transaction
 
                     resetAuctionInterface();
                 }
@@ -876,11 +909,15 @@ public class GameEngine {
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, true, "-" + market.getEnergyBuyPrice());
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, "+" + market.getEnergySellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.ENERGY, market.getEnergyStock());
+                    //Update the market's prices and stock to reflect the successful transaction
 
                     refreshMarketButtonAvailability();
+                    //Ensure that the active player can't buy anything they lack the funds for after potentially
+                    //losing money in their most recent transaction (or if the market itself has run out of stock)
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.ENERGY);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                    //Update the player's inventory to reflect the outcome of the successful transaction
 
                     resetAuctionInterface();
                 }
@@ -894,11 +931,15 @@ public class GameEngine {
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + market.getFoodBuyPrice());
                     gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + market.getFoodSellPrice());
                     gameScreen.marketInterfaceTable.setMarketStockText(ResourceType.FOOD, market.getFoodStock());
+                    //Update the market's prices and stock to reflect the successful transaction
 
                     refreshMarketButtonAvailability();
+                    //Ensure that the active player can't buy anything they lack the funds for after potentially
+                    //losing money in their most recent transaction (or if the market itself has run out of stock)
 
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.FOOD);
                     gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                    //Update the player's inventory to reflect the outcome of the successful transaction
 
                     resetAuctionInterface();
                 }
@@ -907,7 +948,8 @@ public class GameEngine {
     }
 
     /**
-     * Updates the appearance of the buttons within the market
+     * Updates the options that are made available to the active player through the market's interface (based on
+     * what is owned by both the player and the market itself at the current time)
      */
     public void refreshMarketButtonAvailability() {
         if (currentPlayer().getResource(ResourceType.MONEY) >= market.getOreBuyPrice() && market.getOreStock() > 0) {
@@ -915,40 +957,47 @@ public class GameEngine {
         } else {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, false, Color.RED);
         }
+        //Only allow the active player to buy ore if they can afford it and if it is actually in stock
 
         if (currentPlayer().getResource(ResourceType.MONEY) >= market.getEnergyBuyPrice() && market.getEnergyStock() > 0) {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, true, Color.GREEN);
         } else {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, false, Color.RED);
         }
+        //Only allow the active player to buy energy if they can afford it and if it is actually in stock
 
         if (currentPlayer().getResource(ResourceType.MONEY) >= market.getFoodBuyPrice() && market.getFoodStock() > 0) {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, true, Color.GREEN);
         } else {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, false, Color.RED);
         }
+        //Only allow the active player to buy food if they can afford it and if it is actually in stock
 
         if (currentPlayer().getResource(ResourceType.ORE) > 0) {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, true, Color.GREEN);
         } else {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, false, Color.RED);
         }
+        //Only allow the active player to sell ore to the market if they own some
 
         if (currentPlayer().getResource(ResourceType.ENERGY) > 0) {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, true, Color.GREEN);
         } else {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, false, Color.RED);
         }
+        //Only allow the active player to sell energy to the market if they own some
 
         if (currentPlayer().getResource(ResourceType.FOOD) > 0) {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, true, Color.GREEN);
         } else {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, false, Color.RED);
         }
+        //Only allow the active player to sell food to the market if they own some
     }
 
     /**
-     * Initialises and opens the market interface
+     * Opens the market's interface up to allow for ore, energy and food to be bought and sold through it
+     * This does not necessarily allow for roboticons to be bought
      */
     public void openResourceMarketInterface() {
         gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ORE, true, "-" + market.getOreBuyPrice());
@@ -957,59 +1006,30 @@ public class GameEngine {
         gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ENERGY, false, "+" + market.getEnergySellPrice());
         gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, true, "-" + market.getFoodBuyPrice());
         gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.FOOD, false, "+" + market.getFoodSellPrice());
+        //Refresh the market's current resource prices
 
-        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getOreBuyPrice() && market.getOreStock() > 0) {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, true, Color.GREEN);
-        } else {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, false, Color.RED);
-        }
-
-        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getEnergyBuyPrice() && market.getEnergyStock() > 0) {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, true, Color.GREEN);
-        } else {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, true, false, Color.RED);
-        }
-
-        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getFoodBuyPrice()  && market.getFoodStock() > 0) {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, true, Color.GREEN);
-        } else {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, true, false, Color.RED);
-        }
-
-        if (currentPlayer().getResource(ResourceType.ORE) > 0) {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, true, Color.GREEN);
-        } else {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, false, false, Color.RED);
-        }
-
-        if (currentPlayer().getResource(ResourceType.ENERGY) > 0) {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, true, Color.GREEN);
-        } else {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ENERGY, false, false, Color.RED);
-        }
-
-        if (currentPlayer().getResource(ResourceType.FOOD) > 0) {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, true, Color.GREEN);
-        } else {
-            gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.FOOD, false, false, Color.RED);
-        }
+        refreshMarketButtonAvailability();
+        //Ensure that only valid transactions can be performed
     }
 
     /**
-     * Initialises and opens the roboticon market interface
+     * Opens the market's interface up to allow for roboticons to be bought from it
+     * This does not necessarily allow for ore, energy or food to be bought or sold
      */
     public void openRoboticonMarketInterface() {
         gameScreen.marketInterfaceTable.setMarketButtonText(ResourceType.ROBOTICON, true, "-" + market.getRoboticonBuyPrice());
+        //Refresh the market's current roboticon price
 
-        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getRoboticonBuyPrice()) {
+        if (currentPlayer().getResource(ResourceType.MONEY) >= market.getRoboticonBuyPrice() && market.getRoboticonStock() > 0) {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, true, Color.GREEN);
         } else {
             gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ROBOTICON, true, false, Color.RED);
         }
+        //Ensure that the active player can only buy roboticons that are in stock and affordable from their perspective
     }
 
     /**
-     * Closes the market interface
+     * Closes the market interface, thereby preventing transactions from taking place
      */
     public void closeMarketInterface() {
         gameScreen.marketInterfaceTable.toggleMarketButton(ResourceType.ORE, true, false, Color.GRAY);
@@ -1022,13 +1042,16 @@ public class GameEngine {
     }
 
     /**
-     * Resets the appearance of the auction interface
+     * Resets the appearance of the auction house's interface
+     * Usually called to ensure that players can never offer more then they actually have at prices which other players
+     * may simply not be able to afford
      */
     public void resetAuctionInterface() {
         gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, 0);
         gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, 0);
         gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.FOOD, 0);
         gameScreen.marketInterfaceTable.setTradePrice(0);
+        //Reset the auction house's resource and money counters
 
         if (currentPlayer().getResource(ResourceType.ORE) > 0) {
             gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
@@ -1036,6 +1059,7 @@ public class GameEngine {
             gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, false, Color.RED);
         }
         gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, false, Color.RED);
+        //Only allow the active player to offer stocks of ore that they actually own
 
         if (currentPlayer().getResource(ResourceType.ENERGY) > 0) {
             gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
@@ -1043,6 +1067,7 @@ public class GameEngine {
             gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, false, Color.RED);
         }
         gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, false, Color.RED);
+        //Only allow the active player to offer stocks of energy that they actually own
 
         if (currentPlayer().getResource(ResourceType.FOOD) > 0) {
             gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
@@ -1050,30 +1075,39 @@ public class GameEngine {
             gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, false, Color.RED);
         }
         gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, false, Color.RED);
+        //Only allow the active player to offer stocks of food that they actually own
 
         refreshAuctionPriceButtonAvailability();
+        //Stop the active player from being able to demand more money than what their intended target actually owns
 
         gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.RED);
+        //Ensure that trade offers can't be sent until offerings and price-tags are set for them
     }
 
     /**
-     * Sets the functions of the buttons within the market interface
+     * Assigns functions to the buttons that comprise the auction-house's interface, thereby allowing players to
+     * set up trade-offers
      */
     public void setAuctionButtonFunctions() {
         gameScreen.marketInterfaceTable.setAuctionQuantityButtonFunction(ResourceType.ORE, true, new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) + 1);
+                //Increment the number of ore stocks to be offered in the pending trade request
 
                 if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) < currentPlayer().getResource(ResourceType.ORE)) {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, false, Color.RED);
                 }
+                //Ensure that the player can't offer more ore than what they own
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, true, Color.GREEN);
+                //Allow the player to decrement the number of ore stocks to be offered in the pending trade request
 
                 refreshAuctionConfirmationButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1081,16 +1115,21 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) + 1);
+                //Increment the number of energy stocks to be offered in the pending trade request
 
                 if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) < currentPlayer().getResource(ResourceType.ENERGY)) {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, false, Color.RED);
                 }
+                //Ensure that the player can't offer more energy than what they own
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, true, Color.GREEN);
+                //Allow the player to decrement the number of energy stocks to be offered in the pending trade request
 
                 refreshAuctionConfirmationButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1098,16 +1137,21 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.FOOD, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) + 1);
+                //Increment the number of food stocks to be offered in the pending trade request
 
                 if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) < currentPlayer().getResource(ResourceType.FOOD)) {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, false, Color.RED);
                 }
+                //Ensure that the player can't offer more food than what they own
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, true, Color.GREEN);
+                //Allow the player to decrement the number of food stocks to be offered in the pending trade request
 
                 refreshAuctionConfirmationButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1115,16 +1159,21 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ORE, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) - 1);
+                //Decrement the number of ore stocks to be offered in the pending trade request
 
                 if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) > 0) {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, false, false, Color.RED);
                 }
+                //Ensure that the player can't offer less than zero stocks of ore
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ORE, true, true, Color.GREEN);
+                //Allow the player to increment the number of ore stocks to be offered in the pending trade request
 
                 refreshAuctionConfirmationButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1132,16 +1181,21 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.ENERGY, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) - 1);
+                //Decrement the number of energy stocks to be offered in the pending trade request
 
                 if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ENERGY) > 0) {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, false, false, Color.RED);
                 }
+                //Ensure that the player can't offer less than zero stocks of energy
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.ENERGY, true, true, Color.GREEN);
+                //Allow the player to increment the number of energy stocks to be offered in the pending trade request
 
                 refreshAuctionConfirmationButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1149,16 +1203,21 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradeAmount(ResourceType.FOOD, gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) - 1);
+                //Decrement the number of food stocks to be offered in the pending trade request
 
                 if (gameScreen.marketInterfaceTable.tradeAmount(ResourceType.FOOD) > 0) {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, true, Color.GREEN);
                 } else {
                     gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, false, false, Color.RED);
                 }
+                //Ensure that the player can't offer less than zero stocks of food
 
                 gameScreen.marketInterfaceTable.toggleAuctionQuantityButton(ResourceType.FOOD, true, true, Color.GREEN);
+                //Allow the player to increment the number of food stocks to be offered in the pending trade request
 
                 refreshAuctionConfirmationButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1166,8 +1225,11 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 1);
+                //Increase the price-tag of the pending trade request by 1
 
                 refreshAuctionPriceButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1175,8 +1237,11 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 10);
+                //Increase the price-tag of the pending trade request by 10
 
                 refreshAuctionPriceButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1184,8 +1249,11 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() + 100);
+                //Increase the price-tag of the pending trade request by 100
 
                 refreshAuctionPriceButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1193,8 +1261,11 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 1);
+                //Decrease the price-tag of the pending trade request by 1
 
                 refreshAuctionPriceButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1202,8 +1273,11 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 10);
+                //Decrease the price-tag of the pending trade request by 10
 
                 refreshAuctionPriceButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1211,8 +1285,11 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.marketInterfaceTable.setTradePrice(gameScreen.marketInterfaceTable.tradePrice() - 100);
+                //Decrease the price-tag of the pending trade request by 100
 
                 refreshAuctionPriceButtonAvailability();
+                //If at least one item is being offered for a non-zero amount of money in the trade request being
+                //set up, allow the active player to send it there and then
             }
         });
 
@@ -1229,6 +1306,8 @@ public class GameEngine {
                         gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Offer Already Sent");
                     }
                 }
+                //If there already exists an unresolved trade addressed to the targeted player, prevent another
+                //one from being sent to that player
 
                 if (offerSent == false) {
                     Trade trade = new Trade(gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE),
@@ -1242,6 +1321,7 @@ public class GameEngine {
                     gameScreen.marketInterfaceTable.toggleAuctionConfirmationButton(false, Color.GREEN);
                     gameScreen.marketInterfaceTable.setAuctionConfirmationButtonText("Offer Sent Successfully!");
                 }
+                //Prepare and add the trade request to the pool of outstanding requests
 
                 Timer timer = new Timer();
                 timer.schedule(new Timer.Task() {
@@ -1252,23 +1332,30 @@ public class GameEngine {
                     }
                 }, 3);
                 timer.start();
+                //Display a brief message for about 3 seconds to indicate that the request was sent
+                //Then, revert the trade-offer confirmation button back to its original state
             }
         });
     }
 
     /**
-     * Sets the button functions of the upgrade overlay
+     * Assigns functions to the buttons in the upgrade overlay, thereby enabling roboticon upgrades to occur
      */
     public void setUpgradeOverlayButtonFunctions() {
         gameScreen.upgradeOverlay.setUpgradeButtonFunction(ResourceType.ORE, new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 upgradeRoboticon(0);
+                //Attempt to upgrade the selected roboticon's ore-mining level
 
                 gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                //Update the player's on-screen inventory to reflect the cost of the upgrade
 
                 gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ORE, selectedTile.getRoboticonStored().getLevel()[0]);
+                //Indicate the selected roboticon's new ore-mining level on the upgrade overlay
+
                 updateUpgradeOptions();
+                //Prevent the player from making any invalid upgrade choices afterwards
             }
         });
 
@@ -1276,11 +1363,16 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 upgradeRoboticon(1);
+                //Attempt to upgrade the selected roboticon's energy-generating level
 
                 gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                //Update the player's on-screen inventory to reflect the cost of the upgrade
 
                 gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ENERGY, selectedTile.getRoboticonStored().getLevel()[1]);
+                //Indicate the selected roboticon's new energy-generating level on the upgrade overlay
+
                 updateUpgradeOptions();
+                //Prevent the player from making any invalid upgrade choices afterwards
             }
         });
 
@@ -1288,11 +1380,16 @@ public class GameEngine {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 upgradeRoboticon(2);
+                //Attempt to upgrade the selected roboticon's food-producing level
 
                 gameScreen.playerInfoTable.updateResource(currentPlayer(), ResourceType.MONEY);
+                //Update the player's on-screen inventory to reflect the cost of the upgrade
 
                 gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.FOOD, selectedTile.getRoboticonStored().getLevel()[2]);
+                //Indicate the selected roboticon's new food-producing level on the upgrade overlay
+
                 updateUpgradeOptions();
+                //Prevent the player from making any invalid upgrade choices afterwards
             }
         });
 
@@ -1305,13 +1402,14 @@ public class GameEngine {
     }
 
     /**
-     * Refreshes the values within the upgrade overlay
+     * Updates the upgrade overlay to display the yield and roboticon levels of the last tile to have been selected
      */
     public void refreshUpgradeOverlay() {
         try {
             gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ORE, selectedTile.getResource(ResourceType.ORE));
             gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.ENERGY, selectedTile.getResource(ResourceType.ENERGY));
             gameScreen.upgradeOverlay.setYieldLabelText(ResourceType.FOOD, selectedTile.getResource(ResourceType.FOOD));
+            //Display the yields of the last tile to have been selected
         } catch (InvalidResourceTypeException e) {
             //Do nothing: this should never, ever happen
         }
@@ -1320,13 +1418,17 @@ public class GameEngine {
             gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ORE, selectedTile.getRoboticonStored().getLevel()[0]);
             gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.ENERGY, selectedTile.getRoboticonStored().getLevel()[1]);
             gameScreen.upgradeOverlay.setRoboticonLevelLabelText(ResourceType.FOOD, selectedTile.getRoboticonStored().getLevel()[2]);
+            //Display the current levels of the roboticon that exists on the last tile to have been selected
         }
 
         updateUpgradeOptions();
+        //Present valid upgrade choices to the player based on how much money they have and the current levels of
+        //the roboticon that they're aiming to upgrade
     }
 
     /**
-     * Updates the options available to the current player on the roboticon upgrade screen based on their money count
+     * Updates the upgrade options available to the current player on the roboticon upgrade screen, based on how much
+     * money they own and the current levels of the roboticon that they're trying to upgrade
      */
     private void updateUpgradeOptions() {
         if (selectedTile().getRoboticonStored().getLevel()[0] < 3) {
@@ -1336,11 +1438,12 @@ public class GameEngine {
             } else {
                 gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ORE, false, Color.RED);
             }
-            //Conditionally enable ore upgrade button
         } else {
             gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ORE, "MAX");
             gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ORE, false, Color.RED);
         }
+        //Allow for an ore-mining upgrade to take place if the player has enough money for it and the selected
+        //robotion's ore-mining level hasn't already been maxed out
 
         if (selectedTile().getRoboticonStored().getLevel()[1] < 3) {
             gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ENERGY, "-" + selectedTile.getRoboticonStored().getEnergyUpgradeCost());
@@ -1349,11 +1452,12 @@ public class GameEngine {
             } else {
                 gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ENERGY, false, Color.RED);
             }
-            //Conditionally enable energy upgrade button
         } else {
             gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.ENERGY, "MAX");
             gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.ENERGY, false, Color.RED);
         }
+        //Allow for an energy-generating upgrade to take place if the player has enough money for it and the
+        //selected robotion's energy-generating level hasn't already been maxed out
 
         if (selectedTile().getRoboticonStored().getLevel()[2] < 3) {
             gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.FOOD, "-" + selectedTile.getRoboticonStored().getFoodUpgradeCost());
@@ -1362,15 +1466,17 @@ public class GameEngine {
             } else {
                 gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.FOOD, false, Color.RED);
             }
-            //Conditionally enable food upgrade button
         } else {
             gameScreen.upgradeOverlay.setUpgradeButtonLabelText(ResourceType.FOOD, "MAX");
             gameScreen.upgradeOverlay.toggleUpgradeButton(ResourceType.FOOD, false, Color.RED);
         }
+        //Allow for a food-producing upgrade to take place if the player has enough money for it and the selected
+        //robotion's food-producing level hasn't already been maxed out
     }
 
     /**
-     * Updates the appearance of the auction table
+     * Updates the price-adjustment buttons in the auction house's interface based on how much money the pending
+     * request's target still has to spare
      */
     public void refreshAuctionPriceButtonAvailability() {
         if (gameScreen.marketInterfaceTable.tradePrice() < gameScreen.marketInterfaceTable.selectedPlayer().getResource(ResourceType.MONEY)) {
@@ -1393,6 +1499,8 @@ public class GameEngine {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, true, false, Color.RED);
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, true, false, Color.RED);
         }
+        //Only allow the player to add as much money to their request's price-tag as what that request's recipient
+        //could possibly afford
 
         if (gameScreen.marketInterfaceTable.tradePrice() > 0) {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(1, false, true, Color.GREEN);
@@ -1414,12 +1522,17 @@ public class GameEngine {
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(2, false, false, Color.RED);
             gameScreen.marketInterfaceTable.toggleAuctionPriceButton(3, false, false, Color.RED);
         }
+        //Prevent the player from being able to put a negative price-tag on their trade-request
 
         refreshAuctionConfirmationButtonAvailability();
+        //If at least one item is being offered for a non-zero amount of money in the trade request being
+        //set up, allow the active player to send it there and then
     }
 
     /**
-     * Updates the appearance of the auction table
+     * Verifies whether the pending trade request can indeed be sent (by checking whether it has offerings and a
+     * non-zero price-tag) and - if so - enables the button that would allow for the active player to send that
+     * request
      */
     public void refreshAuctionConfirmationButtonAvailability() {
         if ((gameScreen.marketInterfaceTable.tradeAmount(ResourceType.ORE) > 0
@@ -1433,7 +1546,8 @@ public class GameEngine {
     }
 
     /**
-     * Removes a specific trade from the array  of pending trades
+     * Removes a specific trade from the pool of pending trades
+     *
      * @param trade The trade to be removed
      */
     public void removeTrade(Trade trade) {
